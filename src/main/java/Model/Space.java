@@ -1,7 +1,8 @@
-package it.polimi.ingsw.PSP30;
+package Model;
 
 /**
  * @author Vadym Nahrudnyy
+ * @version 1.0
  */
 
 public class Space {
@@ -11,13 +12,11 @@ public class Space {
     private boolean hasDome;
     private Worker workerInPlace;
 
+    /**
+     * @param coordinateX indicates the column of the table where the new Space will be located
+     * @param coordinateY indicates the line of the table where the new Space will be located
+     */
     public Space(int coordinateX, int coordinateY) {
-        /**
-         * This metod build a new object Space.
-         * @param coordinateX indicates the column of the table where the new Space will be located
-         * @param coordinateY indicates the line of the table where the new Space will be located
-         * @return new Space
-         */
         this.height = 0;
         this.hasDome = false;
         this.coordinateX = coordinateX;

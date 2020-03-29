@@ -1,7 +1,8 @@
-package it.polimi.ingsw.PSP30;
+package Model;
 
 /**
  * @author Vadym Nahrudnyy
+ * @version 1.0
  */
 
 public class Game {
@@ -10,7 +11,7 @@ public class Game {
     private TurnPhase currentPhase;
     private Player currentPlayer;
     private boolean towerWasCompleted; //if "true", a tower was completed during this turn.
-    private Player players [];
+    private Player[] players;
     private IslandBoard gameBoard;
 
     public int getNum_players() {

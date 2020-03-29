@@ -1,4 +1,4 @@
-package it.polimi.ingsw.PSP30;
+package Model;
 
 /**
  * Enumeration used in Game and Power classes.

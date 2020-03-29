@@ -1,7 +1,8 @@
-package it.polimi.ingsw.PSP30;
+package Model;
 
 /**
  * @author Vadym Nahrudnyy
+ * @version 1.0
  */
 
 public class IslandBoard {
