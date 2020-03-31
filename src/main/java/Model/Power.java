@@ -17,9 +17,9 @@ public class Power {
 
     /**
      * @param isActive states if the power have to be activated by the player, so he decides to use it
-     * @param isPlayerTurn
+     * @param isPlayerTurn if '1' is the player's turn
      * @param isOpponent flag that states if the power can be activated during other's players turn
-     * @param turnPhase
+     * @param turnPhase is an enum that indicates in what phase of the game the power can be used
      */
     public Power(Boolean isActive, Boolean isPlayerTurn, Boolean isOpponent, TurnPhase turnPhase) {
 
