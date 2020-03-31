@@ -17,11 +17,9 @@ public class Deck {
         this.cardList = cardList;
     }
 
-
     public ArrayList<God> getCardList() {
         return cardList;
     }
-
 
     public void setCardList(ArrayList<God> cardList) {
         this.cardList = cardList;
