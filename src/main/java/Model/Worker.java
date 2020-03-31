@@ -27,10 +27,11 @@ public class Worker{
 
     /**
      * This method allows the worker to change position.
-     * @param newPosition tells where the worker should be moved.
+     * @param newPosition tells where the worker should be moved to.
      */
 
-    public static void changePosition(Space newPosition ){
+    public void changePosition(Space newPosition){
+       
     }
 
     public int getWorkerID() {
