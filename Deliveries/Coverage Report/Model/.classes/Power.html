@@ -1,0 +1,135 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Power</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">Model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Power (Model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Power</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (5/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (10/ 10)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package Model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;/**
+<i>5</i>&nbsp; * @author Alessia Guzzo
+<i>6</i>&nbsp; */
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;public class Power {
+<i>9</i>&nbsp;    /**
+<i>10</i>&nbsp;     * This class describes the powers used in the game which are associated with Gods
+<i>11</i>&nbsp;     */
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    private Boolean isActive;
+<i>14</i>&nbsp;    private Boolean isPlayerTurn;
+<i>15</i>&nbsp;    private Boolean isOpponent;
+<i>16</i>&nbsp;    private TurnPhase turnPhase;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    /**
+<i>19</i>&nbsp;     * @param isActive states if the power have to be activated by the player, so he decides to use it
+<i>20</i>&nbsp;     * @param isPlayerTurn if &#39;1&#39; is the player&#39;s turn
+<i>21</i>&nbsp;     * @param isOpponent flag that states if the power can be activated during other&#39;s players turn
+<i>22</i>&nbsp;     * @param turnPhase is an enum that indicates in what phase of the game the power can be used
+<i>23</i>&nbsp;     */
+<b class="fc"><i>24</i>&nbsp;    public Power(Boolean isActive, Boolean isPlayerTurn, Boolean isOpponent, TurnPhase turnPhase) {</b>
+<i>25</i>&nbsp;
+<b class="fc"><i>26</i>&nbsp;        this.isActive = isActive;</b>
+<b class="fc"><i>27</i>&nbsp;        this.isPlayerTurn = isPlayerTurn;</b>
+<b class="fc"><i>28</i>&nbsp;        this.isOpponent = isOpponent;</b>
+<b class="fc"><i>29</i>&nbsp;        this.turnPhase = turnPhase;</b>
+<b class="fc"><i>30</i>&nbsp;    }</b>
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    public Boolean getActive() {
+<b class="fc"><i>34</i>&nbsp;        return isActive;</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    public Boolean getPlayerTurn() {
+<b class="fc"><i>39</i>&nbsp;        return isPlayerTurn;</b>
+<i>40</i>&nbsp;    }
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    public Boolean getOpponent() {
+<b class="fc"><i>44</i>&nbsp;        return isOpponent;</b>
+<i>45</i>&nbsp;    }
+<i>46</i>&nbsp;
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;    public TurnPhase getTurnPhase() {
+<b class="fc"><i>49</i>&nbsp;        return turnPhase;</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-03-31 14:25</div>
+</div>
+</body>
+</html>
