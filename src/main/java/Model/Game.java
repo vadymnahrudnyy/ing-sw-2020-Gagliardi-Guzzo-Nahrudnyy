@@ -6,7 +6,7 @@ package Model;
  */
 
 public class Game {
-    private int num_players;
+    private final int num_players;
     private int currentRound;
     private TurnPhase currentPhase;
     private Player currentPlayer;
@@ -14,13 +14,24 @@ public class Game {
     private Player[] players;
     private IslandBoard gameBoard;
 
+    public Game(int num_players, Player currentPlayer, Player[] playersList) {
+        this.num_players = num_players;
+        this.currentRound = 0;
+        this.currentPhase = TurnPhase.SETUP;
+        this.currentPlayer = currentPlayer;
+        this.towerWasCompleted = false;
+        this.gameBoard = new IslandBoard();
+        this.players = new Player[num_players];
+        int index;
+        for (index = 0; index < num_players;++index){
+            players[index] = playersList[index];
+        }
+    }
+
     public int getNum_players() {
         return num_players;
     }
 
-    public void setNum_players(int num_players) {
-        this.num_players = num_players;
-    }
 
     public int getCurrentRound() {
         return currentRound;
@@ -46,7 +57,7 @@ public class Game {
         this.currentPlayer = currentPlayer;
     }
 
-    public boolean isTowerWasCompleted() {
+    public boolean getTowerWasCompleted() {
         return towerWasCompleted;
     }
 
@@ -54,8 +65,12 @@ public class Game {
         this.towerWasCompleted = towerWasCompleted;
     }
 
-    public void setPlayers() {
-        this.players = new Player[num_players];
+    public void setPlayers(Player [] players) {
+        this.players = players;
+    }
+
+    public Player[] getPlayers() {
+        return players;
     }
 
     public IslandBoard getGameBoard() {
