@@ -1,61 +1,48 @@
 package Model;
 
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
 
 public class GameTest {
+    int testRound;
+    int testNum_players;
+    Player testPlayer;
+    Player testPlayer2;
+    Player[] players;
+    Game testedGame;
+
+    @Before public void GameTestSetup(){
+        testNum_players = 2;
+        testPlayer = new Player("test",3,null,null);
+        testPlayer2 = new Player("test2",4,null,null);
+        players = new Player[testNum_players];
+        players[0] = testPlayer;
+        players[1] = testPlayer2;
+        testRound = 6;
+        testedGame = new Game(testNum_players,testPlayer,players);
+    }
 
     @Test
     public void getNum_players() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
-        assertEquals(testNum_players,testedGame.getNum_players());
+        assertEquals(testNum_players,testedGame.getNumPlayers());
     }
 
     @Test
     public void getCurrentRound() {
-        int testNum_players = 2;
-        int testRound = 6;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         testedGame.setCurrentRound(testRound);
         assertEquals(testRound,testedGame.getCurrentRound());
-
     }
 
     @Test
     public void setCurrentRound() {
-        int testNum_players = 2;
-        int testRound = 6;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         testedGame.setCurrentRound(testRound);
         assertEquals(testRound,testedGame.getCurrentRound());
     }
 
     @Test
     public void getCurrentPhase() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         TurnPhase testPhase = TurnPhase.ANYTIME;
         testedGame.setCurrentPhase(testPhase);
         assertEquals(testPhase,testedGame.getCurrentPhase());
@@ -63,13 +50,6 @@ public class GameTest {
 
     @Test
     public void setCurrentPhase() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         TurnPhase testPhase = TurnPhase.ANYTIME;
         testedGame.setCurrentPhase(testPhase);
         assertEquals(testPhase,testedGame.getCurrentPhase());
@@ -77,39 +57,18 @@ public class GameTest {
 
     @Test
     public void getCurrentPlayer() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         testedGame.setCurrentPlayer(testPlayer);
         assertEquals(testPlayer,testedGame.getCurrentPlayer());
     }
 
     @Test
     public void setCurrentPlayer() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         testedGame.setCurrentPlayer(testPlayer);
         assertEquals(testPlayer,testedGame.getCurrentPlayer());
     }
 
     @Test
     public void getTowerWasCompleted() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         testedGame.setCurrentPlayer(testPlayer);
         testedGame.setTowerWasCompleted(true);
         assertTrue(testedGame.getTowerWasCompleted());
@@ -117,13 +76,6 @@ public class GameTest {
 
     @Test
     public void setTowerWasCompleted() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         testedGame.setCurrentPlayer(testPlayer);
         testedGame.setTowerWasCompleted(true);
         assertTrue(testedGame.getTowerWasCompleted());
@@ -131,13 +83,6 @@ public class GameTest {
 
     @Test
     public void setPlayers() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         Player testPlayer3 = new Player("test3",5,null,null);
         Player testPlayer4 = new Player("test4",6,null,null);
         Player [] newplayers = new Player[testNum_players];
@@ -149,13 +94,6 @@ public class GameTest {
 
     @Test
     public void getGameBoard() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         IslandBoard testBoard = new IslandBoard();
         testedGame.setGameBoard(testBoard);
         assertEquals(testBoard,testedGame.getGameBoard());
@@ -163,15 +101,47 @@ public class GameTest {
 
     @Test
     public void setGameBoard() {
-        int testNum_players = 2;
-        Player testPlayer = new Player("test",3,null,null);
-        Player testPlayer2 = new Player("test2",4,null,null);
-        Player[] players = new Player[testNum_players];
-        players[0] = testPlayer;
-        players[1] = testPlayer2;
-        Game testedGame = new Game(testNum_players,testPlayer,players);
         IslandBoard testBoard = new IslandBoard();
         testedGame.setGameBoard(testBoard);
         assertEquals(testBoard,testedGame.getGameBoard());
     }
+
+    @Test
+    public void nextTurnPhase() {
+        testedGame.setCurrentPhase(TurnPhase.START);
+        testedGame.nextTurnPhase();
+        assertEquals(TurnPhase.MOVE,testedGame.getCurrentPhase());
+        testedGame.nextTurnPhase();
+        assertEquals(TurnPhase.BUILD,testedGame.getCurrentPhase());
+        testedGame.nextTurnPhase();
+        assertEquals(TurnPhase.END,testedGame.getCurrentPhase());
+        testedGame.nextTurnPhase();
+        assertEquals(TurnPhase.START,testedGame.getCurrentPhase());
+    }
+
+    @Test
+    public void nextPlayer(){
+        testedGame.setCurrentPlayer(testPlayer);
+        testedGame.nextPlayer();
+        assertEquals(testPlayer2,testedGame.getCurrentPlayer());
+        testedGame.nextPlayer();
+        assertEquals(testPlayer,testedGame.getCurrentPlayer());
+    }
+
+    @Test
+    public void nextPlayer_threePlayersCase(){
+        Player testPlayer3 = new Player("test3",3,null,null);
+        Player[] threePlayers = new Player[3];
+        threePlayers[0] = players[0];
+        threePlayers[1] = players[1];
+        threePlayers[2] = testPlayer3;
+        Game newTestedGame = new Game(3,players[0],threePlayers);
+        newTestedGame.nextPlayer();
+        assertEquals(testPlayer2,newTestedGame.getCurrentPlayer());
+        newTestedGame.nextPlayer();
+        assertEquals(testPlayer3,newTestedGame.getCurrentPlayer());
+        newTestedGame.nextPlayer();
+        assertEquals(testPlayer,newTestedGame.getCurrentPlayer());
+    }
+
 }

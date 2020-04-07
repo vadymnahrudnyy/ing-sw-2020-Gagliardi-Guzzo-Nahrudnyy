@@ -2,36 +2,42 @@ package Model;
 
 /**
  * @author Vadym Nahrudnyy
- * @version 1.0
+ * @version 1.2
+ * Game class is the main class of the Model. It represents the state of the game.
  */
 
 public class Game {
-    private final int num_players;
+    private final int numPlayers;
     private int currentRound;
-    private TurnPhase currentPhase;
-    private Player currentPlayer;
-    private boolean towerWasCompleted; //if "true", a tower was completed during this turn.
     private Player[] players;
+    private Player currentPlayer;
     private IslandBoard gameBoard;
+    private TurnPhase currentPhase;
+    private boolean towerWasCompleted; //if "true", a tower was completed during this turn.
 
-    public Game(int num_players, Player currentPlayer, Player[] playersList) {
-        this.num_players = num_players;
+    /**
+     * To build an instance of class Gaming are needed these parametres
+     * @param numPlayers indicating the number of users playing the game.
+     * @param currentPlayer is used to indicate the Player who's making the move. At the beginning is the first Player joining the game ("The Challenger").
+     * @param playersList is the list of players who joined the game
+     */
+    public Game(int numPlayers, Player currentPlayer, Player[] playersList) {
+        this.numPlayers = numPlayers;
         this.currentRound = 0;
         this.currentPhase = TurnPhase.SETUP;
         this.currentPlayer = currentPlayer;
         this.towerWasCompleted = false;
         this.gameBoard = new IslandBoard();
-        this.players = new Player[num_players];
+        this.players = new Player[numPlayers];
         int index;
-        for (index = 0; index < num_players;++index){
+        for (index = 0; index < numPlayers;++index){
             players[index] = playersList[index];
         }
     }
 
-    public int getNum_players() {
-        return num_players;
+    public int getNumPlayers() {
+        return numPlayers;
     }
-
 
     public int getCurrentRound() {
         return currentRound;
@@ -49,12 +55,48 @@ public class Game {
         this.currentPhase = currentPhase;
     }
 
+    /**
+     * @since version 1.1
+     * Method nextTurnPhase set the parameter TurnPhase with the next value, in case the turn is finished (current phase is END)
+     * the currentPhase is set to START.
+     */
+    public void nextTurnPhase(){
+        TurnPhase currentPhase = getCurrentPhase();
+        switch (currentPhase){
+            case START:
+                setCurrentPhase(TurnPhase.MOVE);
+                break;
+            case MOVE:
+                setCurrentPhase(TurnPhase.BUILD);
+                break;
+            case BUILD:
+                setCurrentPhase(TurnPhase.END);
+                break;
+            case END:
+                setCurrentPhase(TurnPhase.START);
+                break;
+        }
+    }
+
     public Player getCurrentPlayer() {
         return currentPlayer;
     }
 
     public void setCurrentPlayer(Player currentPlayer) {
         this.currentPlayer = currentPlayer;
+    }
+
+    /**
+     * @since version 1.2
+     * Method nextPlayer sets the next player in the list as current Player.
+     * In case the player who made the turn is the last of the list, then the first player is set as current.
+     */
+    public void nextPlayer(){
+        Player currentPlayer = getCurrentPlayer();
+        int index = 0;
+        while (players[index]!=currentPlayer){++index;} //don't control index to be < num_players in that case a non valid player is playing
+        if (index == numPlayers - 1) setCurrentPlayer(players[0]);
+        else setCurrentPlayer(players[index+1]);
     }
 
     public boolean getTowerWasCompleted() {

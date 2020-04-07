@@ -11,7 +11,7 @@ import Exceptions.Space.*;
 public class Space {
     private int height;
     private boolean hasDome;
-    private final boolean isPerimetral;
+    private final boolean isPerimeter;
     private final int coordinateX;
     private final int coordinateY;
 
@@ -28,17 +28,12 @@ public class Space {
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.workerInPlace = null; //Workers will be placed by players during the Setup.
-        if ((coordinateX == 0)||(coordinateY == 0)||(coordinateX == TableDimension)||(coordinateY == TableDimension)){
-            this.isPerimetral = true;
-        }
-        else {
-            this.isPerimetral = false;
-        }
+        this.isPerimeter = (coordinateX == 1) || (coordinateY == 1) || (coordinateX == TableDimension + 1) || (coordinateY == TableDimension + 1);
     }
 
-    public void setHeight(int height) throws InvalidHeightException {
+    public void setHeight(int height) {
         int maxHeight = 4;
-        if ((height > 0)&&(height <= maxHeight)) {
+        if ((height >= 0)&&(height <= maxHeight)) {
             this.height = height;
         }
         else throw new InvalidHeightException();
@@ -64,7 +59,7 @@ public class Space {
         return hasDome;
     }
 
-    public void buildDome() throws DomeAlreadyBuiltException{
+    public void buildDome() {
         boolean Dome = getHasDome();
         if (!Dome) {
             setHasDome(true);
@@ -73,7 +68,7 @@ public class Space {
         else throw new DomeAlreadyBuiltException();
     }
 
-    public void removeDome() throws DomeAlreadyMissingException{
+    public void removeDome() {
         boolean Dome = getHasDome();
         if (Dome) {
             setHasDome(false);
@@ -82,33 +77,33 @@ public class Space {
         else throw new DomeAlreadyMissingException();
     }
 
-    public void setWorkerInPlace(Worker workerInPlace) {
-        this.workerInPlace = workerInPlace;
+    public void setWorkerInPlace(Worker consideredWorker) {
+        this.workerInPlace = consideredWorker;
     }
+
     public void removeWorkerInPlace(){
-        this.workerInPlace = null;
+        this.setWorkerInPlace(null);
     }
 
     public Worker getWorkerInPlace() {
         return workerInPlace;
     }
 
-    public void incrementHeight() throws TowerCompleteException {
+    public void incrementHeight() {
         int height = getHeight();
         if (height < 4)setHeight(++height);
         else throw new TowerCompleteException();
     }
-    public void decrementHeight() throws MissingTowerException {
+
+    public void decrementHeight() {
         int height = getHeight();
         if (height == 0) throw new MissingTowerException();
-        else setHeight(--height);
+        else setHeight(height-1);
     }
 
-
-
-
-
-
+    public boolean isPerimeter() {
+        return isPerimeter;
+    }
 }
 
 

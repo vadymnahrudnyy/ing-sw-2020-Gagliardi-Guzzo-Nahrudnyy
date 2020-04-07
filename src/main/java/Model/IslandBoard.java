@@ -12,6 +12,7 @@ public class IslandBoard {
 
     /**
      * This method builds the game board. The game board is represented as a matrix N*N where N is the dimension of the board.
+     * It doesn't need any parameter during the setting of the board.
      */
     public IslandBoard() {
         this.numberCompleteTowers = 0;
@@ -19,7 +20,7 @@ public class IslandBoard {
         int coordinateX,coordinateY;
         for (coordinateX = 0;coordinateX<=TableDimension;++coordinateX){
             for (coordinateY = 0; coordinateY <= TableDimension; ++coordinateY){
-                matrix [coordinateX][coordinateY] = new Space(coordinateX,coordinateY,TableDimension);
+                matrix [coordinateX][coordinateY] = new Space(coordinateX+1,coordinateY+1,TableDimension);
             }
         }
     }
@@ -36,6 +37,12 @@ public class IslandBoard {
         return numberCompleteTowers;
     }
 
+    /**
+     * Method getSpace is used to get a single Space from the board.
+     * @param coordinateX indicates the X coordinate of the wanted space.
+     * @param coordinateY indicates the Y coordinate of the wanted space.
+     * @return the desired Space.
+     */
     public Space getSpace(int coordinateX, int coordinateY) {
         return matrix[coordinateX][coordinateY];
     }
@@ -44,12 +51,11 @@ public class IslandBoard {
         this.numberCompleteTowers = numberCompleteTowers;
     }
 
+    /**
+     * The method increments the number of completed towers when a complete tower is built.
+     */
     public void incrementNumberCompleteTowers() {
         int CompleteTowers = getNumberCompleteTowers();
         setNumberCompleteTowers(++CompleteTowers);
-    }
-    public void decrementNumberCompleteTowers(){
-        int CompleteTowers = getNumberCompleteTowers();
-        setNumberCompleteTowers(--CompleteTowers);
     }
 }
