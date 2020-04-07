@@ -8,7 +8,7 @@ package Model;
 
 public class Player{
     /**
-     * This class creates an object Player.
+     * This class manages the player during the game.
      */
 
     private final String username;
@@ -18,10 +18,17 @@ public class Player{
     private boolean hasBuilt;
     private God god;
 
+    /**
+     * @param username indicates the player's username.
+     * @param userID associate the player with a unique identification number.
+     * @param workers tells which are the worker associated with that player.
+     * @param god tells which god card the player owm.
+     */
+
     public Player(String username, int userID, Worker[] workers, God god) {
         this.username = username;
         this.userID = userID;
-        this.workers = new Worker[2];
+        this.workers = workers;
         this.hasMovedWorker = false;
         this.hasBuilt = false;
         this.god = god;
@@ -39,7 +46,7 @@ public class Player{
         return workers;
     }
 
-    public Worker getworker(int i){
+    public Worker getWorker(int i){
         return workers[i];
     }
 
