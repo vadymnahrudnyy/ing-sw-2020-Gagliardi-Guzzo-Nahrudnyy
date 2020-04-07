@@ -10,23 +10,27 @@ import static org.junit.Assert.*;
 
 public class DeckTest {
 
+    ArrayList<God> cardlist;
+    int[] power;
+    God god;
+
+    @Before public void DeckTestSetUp() {
+
+        power= new int[1];
+        power[0] = 6;
+        god = new God( "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
+        ArrayList<God> cardlist = new ArrayList<>(Arrays.asList(god));
+
+    }
 
     @Test
     public void getCardList() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God godid = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        ArrayList<God> cardlist = new ArrayList<>(Arrays.asList(godid));
         Deck deck = new Deck(cardlist);
         assertEquals(cardlist,deck.getCardList());
     }
 
     @Test
     public void setCardList() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God godid = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        ArrayList<God> cardlist = new ArrayList<>(Arrays.asList(godid));
         Deck deck = new Deck(null);
         deck.setCardList(cardlist);
         assertEquals(cardlist,deck.getCardList());

@@ -1,32 +1,45 @@
 package Model;
 
+import org.junit.Before;
 import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import static org.junit.Assert.*;
 
 public class PowerTest {
 
+    Power power;
+
+    @Before
+    public void PowerTestSetUp() {
+        power = new Power(5, true, false, true, TurnPhase.WINCONDITION);
+    }
+
+    @Test
+    public void getPowerID() {
+        assertEquals(5, power.getPowerID());
+    }
+
     @Test
     public void getActive() {
-        Power power= new Power(false,true,false,TurnPhase.WINCONDITION);
-        assertEquals(false,power.getActive());
+        assertEquals(true, power.getActive());
     }
 
     @Test
-    public void getPlayerTurn() {
-        Power power= new Power(false,true,false,TurnPhase.WINCONDITION);
-        assertEquals(true,power.getPlayerTurn());
+    public void getUsableOnPlayerTurn() {
+        assertEquals(false, power.getUsableOnPlayerTurn());
     }
 
     @Test
-    public void getOpponent() {
-        Power power= new Power(false,true,false,TurnPhase.WINCONDITION);
-        assertEquals(false,power.getOpponent());
+    public void getValidOnOpponentTurn() {
+        assertEquals(true, power.getValidOnOpponentTurn());
     }
 
     @Test
     public void getTurnPhase() {
-        Power power= new Power(false,true,false,TurnPhase.WINCONDITION);
-        assertEquals(TurnPhase.WINCONDITION,power.getTurnPhase());
+        assertEquals(TurnPhase.WINCONDITION, power.getTurnPhase());
     }
+
 }

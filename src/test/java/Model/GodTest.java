@@ -4,58 +4,45 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.junit.Assert.*;
 
 public class GodTest {
 
+    int[] power;
+    God god;
 
-    @Test
-    public void getGodID() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God godid = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        assertEquals(8,godid.getGodID());
+    @Before public void GodTestSetUp() {
+
+        power= new int[1];
+        power[0] = 6;
+        god = new God("Minotauro", 1, 3, "il mostro dalla testa di toro", power);
+
     }
-
 
 
     @Test
     public void getName() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God godid = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        assertEquals("Minotauro",godid.getName());
+        assertEquals("Minotauro",god.getName());
     }
 
     @Test
     public void getPlayersAllowed() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God godid = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        assertEquals(3,godid.getPlayersAllowed());
+        assertEquals(3,god.getPlayersAllowed());
     }
 
     @Test
     public void getDescription() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God godid = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        assertEquals("il mostro dalla testa di toro",godid.getDescription());
+        assertEquals("il mostro dalla testa di toro",god.getDescription());
     }
 
-    @Test
-    public void getPowers() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God godid = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        assertArrayEquals(power,godid.getPowers());
-    }
 
     @Test
-    public void getSinglePower() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God godid = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        assertEquals(power[0],godid.getSinglePower(0));
+    public void testGetPowers() { assertArrayEquals(power,god.getPowers()); }
+
+    @Test
+    public void testGetSinglePower() { assertEquals(power[0],god.getSinglePower(0));
     }
 }

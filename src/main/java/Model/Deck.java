@@ -7,7 +7,7 @@ import java.util.ArrayList;
 
 public class Deck {
     /**
-     * This class uses java.util.ArrayList for implementing the ArrayList which
+     * Deck class uses java.util.ArrayList for implementing the ArrayList which
      * includes all the types of GodCard that can be used during the game session
      */
     private ArrayList<God> cardList;
