@@ -1,142 +1,100 @@
 package Model;
 
 import org.junit.Test;
-
+import org.junit.Before;
 import static org.junit.Assert.*;
 
 public class PlayerTest {
 
+    int[] power;
+    God testGod;
+    Player testPlayer;
+    Worker[] testWorkers;
+    Space firstCurrentPosition;
+    Space secondCurrentPosition;
+
+    @Before
+    public void PlayerTestSetUp(){
+        power= new int[1];
+        power[0]=8;
+        testGod = new God("Minotauro", 1, 3, "il mostro dalla testa di toro", power);
+        firstCurrentPosition = new Space(4,3,4);
+        secondCurrentPosition = new Space(2,3,4);
+        testWorkers=new Worker[2];
+        testWorkers[0] = new Worker(30, "Tom", 'm', firstCurrentPosition);
+        testWorkers[1] = new Worker(50, "Tom", 'm', secondCurrentPosition);
+
+    }
+
     @Test
     public void getUsername() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God testGod = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        Space currentPosition = new Space(4,3,4);
-        Worker[] testworker=new Worker[1];
-        testworker[0] = new Worker(30, "Tom", 'm', currentPosition);
-        Player testPlayer= new Player("Tom", 30, testworker, testGod );
+        testPlayer= new Player("Tom", 30, testWorkers, testGod );
         assertEquals("Tom",testPlayer.getUsername());
     }
 
     @Test
     public void getUserID() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God testGod = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        Space currentPosition = new Space(4,3,4);
-        Worker[] testworker=new Worker[1];
-        testworker[0] = new Worker(30, "Tom", 'm', currentPosition);
-        Player testPlayer= new Player("Tom", 30, testworker, testGod );
+        testPlayer= new Player("Tom", 30, testWorkers, testGod );
         assertEquals(30,testPlayer.getUserID());
     }
 
     @Test
     public void getWorkers() {
-        Space currentPosition1 = new Space(4,3,4);
-        Space currentPosition2 = new Space(2,3,4);
-        Worker[] testWorkers=new Worker[2];
-        testWorkers[0] = new Worker(30, "Player1", 'm', currentPosition1);
-        testWorkers[1] = new Worker(25, "Player1", 'm', currentPosition2);
-        Player testPlayer= new Player("Player1", 30, testWorkers, null );
+        testPlayer= new Player("Tom", 30, testWorkers, testGod );
         assertArrayEquals(testWorkers,testPlayer.getWorkers());
     }
 
     @Test
     public void getWorker() {
-
-        Space currentPosition1 = new Space(4,3,4);
-        Space currentPosition2 = new Space(2,3,4);
-        Worker[] testWorkers=new Worker[2];
-        testWorkers[0] = new Worker(30, "Player1", 'm', currentPosition1);
-        testWorkers[1] = new Worker(25, "Player1", 'm', currentPosition2);
-        Player testPlayer= new Player("Player1", 30, testWorkers, null );
+        testPlayer= new Player("Tom", 30, testWorkers, testGod );
         assertEquals(testWorkers[0],testPlayer.getWorker(0));
 
     }
 
     @Test
     public void setWorkers() {
-        Space currentPosition = new Space(4,3,4);
-        Player testPlayer = new Player("test",3,null,null);
-        Worker[] testworker=new Worker[1];
-        testworker[0] = new Worker(30, "Tom", 'm', currentPosition);
-        testPlayer.setWorkers(testworker);
-        assertArrayEquals(testworker,testPlayer.getWorkers());
+        testPlayer= new Player("Tom", 30, null, testGod );
+        testPlayer.setWorkers(testWorkers);
+        assertArrayEquals(testWorkers,testPlayer.getWorkers());
     }
 
     @Test
     public void isHasMovedWorker() {
-        Power[] power = new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God testGod = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        Space currentPosition = new Space(4, 3, 4);
-        Worker[] testworker = new Worker[1];
-        testworker[0] = new Worker(30, "Tom", 'm', currentPosition);
-        Player testPlayer = new Player("Tom", 30, testworker, testGod);
+        testPlayer= new Player("Tom", 30, testWorkers, testGod );
         testPlayer.setHasMovedWorker(true);
         assertTrue(testPlayer.isHasMovedWorker());
     }
 
     @Test
     public void setHasMovedWorker() {
-        Power[] power = new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God testGod = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        Space currentPosition = new Space(4, 3, 4);
-        Worker[] testworker = new Worker[1];
-        testworker[0] = new Worker(30, "Tom", 'm', currentPosition);
-        Player testPlayer = new Player("Tom", 30, testworker, testGod);
+        testPlayer= new Player("Tom", 30, testWorkers, testGod );
         testPlayer.setHasMovedWorker(true);
         assertTrue(testPlayer.isHasMovedWorker());
     }
 
     @Test
     public void isHasBuilt() {
-        Power[] power = new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God testGod = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        Space currentPosition = new Space(4, 3, 4);
-        Worker[] testworker = new Worker[1];
-        testworker[0] = new Worker(30, "Tom", 'm', currentPosition);
-        Player testPlayer = new Player("Tom", 30, testworker, testGod);
+        testPlayer= new Player("Tom", 30, testWorkers, testGod );
         testPlayer.setHasBuilt(true);
         assertTrue(testPlayer.isHasBuilt());
     }
 
     @Test
     public void setHasBuilt() {
-        Power[] power = new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God testGod = new God(8, "Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        Space currentPosition = new Space(4, 3, 4);
-        Worker[] testworker = new Worker[1];
-        testworker[0] = new Worker(30, "Tom", 'm', currentPosition);
-        Player testPlayer = new Player("Tom", 30, testworker, testGod);
+        testPlayer= new Player("Tom", 30, testWorkers, testGod );
         testPlayer.setHasBuilt(true);
         assertTrue(testPlayer.isHasBuilt());
     }
 
     @Test
     public void getGod() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God testGod = new God(8, null, 1, 3, "il mostro dalla testa di toro", power);
-        Space currentPosition = new Space(4,3,4);
-        Worker[] testworker=new Worker[1];
-        testworker[0] = new Worker(30, "Tom", 'm', currentPosition);
-        Player testPlayer= new Player("Tom", 30, testworker, testGod );
+        testPlayer= new Player("Tom", 30, testWorkers, testGod );
         assertEquals(testGod, testPlayer.getGod());
     }
 
     @Test
     public void setGod() {
-        Power[] power= new Power[1];
-        power[0] = new Power(true, true, false, TurnPhase.MOVE);
-        God testGod = new God(8, null, 1, 3, "il mostro dalla testa di toro", power);
-        Space currentPosition = new Space(4,3,4);
-        Worker[] testworker=new Worker[1];
-        testworker[0] = new Worker(30, "Tom", 'm', currentPosition);
-        Player testPlayer= new Player("Tom", 30, testworker, null );
+        testPlayer= new Player("Tom", 30, testWorkers, null );
         testPlayer.setGod(testGod);
         assertEquals(testGod,testPlayer.getGod());
 
