@@ -19,9 +19,7 @@ public class GodTest {
         power= new int[1];
         power[0] = 6;
         god = new God("Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-
     }
-
 
     @Test
     public void getName() {
