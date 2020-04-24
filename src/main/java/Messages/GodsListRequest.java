@@ -5,17 +5,16 @@ import Model.God;
 import java.util.ArrayList;
 
 /**
- * This class implements the message sending the list of gods to the first player and requesting the gods to play with.
+ * GodsList implements the message sending to the challenger the
+ * list of gods and asking him to choose which of them will be used in the game.
  */
 public class GodsListRequest {
     private static final long serialVersionUID = 100007L;
     private static final int messageID = 103;
-    private final boolean challenger;
     private final ArrayList<God> deck;
 
-    public GodsListRequest(ArrayList<God> gods, boolean first){
+    public GodsListRequest(ArrayList<God> gods){
         deck = gods;
-        challenger = first;
     }
     public int getMessageID(){
         return messageID;

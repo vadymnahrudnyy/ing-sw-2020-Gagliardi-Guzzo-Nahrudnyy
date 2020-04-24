@@ -1,5 +1,9 @@
 package Messages;
 
+/**
+ * UsernameResponse is used for sending
+ * to the server the player's username
+ */
 public class UsernameResponse extends Message{
     private static final long serialVersionUID = 100002L;
     private static final int messageID = 201;

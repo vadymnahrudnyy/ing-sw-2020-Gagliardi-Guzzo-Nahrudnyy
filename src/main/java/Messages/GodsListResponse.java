@@ -4,12 +4,16 @@ import Model.God;
 
 import java.util.ArrayList;
 
-public class GodListResponse extends Message {
+/**
+ * GodsListResponse send to the server the list
+ * of gods the challenger has chosen to play with.
+ */
+public class GodsListResponse extends Message {
     private static final long serialVersionUID = 100008L;
     private static final int messageID = 203;
     private ArrayList<God> gods;
 
-    public GodListResponse(ArrayList<God> selectedGods){
+    public GodsListResponse(ArrayList<God> selectedGods){
         gods = selectedGods;
     }
     public int getMessageID(){
