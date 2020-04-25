@@ -13,6 +13,8 @@ public class Lobby {
     private final ArrayList<String> serverPlayers;
     private final ArrayList<String> twoPlayersLobby;
     private final ArrayList<String> threePlayersLobby;
+    private ArrayList<VirtualView> virtualViews;
+    private int isReady;
 
     /**
      * Constructor of the server lobby.
@@ -23,6 +25,8 @@ public class Lobby {
         serverPlayers = new ArrayList<String>();
         twoPlayersLobby = new ArrayList<String>();
         threePlayersLobby = new ArrayList<String>();
+        virtualViews = new ArrayList<VirtualView>();
+        isReady = 0;
     }
     /**
      * Method getMaxServerPlayers
@@ -132,4 +136,31 @@ public class Lobby {
     public void resetThreePlayersLobby() {
         threePlayersLobby.clear();
     }
+
+    /**
+     * Method checkReady verifies if there are enough players in the lobby to start a new game.
+     * @param numPlayers is the number of player wanted in the new game.
+     */
+    public void checkReady(int numPlayers){
+        if(numPlayers==2 && getTwoPlayersLobbySlotsOccupied()==2) isReady=1;
+        else if (numPlayers==3 && getThreePlayersLobbySlotsOccupied()==3) isReady=1;
+    }
+
+    /**
+     * This method add a new element in the array list that contains all the virtual views already created.
+     * @param virtualView specifies the new virtual view to add into the array list.
+     */
+    public void addVirtualView(VirtualView virtualView){ virtualViews.add(virtualView); }
+
+    /**
+     * Getter of the parameter isReady.
+     * @return 1 if there are enough players to start a new game or 0 if there aren't.
+     */
+    public int getIsReady() { return isReady; }
+
+    /**
+     * Setter of the parameter isReady.
+     * @param isReady Integer (0 or 1) that specifies if there are enough players to start a new game.
+     */
+    public void setIsReady(int isReady) { this.isReady = isReady; }
 }
