@@ -2,6 +2,7 @@ package Server;
 
 import Messages.*;
 
+
 import java.io.*;
 import java.net.*;
 import java.util.ArrayList;
@@ -21,9 +22,8 @@ public class VirtualView implements Runnable {
     private ObjectInputStream input;
     private ObjectOutputStream output;
     private QueueOfEvents incomingMessages= new QueueOfEvents();
+    //private GameController controller;
     private boolean updated;
-    //private Controller controller;
-
 
     @Override
     public void run() {
@@ -71,7 +71,7 @@ public class VirtualView implements Runnable {
             this.input = new ObjectInputStream(client.getInputStream());
             serverLobby = lobby;
             updated = false;
-            
+
         }
         this.isConnected = true;
 
@@ -150,5 +150,29 @@ public class VirtualView implements Runnable {
      */
     public boolean checkUsername(String username) {
         return ((serverLobby.getTwoPlayersLobby().contains(username))||(serverLobby.getThreePlayersLobby().contains(username)));
+    }
+
+    /**
+     * Getter of the parameter updated.
+     * @return true if the controller should and updated of a new message or false if there is no need to update.
+     */
+    public boolean isUpdated() {
+        return updated;
+    }
+
+    /**
+     * Setter of the parameter updated
+     * @param updated is true if a new message is received or false if there are no new messages.
+     */
+    public void setUpdated(boolean updated) {
+        this.updated = updated;
+    }
+
+    /**
+     * Getter of the queue of the incoming messages.
+     * @return the queue of the incoming messages.
+     */
+    public QueueOfEvents getIncomingMessages() {
+        return incomingMessages;
     }
 }

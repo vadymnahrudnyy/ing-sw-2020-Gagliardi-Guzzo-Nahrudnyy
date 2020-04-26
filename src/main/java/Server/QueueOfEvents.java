@@ -13,6 +13,8 @@ public class QueueOfEvents  {
     private Node firstEvent;
     private Node lastEvent;
 
+
+
     /**
      * This nested class defines the structure of the nodes.
      */
