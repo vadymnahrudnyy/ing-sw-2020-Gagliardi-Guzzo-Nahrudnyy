@@ -1,8 +1,6 @@
 package Server;
 
-import Messages.Message;
-import Messages.SelectWorkerRequest;
-import Messages.UsernameRequest;
+import Messages.*;
 
 import java.io.*;
 import java.net.*;
@@ -22,27 +20,28 @@ public class VirtualView implements Runnable {
     private boolean isConnected;
     private ObjectInputStream input;
     private ObjectOutputStream output;
+    private QueueOfEvents incomingMessages= new QueueOfEvents();
+    private boolean updated;
+    //private Controller controller;
 
 
     @Override
     public void run() {
         try {
-
-            SelectWorkerRequest numPlayersChoose = new SelectWorkerRequest(); //richiedo numeroGiocatori
-            //ricevo numeroGiocatori
-
+            Message message;
+            sendMessage(new UsernameRequest());
             do{
-            UsernameRequest user = new UsernameRequest(); ////richiedo username
-            //ricevo username
-            if(checkUsername(username)) {
-                insertInLobby (numPlayers);
-            }
-            else {
-               //MESSAGGIO ERRORE "Username already taken. Try again."
-            }
-            }while (checkUsername(username));
-
+                message = (Message) input.readObject();
+            }while (message.getMessageID() != 201);
+            username = ((UsernameResponse) message).getUsername();
+            sendMessage(new NumPlayersRequest());
+            do{
+                message = (Message) input.readObject();
+            }while (message.getMessageID() != 202);
+            numPlayers = ((NumPlayersResponse)message).getNumPlayers();
+            insertInLobby ();
             while (isConnected) receiveMessage(); //continuo a ricevere dal client
+            //ricevi disconnessioni??
 
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
@@ -50,14 +49,13 @@ public class VirtualView implements Runnable {
     }
 
 
-
     /**
      * This method insert the new client connected in to the lobby categorized by the number of players it wants to play with.
-     * @param numPlayers is the number of player the client wants in its game.
      */
-    private void insertInLobby(int numPlayers) {
-        if(numPlayers==2) serverLobby.addPlayerToTwoPlayersLobby(username,this);
-        else if (numPlayers==3) serverLobby.addPlayerToThreePlayersLobby(username,this);
+    private void insertInLobby() {
+        if(numPlayers==2 && checkUsername(username)) serverLobby.addPlayerToTwoPlayersLobby(username,this);
+        else if (numPlayers==3 && checkUsername(username) ) serverLobby.addPlayerToThreePlayersLobby(username,this);
+        //Errore nel caso lo username già è presente
         serverLobby.checkReady();
     }
 
@@ -72,8 +70,8 @@ public class VirtualView implements Runnable {
             this.output = new ObjectOutputStream(client.getOutputStream());
             this.input = new ObjectInputStream(client.getInputStream());
             serverLobby = lobby;
-
-            //  this.guestString = "Guest" + (new Random()).nextInt(9999);
+            updated = false;
+            
         }
         this.isConnected = true;
 
@@ -87,12 +85,8 @@ public class VirtualView implements Runnable {
      * @throws ClassNotFoundException if the message does not belong to one of the expected types.
      */
     private void receiveMessage() throws IOException, ClassNotFoundException {
-        Message message = (Message) input.readObject();
-        if (message instanceof Message) {
-            //((Message) message).accept(new MessageParser(this));
-            return;
-        }
-        //((Message) message).accept(new MessageParser(this));
+       //da modificare!!!
+
     }
 
 
@@ -124,7 +118,9 @@ public class VirtualView implements Runnable {
      *
      * @return true if the connection is still open, false if the connection is closed
      */
-    public boolean ping() { return isConnected; }
+    public boolean ping() {
+        //in un thread a parte (30 s)
+        return isConnected; }
 
     /**
      * This method close the connection if one of the players disconnect
