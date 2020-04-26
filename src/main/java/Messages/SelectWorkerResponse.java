@@ -6,7 +6,6 @@ package Messages;
  */
 public class SelectWorkerResponse extends Message {
     private static final long serialVersionUID = 100014L;
-    private static final int messageID = 206;
     private final int coordinateX;
     private final int coordinateY;
 
@@ -16,11 +15,9 @@ public class SelectWorkerResponse extends Message {
      * @param CoordinateY indicates the Y coordinate of the selected worker.
      */
     public SelectWorkerResponse(int CoordinateX,int CoordinateY){
+        messageID = SELECT_WORKER_RESPONSE;
         coordinateX = CoordinateX;
         coordinateY = CoordinateY;
-    }
-    public int getMessageID() {
-        return messageID;
     }
     public int getCoordinateX(){
         return coordinateX;

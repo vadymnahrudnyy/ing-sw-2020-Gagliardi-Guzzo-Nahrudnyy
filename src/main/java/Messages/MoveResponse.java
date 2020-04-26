@@ -6,7 +6,6 @@ package Messages;
  */
 public class MoveResponse extends Message {
     private static final long serialVersionUID = 100016L;
-    private static final int messageID = 207;
     private final int destCoordinateX;
     private final int destCoordinateY;
 
@@ -16,20 +15,14 @@ public class MoveResponse extends Message {
      * @param coordinateY destionatio coordinate Y
      */
     public MoveResponse(int coordinateX, int coordinateY){
+        messageID = MOVE_RESPONSE;
         destCoordinateX = coordinateX;
         destCoordinateY = coordinateY;
     }
-
     public int getDestCoordinateX() {
         return destCoordinateX;
     }
-
     public int getDestCoordinateY() {
         return destCoordinateY;
     }
-
-    public int getMessageID() {
-        return messageID;
-    }
-
 }

@@ -7,7 +7,7 @@ import java.util.NoSuchElementException;
  *The {@code QueueOfEvents} class is used to manage all the events between client e server by implementing a FIFO queue.
  * @version 1.0
  */
-public class QueueOfEvents  {
+public class QueueOfEvents {
     private static final int MAX_EVENTS = 100;
     private int numOfEvents;
     private Node firstEvent;
@@ -57,12 +57,13 @@ public class QueueOfEvents  {
     /**
      * This methods delete the last inserted node of the queue.
      */
-    public void dequeueEvent() {
-        if (isEmpty()) throw new NoSuchElementException("The queue is empty");
+    public Message dequeueEvent() throws NoSuchElementException {
+        if (isEmpty()) return null;
         Message message = firstEvent.message;
         firstEvent = firstEvent.nextEvent;
         numOfEvents--;
         if (isEmpty()) lastEvent = null;
+        return message;
     }
 
 

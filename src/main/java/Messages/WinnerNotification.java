@@ -3,9 +3,8 @@ package Messages;
 /**
  * WinnerNotification implements the message used to announce the winner
  */
-public class WinnerNotification {
+public class WinnerNotification extends Message{
     private static final long serialVersionUID = 100018L;
-    private static final int messageID = 304;
     private final String winnerUsername;
 
     /**
@@ -13,10 +12,10 @@ public class WinnerNotification {
      * @param winner username of the winner.
      */
     public WinnerNotification(String winner){
+        messageID = WINNER_NOTIFICATION;
         winnerUsername = winner;
     }
-
-    public static int getMessageID() {
-        return messageID;
+    public String getWinnerUsername(){
+        return winnerUsername;
     }
 }

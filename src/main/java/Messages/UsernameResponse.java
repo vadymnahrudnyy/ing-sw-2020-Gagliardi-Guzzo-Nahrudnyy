@@ -1,19 +1,18 @@
 package Messages;
 
+import java.io.Serializable;
+
 /**
  * UsernameResponse is used for sending
  * to the server the player's username
  */
-public class UsernameResponse extends Message{
+public class UsernameResponse extends Message {
     private static final long serialVersionUID = 100002L;
-    private static final int messageID = 201;
     private final String playerUsername;
 
     public UsernameResponse (String username){
+        messageID = USERNAME_RESPONSE;
         playerUsername = username;
-    }
-    public int getID (){
-        return messageID;
     }
     public String getUsername (){
         return playerUsername;

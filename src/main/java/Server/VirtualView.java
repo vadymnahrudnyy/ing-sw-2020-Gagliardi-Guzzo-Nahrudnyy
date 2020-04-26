@@ -175,4 +175,8 @@ public class VirtualView implements Runnable {
     public QueueOfEvents getIncomingMessages() {
         return incomingMessages;
     }
+
+    public Message dequeueFirstMessage(){
+        return getIncomingMessages().dequeueEvent();
+    }
 }

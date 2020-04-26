@@ -7,19 +7,14 @@ package Messages;
  */
 public class MoveRequest extends Message {
     private static final long serialVersionUID = 100015L;
-    private static final int messageID = 107;
     private final boolean[][] allowedMoves;
 
     public MoveRequest(boolean[][] movesMatrix){
+        messageID = MOVE_REQUEST;
         allowedMoves = movesMatrix;
     }
 
     public boolean[][] getAllowedMoves() {
         return allowedMoves;
     }
-
-    public int getMessageID() {
-        return messageID;
-    }
-
 }

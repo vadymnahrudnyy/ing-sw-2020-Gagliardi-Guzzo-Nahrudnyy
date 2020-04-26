@@ -9,13 +9,13 @@ import Model.Player;
  */
 public class StartPlayerRequest extends Message {
     private static final long serialVersionUID = 100009L;
-    private static final int messageID = 104;
     private final Player[] players;
 
     public StartPlayerRequest(Player[] playersList){
+        messageID = START_PLAYER_REQUEST;
         players = playersList;
     }
-    public int getMessageID() {
-        return messageID;
+    public Player[] getPlayers() {
+        return players;
     }
 }
