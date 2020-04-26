@@ -11,19 +11,18 @@ import java.util.ArrayList;
 
 /**
  * This class behave like the View for Controller and Model
- * @version 1.1
+ * @version 1.3
  */
 
 public class VirtualView implements Runnable {
-
-
     private Socket client;
+    private int numPlayers;
     private String username;
+    private Lobby serverLobby;
     private boolean isConnected;
     private ObjectInputStream input;
     private ObjectOutputStream output;
-    private Lobby lobby;
-    private int numPlayers;
+
 
     @Override
     public void run() {
@@ -36,7 +35,7 @@ public class VirtualView implements Runnable {
             UsernameRequest user = new UsernameRequest(); ////richiedo username
             //ricevo username
             if(checkUsername(username)) {
-                insertInLobby (username, numPlayers);
+                insertInLobby (numPlayers);
             }
             else {
                //MESSAGGIO ERRORE "Username already taken. Try again."
@@ -50,30 +49,29 @@ public class VirtualView implements Runnable {
         }
     }
 
+
+
     /**
      * This method insert the new client connected in to the lobby categorized by the number of players it wants to play with.
-     * @param username is reffered to the new client connected.
      * @param numPlayers is the number of player the client wants in its game.
      */
-    private void insertInLobby(String username, int numPlayers) {
-        lobby.addPlayerToServer(username);
-        if(numPlayers==2) lobby.addPlayerToTwoPlayersLobby(username);
-        else if (numPlayers==3) lobby.addPlayerToThreePlayersLobby(username);
-        lobby.addVirtualView(this);
-        lobby.checkReady(numPlayers);
+    private void insertInLobby(int numPlayers) {
+        if(numPlayers==2) serverLobby.addPlayerToTwoPlayersLobby(username,this);
+        else if (numPlayers==3) serverLobby.addPlayerToThreePlayersLobby(username,this);
+        serverLobby.checkReady();
     }
 
 
     /**
      * This is the constructor of VirtualView class.
-     *
      * @param client specifies the client connected to the server.
      */
-    public VirtualView(Socket client) throws IOException {
+    public VirtualView(Socket client,Lobby lobby) throws IOException {
         {
             this.client = client;
             this.output = new ObjectOutputStream(client.getOutputStream());
             this.input = new ObjectInputStream(client.getInputStream());
+            serverLobby = lobby;
 
             //  this.guestString = "Guest" + (new Random()).nextInt(9999);
         }
@@ -136,6 +134,7 @@ public class VirtualView implements Runnable {
             //togli player
             client.close();
         } catch (IOException e) {
+            System.out.println("Disconnection Failed");
         }
         isConnected = false;
     }
@@ -154,10 +153,6 @@ public class VirtualView implements Runnable {
      * @return true if there is no other username like this, false if there is already a client connected that had choose that username
      */
     public boolean checkUsername(String username) {
-        ArrayList<String> playerConnected = lobby.getServerPlayers();
-        for (String player : playerConnected) {
-            if (player.equals(username)) return false;
-        }
-        return true;
+        return ((serverLobby.getTwoPlayersLobby().contains(username))||(serverLobby.getThreePlayersLobby().contains(username)));
     }
 }
