@@ -1,12 +1,8 @@
 package Server;
 
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-
 import java.io.IOException;
-import java.net.Inet4Address;
-import java.net.ServerSocket;
 import java.net.Socket;
 
 import static org.junit.Assert.*;
