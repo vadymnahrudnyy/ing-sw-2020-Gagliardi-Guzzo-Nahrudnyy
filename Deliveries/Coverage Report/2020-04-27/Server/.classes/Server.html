@@ -1,0 +1,135 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: Server</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">Server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: Server (Server)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">Server</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 15)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package Server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.net.*;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;import java.util.ArrayList;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import Model.*;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * This class creates and manages the server
+<i>11</i>&nbsp; * @version 1.1
+<i>12</i>&nbsp; */
+<i>13</i>&nbsp;
+<b class="nc"><i>14</i>&nbsp;public class Server {</b>
+<i>15</i>&nbsp;
+<b class="nc"><i>16</i>&nbsp;    private static final ArrayList&lt;God&gt; godsList = new ArrayList&lt;God&gt;();</b>
+<b class="nc"><i>17</i>&nbsp;    private static final ArrayList&lt;Power&gt; powerList = new ArrayList&lt;Power&gt;();</b>
+<i>18</i>&nbsp;    private static final int MAX_PLAYERS = 100;
+<i>19</i>&nbsp;    private static final int SOCKET_PORT = 50000;
+<b class="nc"><i>20</i>&nbsp;    private static final Lobby serverLobby = new Lobby ();</b>
+<i>21</i>&nbsp;    private static ServerSocket server;
+<b class="nc"><i>22</i>&nbsp;    private ArrayList&lt;VirtualView&gt; clients = new ArrayList&lt;VirtualView&gt;();</b>
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;    public void main () {
+<i>26</i>&nbsp;        try {
+<b class="nc"><i>27</i>&nbsp;            server = new ServerSocket(SOCKET_PORT);</b>
+<b class="nc"><i>28</i>&nbsp;            ConnectionAcceptance connectionAcceptor = new ConnectionAcceptance(this);</b>
+<b class="nc"><i>29</i>&nbsp;            Thread ConnectionsAcceptThread = new Thread(connectionAcceptor);</b>
+<b class="nc"><i>30</i>&nbsp;            ConnectionsAcceptThread.start();</b>
+<i>31</i>&nbsp;        }
+<b class="nc"><i>32</i>&nbsp;        catch(Exception e){</b>
+<b class="nc"><i>33</i>&nbsp;            System.out.println(&quot;Error: The server could not be initialized&quot;);</b>
+<b class="nc"><i>34</i>&nbsp;        }</b>
+<i>35</i>&nbsp;    }
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    public void startGame (){
+<b class="nc"><i>40</i>&nbsp;        serverLobby.checkReady();</b>
+<i>41</i>&nbsp;        /*if(serverLobby.getThreePlayersLobbyReady()| serverLobby.getTwoPlayersLobbyReady())
+<i>42</i>&nbsp;            controller= new GameController;
+<i>43</i>&nbsp;*/
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<b class="nc"><i>46</i>&nbsp;    public Lobby getServerLobby(){return serverLobby;}</b>
+<i>47</i>&nbsp;
+<b class="nc"><i>48</i>&nbsp;    public ServerSocket getServerSocket(){return server;}</b>
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;}
+<i>52</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-04-27 19:46</div>
+</div>
+</body>
+</html>

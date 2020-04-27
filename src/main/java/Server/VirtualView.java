@@ -1,11 +1,11 @@
 package Server;
 
 import Messages.*;
+import Utils.QueueOfEvents;
 
 
 import java.io.*;
 import java.net.*;
-import java.util.ArrayList;
 
 
 /**
@@ -23,7 +23,7 @@ public class VirtualView implements Runnable {
     private ObjectOutputStream output;
     private QueueOfEvents incomingMessages= new QueueOfEvents();
     //private GameController controller;
-    private boolean updated;
+
 
     @Override
     public void run() {
@@ -40,9 +40,7 @@ public class VirtualView implements Runnable {
             }while (message.getMessageID() != 202);
             numPlayers = ((NumPlayersResponse)message).getNumPlayers();
             insertInLobby ();
-            while (isConnected) receiveMessage(); //continuo a ricevere dal client
-            //ricevi disconnessioni??
-
+            while (isConnected) receiveMessage();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
@@ -55,6 +53,7 @@ public class VirtualView implements Runnable {
     private void insertInLobby() {
         if(numPlayers==2 && checkUsername(username)) serverLobby.addPlayerToTwoPlayersLobby(username,this);
         else if (numPlayers==3 && checkUsername(username) ) serverLobby.addPlayerToThreePlayersLobby(username,this);
+
         //Errore nel caso lo username già è presente
         serverLobby.checkReady();
     }
@@ -70,7 +69,6 @@ public class VirtualView implements Runnable {
             this.output = new ObjectOutputStream(client.getOutputStream());
             this.input = new ObjectInputStream(client.getInputStream());
             serverLobby = lobby;
-            updated = false;
 
         }
         this.isConnected = true;
@@ -79,14 +77,22 @@ public class VirtualView implements Runnable {
 
 
     /**
-     * This methods receives messages from client.
+     * This methods receives messages from client, adds them into the queue and notify the cotroller of the update.
      *
      * @throws IOException            if there are exceptions that cannot be handled.
      * @throws ClassNotFoundException if the message does not belong to one of the expected types.
      */
     private void receiveMessage() throws IOException, ClassNotFoundException {
-       //da modificare!!!
+        try {
+            Message message= (Message) input.readObject();
 
+            incomingMessages.enqueueEvent(message);
+        }
+        catch (ClassNotFoundException | IOException e) {
+
+        e.printStackTrace();
+
+        }
     }
 
 
@@ -112,15 +118,6 @@ public class VirtualView implements Runnable {
      * @param username indicates the username string
      */
     public void setUsername(String username) { this.username = username; }
-
-    /**
-     * Getter for variable isConnected
-     *
-     * @return true if the connection is still open, false if the connection is closed
-     */
-    public boolean ping() {
-        //in un thread a parte (30 s)
-        return isConnected; }
 
     /**
      * This method close the connection if one of the players disconnect
@@ -150,22 +147,6 @@ public class VirtualView implements Runnable {
      */
     public boolean checkUsername(String username) {
         return ((serverLobby.getTwoPlayersLobby().contains(username))||(serverLobby.getThreePlayersLobby().contains(username)));
-    }
-
-    /**
-     * Getter of the parameter updated.
-     * @return true if the controller should and updated of a new message or false if there is no need to update.
-     */
-    public boolean isUpdated() {
-        return updated;
-    }
-
-    /**
-     * Setter of the parameter updated
-     * @param updated is true if a new message is received or false if there are no new messages.
-     */
-    public void setUpdated(boolean updated) {
-        this.updated = updated;
     }
 
     /**
