@@ -122,4 +122,12 @@ public class Game {
     public void setGameBoard(IslandBoard gameBoard) {
         this.gameBoard = gameBoard;
     }
+
+    public Player getPlayerByUsername(String username){
+        int index = 0;
+        while (index < numPlayers){
+            if (players[index].getUsername().equals(username)) return players[index];
+        }
+        return null;
+    }
 }

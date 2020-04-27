@@ -11,12 +11,18 @@ import java.util.ArrayList;
 public class GodsListRequest extends Message {
     private static final long serialVersionUID = 100007L;
     private final ArrayList<God> deck;
+    private final int numPlayers;
 
-    public GodsListRequest(ArrayList<God> gods){
+    public GodsListRequest(ArrayList<God> gods, int players){
         messageID = GODS_LIST_REQUEST;
         deck = gods;
+        numPlayers = players;
     }
     public ArrayList<God> getDeck(){
         return deck;
+    }
+
+    public int getNumPlayers() {
+        return numPlayers;
     }
 }
