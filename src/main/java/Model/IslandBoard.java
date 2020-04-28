@@ -6,7 +6,7 @@ package Model;
  */
 
 public class IslandBoard {
-    final int TableDimension = 4; //Indicates the dimension of the game board, assumed to be a square. Count starting from 0
+    private static final int TableDimension = 4; //Indicates the dimension of the game board, assumed to be a square. Count starting from 0
     private int numberCompleteTowers;
     private Space[][] matrix;
 
@@ -57,5 +57,9 @@ public class IslandBoard {
     public void incrementNumberCompleteTowers() {
         int CompleteTowers = getNumberCompleteTowers();
         setNumberCompleteTowers(++CompleteTowers);
+    }
+
+    public int getTableDimension(){
+        return TableDimension+1;
     }
 }

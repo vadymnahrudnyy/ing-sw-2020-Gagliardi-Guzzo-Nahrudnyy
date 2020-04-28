@@ -1,10 +1,7 @@
 package Server;
 
 import Messages.*;
-import Model.Game;
-import Model.God;
-import Model.Player;
-import Model.Power;
+import Model.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,7 +20,9 @@ public class GameController implements Runnable {
         godList = gods;
         powerList = powers;
         virtualViewsList = (VirtualView[]) virtualViews.toArray();
-        currentGame = new Game(numPlayers,((Player[])players.toArray())[0],(Player[]) players.toArray());
+        Player[] playersArray = new Player[numPlayers];
+        for (int i=0;i<numPlayers;++i) {playersArray[i] = new Player(virtualViewsList[i].getUsername(),i,null,null);}
+        currentGame = new Game(numPlayers,playersArray[0],playersArray);
     }
 
     @Override
@@ -32,17 +31,80 @@ public class GameController implements Runnable {
 
     }
 
-    public void setupPhase() {
+    private void setupPhase() {
         sendStartGameMessage();
         chooseGods();
+        chooseStartPlayer();
+        chooseWorkerPositions();
+        startGame();
+    }
+    private void chooseWorkerPositions(){
+        currentGame.setCurrentPlayer(currentGame.getStarterPlayer());
+        int tableDimension = currentGame.getGameBoard().getTableDimension();
+        boolean [][] allowedPositions = initializeAllowedPositions(tableDimension);
+        boolean validPosition;
+        do {
+            VirtualView currentClient = getVirtualViewByUsername(currentGame.getCurrentPlayer().getUsername());
+            do{
+                try{
+                    currentClient.sendMessage(new WorkerPositionRequest(1,allowedPositions));
+                }catch (IOException e){
+                    System.out.println("Worker 1 position request failed to player " + currentClient.getUsername());
+                }
+                waitValidMessage(currentClient,Message.WORKER_POSITION_RESPONSE);
+                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
+            }while(!validPosition);
+            do{
+                try{
+                    currentClient.sendMessage(new WorkerPositionRequest(2,allowedPositions));
+                }catch (IOException e){
+                    System.out.println("Worker 2 position request failed to player " + currentClient.getUsername());
+                }
+                waitValidMessage(currentClient,Message.WORKER_POSITION_RESPONSE);
+                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
+            }while(!validPosition);
+            currentGame.nextPlayer();
+        }while(currentGame.getCurrentPlayer() != currentGame.getStarterPlayer());
+    }
 
+    private boolean verifyValidPosition(boolean[][] allowedPositions,WorkerPositionResponse response){
+        int coordinateX = response.getCoordinateX();
+        int coordinateY = response.getCoordinateY();
+        if (allowedPositions[coordinateX - 1][coordinateY - 1]){
+            allowedPositions[coordinateX-1][coordinateY-1] = false;
+            return true;
+        }
+        else return false;
+    }
+    private boolean[][] initializeAllowedPositions(int tableDimension){
+        boolean[][] allowedPositions = new boolean[tableDimension][tableDimension];
+        for (int coordinateX = 0; coordinateX < tableDimension;++coordinateX){
+            for (int coordinateY = 0; coordinateY < tableDimension;++coordinateY){
+                allowedPositions[coordinateX][coordinateY] = true;
+            }
+        }
+        return allowedPositions;
+    }
+    private void chooseStartPlayer(){
+        try{
+            virtualViewsList[0].sendMessage(new StartPlayerRequest(currentGame.getPlayers()));
+        } catch (IOException e){
+            System.out.println("Start player request failed");
+        }
+        waitValidMessage(virtualViewsList[0],Message.START_PLAYER_RESPONSE);
+        currentGame.setStarterPlayer(((StartPlayerResponse) receivedMessage).getStartPlayerUsername());
 
+    }
+
+    private void startGame(){
+        currentGame.setCurrentPhase(TurnPhase.START);
+        currentGame.setCurrentRound(1);
     }
 
     /**
      * Method used to notify all player about the game being start
      */
-    public void sendStartGameMessage() {
+    private void sendStartGameMessage() {
         for (VirtualView view : virtualViewsList) {
             try {
                 view.sendMessage(new GameStartNotification());
@@ -126,6 +188,13 @@ public class GameController implements Runnable {
     private God getGodByName(String name){
         for (God god:godList) {
             if (god.getName().equals(name)) return god;
+        }
+        return null;
+    }
+
+    private VirtualView getVirtualViewByUsername(String username){
+        for (int index = 0; index < currentGame.getNumPlayers();++index){
+            if (virtualViewsList[index].equals(username)) return virtualViewsList[index];
         }
         return null;
     }

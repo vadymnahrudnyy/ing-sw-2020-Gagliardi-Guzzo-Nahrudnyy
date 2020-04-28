@@ -11,6 +11,7 @@ public class Game {
     private int currentRound;
     private Player[] players;
     private Player currentPlayer;
+    private Player starterPlayer;
     private IslandBoard gameBoard;
     private TurnPhase currentPhase;
     private boolean towerWasCompleted; //if "true", a tower was completed during this turn.
@@ -35,6 +36,12 @@ public class Game {
         }
     }
 
+    public void setStarterPlayer(String username){
+        starterPlayer = getPlayerByUsername(username);
+    }
+    public Player getStarterPlayer(){
+        return starterPlayer;
+    }
     public int getNumPlayers() {
         return numPlayers;
     }

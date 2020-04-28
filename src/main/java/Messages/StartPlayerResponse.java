@@ -12,4 +12,8 @@ public class StartPlayerResponse extends Message{
         messageID = START_PLAYER_RESPONSE;
         startPlayerUsername = startPlayer;
     }
+
+    public String getStartPlayerUsername() {
+        return startPlayerUsername;
+    }
 }
