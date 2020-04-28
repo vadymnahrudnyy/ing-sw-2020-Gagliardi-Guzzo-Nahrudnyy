@@ -3,12 +3,15 @@ package Model;
 
 import Exceptions.Space.*;
 
+import java.io.Serializable;
+
 /**
  * @author Vadym Nahrudnyy
  * @version 1.0
  */
 
-public class Space {
+public class Space implements Serializable {
+    private static final long serialVersionUID = 50003L;
     private int height;
     private boolean hasDome;
     private final boolean isPerimeter;

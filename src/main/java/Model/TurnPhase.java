@@ -1,5 +1,7 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  * Enumeration used in Game and Power classes.
  * SETUP is used in Game only at the beginning of the game (Turn 0)
@@ -8,7 +10,7 @@ package Model;
  * a real phase of the turn but are useful to indicate the moment a power can be used.
  */
 
-public enum TurnPhase {
+public enum TurnPhase implements Serializable {
     SETUP,
     START,
     MOVE,

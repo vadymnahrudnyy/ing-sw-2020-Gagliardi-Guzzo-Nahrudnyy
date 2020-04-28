@@ -10,13 +10,13 @@ import java.util.ArrayList;
  */
 public class GodsListResponse extends Message {
     private static final long serialVersionUID = 100008L;
-    private ArrayList<God> gods;
+    private ArrayList<String> gods;
 
-    public GodsListResponse(ArrayList<God> selectedGods){
+    public GodsListResponse(ArrayList<String> selectedGods){
         messageID = GODS_LIST_RESPONSE;
         gods = selectedGods;
     }
-    public ArrayList<God> getGods(){
+    public ArrayList<String> getGods(){
         return gods;
     }
 }

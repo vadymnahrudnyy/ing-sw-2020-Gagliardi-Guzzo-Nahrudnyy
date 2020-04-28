@@ -28,6 +28,12 @@ public class GameController implements Runnable {
     @Override
     public void run() {
         setupPhase();
+        RoundHandle();
+
+    }
+
+    private void RoundHandle(){
+        currentGame.setCurrentPhase(TurnPhase.START);
 
     }
 
@@ -54,6 +60,7 @@ public class GameController implements Runnable {
                 waitValidMessage(currentClient,Message.WORKER_POSITION_RESPONSE);
                 validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
             }while(!validPosition);
+            createWorker(1,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
             do{
                 try{
                     currentClient.sendMessage(new WorkerPositionRequest(2,allowedPositions));
@@ -63,8 +70,19 @@ public class GameController implements Runnable {
                 waitValidMessage(currentClient,Message.WORKER_POSITION_RESPONSE);
                 validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
             }while(!validPosition);
+            createWorker(2,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
             currentGame.nextPlayer();
         }while(currentGame.getCurrentPlayer() != currentGame.getStarterPlayer());
+
+    }
+
+    private void createWorker(int numWorker,Player owner,int coordinateX, int coordinateY){
+        Worker[] workers = owner.getWorkers();
+        if(workers == null) workers = new Worker[Game.WORKERS_PER_PLAYER];
+        char gender = 'm';
+        if (numWorker == 1) gender = 'f';
+        Space workerPosition = currentGame.getGameBoard().getSpace(coordinateX,coordinateY);
+        workers[numWorker-1] = new Worker(numWorker,owner.getUsername(),gender,workerPosition);
     }
 
     private boolean verifyValidPosition(boolean[][] allowedPositions,WorkerPositionResponse response){
@@ -97,7 +115,6 @@ public class GameController implements Runnable {
     }
 
     private void startGame(){
-        currentGame.setCurrentPhase(TurnPhase.START);
         currentGame.setCurrentRound(1);
     }
 
@@ -126,7 +143,12 @@ public class GameController implements Runnable {
             System.out.println("God list request failed to player " + firstVirtualView.getUsername());
         }
         waitValidMessage(firstVirtualView,Message.GODS_LIST_RESPONSE);
-        ArrayList<God> gameGods = ((GodsListResponse) receivedMessage).getGods();
+        ArrayList<String> gameGodsNames = ((GodsListResponse) receivedMessage).getGods();
+        ArrayList<God> gameGods = new ArrayList<>();
+        for (String godName:gameGodsNames) {
+            gameGods.add(getGodByName(godName));
+
+        }
         int Index = 1;
         ArrayList<God> chosenGods = new ArrayList<>();
         while (Index < currentGame.getNumPlayers()){

@@ -2,13 +2,15 @@ package Model;
 
 import Exception.Worker.InvalidWorkerPositionException;
 
+import java.io.Serializable;
+
 /**
  * @author Alessia Gagliardi
  * @version 1.0
  */
 
 
-public class Worker {
+public class Worker implements Serializable {
     /**
      * This class manages the workers of a player on the board
      */

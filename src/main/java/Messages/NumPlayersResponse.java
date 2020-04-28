@@ -6,7 +6,6 @@ package Messages;
  */
 public class NumPlayersResponse extends Message{
     private static final long serialVersionUID = 100004L;
-
     private final int numPlayers;
 
     public NumPlayersResponse (int numberPlayers){

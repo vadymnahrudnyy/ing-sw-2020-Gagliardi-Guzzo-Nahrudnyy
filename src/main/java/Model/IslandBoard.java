@@ -1,12 +1,15 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  * @author Vadym Nahrudnyy
  * @version 1.0
  */
 
-public class IslandBoard {
-    private static final int TableDimension = 4; //Indicates the dimension of the game board, assumed to be a square. Count starting from 0
+public class IslandBoard implements Serializable {
+    private static final long serialVersionUID = 50002L;
+    private static final int TABLE_DIMENSION = 4; //Indicates the dimension of the game board, assumed to be a square. Count starting from 0
     private int numberCompleteTowers;
     private Space[][] matrix;
 
@@ -16,11 +19,11 @@ public class IslandBoard {
      */
     public IslandBoard() {
         this.numberCompleteTowers = 0;
-        this.matrix = new Space[TableDimension+1][TableDimension +1];
+        this.matrix = new Space[TABLE_DIMENSION+1][TABLE_DIMENSION +1];
         int coordinateX,coordinateY;
-        for (coordinateX = 0;coordinateX<=TableDimension;++coordinateX){
-            for (coordinateY = 0; coordinateY <= TableDimension; ++coordinateY){
-                matrix [coordinateX][coordinateY] = new Space(coordinateX+1,coordinateY+1,TableDimension);
+        for (coordinateX = 0;coordinateX<=TABLE_DIMENSION;++coordinateX){
+            for (coordinateY = 0; coordinateY <= TABLE_DIMENSION; ++coordinateY){
+                matrix [coordinateX][coordinateY] = new Space(coordinateX+1,coordinateY+1,TABLE_DIMENSION);
             }
         }
     }
@@ -60,6 +63,6 @@ public class IslandBoard {
     }
 
     public int getTableDimension(){
-        return TableDimension+1;
+        return TABLE_DIMENSION+1;
     }
 }

@@ -1,11 +1,13 @@
 package Model;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author Alessia Guzzo
  */
 
-public class Deck {
+public class Deck implements Serializable {
+    private static final long serialVersionUID = 50004L;
     /**
      * Deck class uses java.util.ArrayList for implementing the ArrayList which
      * includes all the types of GodCard that can be used during the game session

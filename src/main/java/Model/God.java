@@ -1,13 +1,16 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  * @author Alessia Guzzo
  */
 
-public final class God {
+public class God implements Serializable {
     /**
      * God class creates all the God types with their respective attributes
      */
+    private static final long serialVersionUID = 50005L;
     private final String name;
     private final int playersAllowed;
     private final String description;

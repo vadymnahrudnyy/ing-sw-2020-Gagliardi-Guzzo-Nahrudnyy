@@ -1,16 +1,18 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  * @author Alessia Gagliardi
  * @version 1.0
  */
 
 
-public class Player{
+public class Player implements Serializable {
     /**
      * This class manages the player during the game.
      */
-
+    private static final long serialVersionUID = 50006L;
     private final String username;
     private final int userID;
     private Worker [ ] workers;

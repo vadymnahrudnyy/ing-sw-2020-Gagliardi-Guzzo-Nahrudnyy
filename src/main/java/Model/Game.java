@@ -1,12 +1,15 @@
 package Model;
 
+import java.io.Serializable;
+
 /**
  * @author Vadym Nahrudnyy
  * @version 1.2
  * Game class is the main class of the Model. It represents the state of the game.
  */
 
-public class Game {
+public class Game implements Serializable {
+    private static final long serialVersionUID = 50001L;
     private final int numPlayers;
     private int currentRound;
     private Player[] players;
@@ -15,6 +18,9 @@ public class Game {
     private IslandBoard gameBoard;
     private TurnPhase currentPhase;
     private boolean towerWasCompleted; //if "true", a tower was completed during this turn.
+    private boolean AthenaMovedUp;
+
+    public static final int WORKERS_PER_PLAYER = 2;
 
     /**
      * To build an instance of class Gaming are needed these parametres
@@ -136,5 +142,12 @@ public class Game {
             if (players[index].getUsername().equals(username)) return players[index];
         }
         return null;
+    }
+
+    public boolean hasAthenaMovedUpDuringLastRound() {
+        return AthenaMovedUp;
+    }
+    public void setAthenaMovedUp(boolean movedUp){
+        AthenaMovedUp = movedUp;
     }
 }
