@@ -45,7 +45,7 @@ public class QueueOfEvents {
      * This methods allows to create a new node to insert in the queue.
      * @param message specifies the message to insert into the queue.
      */
-    public void enqueueEvent(Message message) {
+    public synchronized void enqueueEvent(Message message) {
         Node oldLastEvent = lastEvent;
         lastEvent = new Node();
         lastEvent.message = message;

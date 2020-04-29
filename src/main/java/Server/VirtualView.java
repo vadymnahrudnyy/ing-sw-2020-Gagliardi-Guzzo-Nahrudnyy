@@ -30,6 +30,10 @@ public class VirtualView implements Runnable {
         try {
             Message message;
             sendMessage(new UsernameRequest());
+            Ping connectionChecker = new Ping(this);
+            Thread pingThread = new Thread(connectionChecker);
+            pingThread.start();
+
             do{
                 message = (Message) input.readObject();
             }while (message.getMessageID() != 201);
@@ -45,6 +49,7 @@ public class VirtualView implements Runnable {
             e.printStackTrace();
         }
     }
+
 
 
     /**
@@ -72,8 +77,8 @@ public class VirtualView implements Runnable {
 
         }
         this.isConnected = true;
-
     }
+
 
 
     /**
@@ -101,7 +106,7 @@ public class VirtualView implements Runnable {
      *
      * @param message indicates the output message from server.
      */
-    public void sendMessage(Message message) throws IOException {
+    public synchronized void sendMessage(Message message) throws IOException {
         output.writeObject(message);
     }
 
@@ -159,5 +164,28 @@ public class VirtualView implements Runnable {
 
     public Message dequeueFirstMessage(){
         return getIncomingMessages().dequeueEvent();
+    }
+
+    /**
+     * Inner class Ping implements the separate thread for each virtual view. It sends a ping message to the client
+     */
+    private static class Ping implements Runnable {
+        private final VirtualView client;
+
+        public Ping(VirtualView userVirtualView){
+            client = userVirtualView;
+        }
+        @Override
+        public void run() {
+            do{
+                try {
+                    client.sendMessage(new PingMessage());
+                } catch (IOException e) {
+                    client.incomingMessages.enqueueEvent(new Disconnection());
+                    client.isConnected = false;
+                }
+            } while (client.isConnected);
+
+        }
     }
 }
