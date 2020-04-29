@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<God>
+	
+	<Power ID="1">
+		<powerID>1</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>MOVE</turnPhase>
+	</Power>
+
+	<Power ID="2">
+		<powerID>2</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>MOVE</turnPhase>
+	</Power>
+	
+	<Power ID="3">
+		<powerID>3</powerID>
+		<isActive>false</isActive>
+		<usableOnPlayerTurn>false</usableOnPlayerTurn>
+		<validOnOpponentTurn>true</validOnOpponentTurn>
+		<turnPhase>MOVE</turnPhase>
+	</Power>
+	
+	<Power ID="4">
+		<powerID>4</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>BUILD</turnPhase>
+	</Power>	
+	
+	<Power ID="5">
+		<powerID>5</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>BUILD</turnPhase>
+	</Power>
+
+	<Power ID="6">
+		<powerID>6</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>BUILD</turnPhase>
+	</Power>
+	
+	<Power ID="8">
+		<powerID>8</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>MOVE</turnPhase>
+	</Power>
+	
+	<Power ID="9">
+		<powerID>9</powerID>
+		<isActive>false</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>WINCONDITION</turnPhase>
+	</Power>
+	
+	<Power ID="10">
+		<powerID>10</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>MOVE</turnPhase>
+	</Power>
+
+	<Power ID="12">
+		<powerID>12</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>END</turnPhase>
+	</Power>
+
+	<Power ID="16">
+		<powerID>16</powerID>
+		<isActive>false</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>true</validOnOpponentTurn>
+		<turnPhase>WINCONDITION</turnPhase>
+	</Power>
+	
+	<Power ID="20">
+		<powerID>20</powerID>
+		<isActive>false</isActive>
+		<usableOnPlayerTurn>false</usableOnPlayerTurn>
+		<validOnOpponentTurn>true</validOnOpponentTurn>
+		<turnPhase>MOVE</turnPhase>
+	</Power>
+	
+	<Power ID="21">
+		<powerID>21</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>BUILD</turnPhase>
+	</Power>
+	
+	<Power ID="30">
+		<powerID>30</powerID>
+		<isActive>true</isActive>
+		<usableOnPlayerTurn>true</usableOnPlayerTurn>
+		<validOnOpponentTurn>false</validOnOpponentTurn>
+		<turnPhase>BUILD</turnPhase>
+	</Power>
+</God>
+
