@@ -10,10 +10,26 @@ public class Power {
      */
 
     private final int powerID;
-    private Boolean isActive;
-    private Boolean usableOnPlayerTurn;
-    private Boolean validOnOpponentTurn;
-    private TurnPhase turnPhase;
+    private final Boolean isActive;
+    private final Boolean usableOnPlayerTurn;
+    private final Boolean validOnOpponentTurn;
+    private final TurnPhase turnPhase;
+
+
+    public static final int WORKER_POSITION_EXCHANGE_POWER = 1;
+    public static final int DOUBLE_MOVE_POWER = 2;
+    public static final int OPPONENTS_NOT_MOVE_UP_POWER = 3;
+    public static final int BUILD_DOME_EVERYWHERE_POWER = 4;
+    public static final int DIFFERENT_SPACE_DOUBLE_BUILD_POWER = 5;
+    public static final int SAME_SPACE_DOUBLE_BUILD_POWER = 6;
+    public static final int PUSH_WORKER_POWER = 8;
+    public static final int TWO_BLOCK_FALL_VICTORY_POWER = 9;
+    public static final int NOT_MOVE_UP_DOUBLE_BUILD_POWER = 10;//Prometheus Power
+    public static final int BLOCK_REMOVE_POWER = 12;
+    public static final int FIVE_TOWER_VICTORY_POWER = 16;
+    public static final int PERIMETER_VICTORY_DENY_POWER = 20;
+    public static final int NON_PERIMETER_DOUBLE_BUILD = 21;
+    public static final int WORKER_POSITION_BUILD = 30;
 
 
     /**

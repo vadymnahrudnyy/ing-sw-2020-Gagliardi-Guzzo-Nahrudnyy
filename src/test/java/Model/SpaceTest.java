@@ -20,7 +20,7 @@ public class SpaceTest {
         testCoordinateX = 5;
         testCoordinateY = 3;
         testTableDimension = 4;
-        testedSpace = new Space(testCoordinateX,testCoordinateY,testTableDimension);
+        testedSpace = new Space(testCoordinateX,testCoordinateY);
         Worker testWorker = new Worker(12,"TestOwner", 'f',testedSpace);
     }
 
@@ -142,16 +142,16 @@ public class SpaceTest {
     }
     @Test
     public void buildPerimeterSpace(){
-        perimetralSpace = new Space(1,2,4);
+        perimetralSpace = new Space(1,2);
         assertTrue(perimetralSpace.isPerimeter());
         System.out.println(1);
-        perimetralSpace = new Space(3,1,4);
+        perimetralSpace = new Space(3,1);
         assertTrue(perimetralSpace.isPerimeter());
-        perimetralSpace = new Space(5,2,4);
+        perimetralSpace = new Space(5,2);
         assertTrue(perimetralSpace.isPerimeter());
-        perimetralSpace = new Space(3,5,4);
+        perimetralSpace = new Space(3,5);
         assertTrue(perimetralSpace.isPerimeter());
-        perimetralSpace = new Space(3,3,4);
+        perimetralSpace = new Space(3,3);
         assertFalse(perimetralSpace.isPerimeter());
     }
 }

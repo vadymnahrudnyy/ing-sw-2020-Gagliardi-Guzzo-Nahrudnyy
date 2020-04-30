@@ -1,5 +1,8 @@
 package Server;
 
+import Messages.UsernameTakenError;
+
+import java.io.IOException;
 import java.util.ArrayList;
 /**
  * Class Lobby implements a simple lobby for the server.
@@ -148,9 +151,32 @@ public class Lobby {
     /**
      * Method checkReady verifies if the lobbies are ready to start the game.
      */
-    public synchronized void checkReady(){
+    private synchronized void checkReady(){
         if(getTwoPlayersLobbySlotsOccupied()==2) setTwoPlayersLobbyReady(true);
         if (getThreePlayersLobbySlotsOccupied()==3) setThreePlayersLobbyReady(true);
     }
 
+    /**
+     * Check the username of the player and insert it in the lobby.In case the username is already present it sends to the player an error.
+     * @param desiredNumPlayers Number of players in the game wanted by the player.
+     * @param client VirtualView of the player.
+     * @param username username of the player.
+     */
+    public synchronized void addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username){
+        if (desiredNumPlayers == 2){
+            if (!(getTwoPlayersLobby().contains(username))) {
+                addPlayerToTwoPlayersLobby(username,client);
+            }
+        }
+        else {
+            if (!(getThreePlayersLobby().contains(username))) {
+                addPlayerToThreePlayersLobby(username,client);
+            }
+        }
+        try{
+            client.sendMessage(new UsernameTakenError());
+        } catch (IOException e){
+            System.out.println("Username Taken Notification failed");
+        }
+    }
 }

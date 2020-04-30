@@ -17,6 +17,8 @@ public class Message implements Serializable {
     public static final int MOVE_REQUEST = 107;
     public static final int CHOSE_GOD_REQUEST = 108;
     public static final int BUILD_REQUEST = 109;
+    public static final int USE_POWER_REQUEST = 110;
+
     public static final int USERNAME_RESPONSE = 201;
     public static final int NUM_PLAYERS_RESPONSE = 202;
     public static final int GODS_LIST_RESPONSE = 203;
@@ -24,13 +26,18 @@ public class Message implements Serializable {
     public static final int WORKER_POSITION_RESPONSE = 205;
     public static final int SELECT_WORKER_RESPONSE = 206;
     public static final int MOVE_RESPONSE = 207;
-    public static final int BUILD_RESPONSE = 209;
     public static final int CHOSE_GOD_RESPONSE = 208;
+    public static final int BUILD_RESPONSE = 209;
+    public static final int USE_POWER_RESPONSE = 210;
+
     public static final int LOBBY_STATUS_NOTIFICATION = 301;
     public static final int GAME_START_NOTIFICATION = 302;
     public static final int GAME_STATUS_NOTIFICATION = 303;
     public static final int WINNER_NOTIFICATION = 304;
     public static final int LAST_GOD_NOTIFICATION = 305;
+
+    public static final int USERNAME_TAKEN_ERROR = 401;
+
     public static final int PING_MESSAGE = 501;
     public static final int DISCONNECTION_MESSAGE = 502;
 

@@ -37,7 +37,6 @@ public class Server {
 
 
     public void startGame (){
-        serverLobby.checkReady();
         /*if(serverLobby.getThreePlayersLobbyReady()| serverLobby.getTwoPlayersLobbyReady())
             controller= new GameController;
 */

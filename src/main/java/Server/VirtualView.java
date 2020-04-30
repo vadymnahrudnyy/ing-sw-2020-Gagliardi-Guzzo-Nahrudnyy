@@ -14,13 +14,14 @@ import java.net.*;
  */
 
 public class VirtualView implements Runnable {
-    private Socket client;
+    private final Socket client;
     private int numPlayers;
     private String username;
     private Lobby serverLobby;
     private boolean isConnected;
-    private ObjectInputStream input;
-    private ObjectOutputStream output;
+    private boolean pingReceived;
+    private final ObjectInputStream input;
+    private final ObjectOutputStream output;
     private QueueOfEvents incomingMessages= new QueueOfEvents();
     //private GameController controller;
 
@@ -33,7 +34,7 @@ public class VirtualView implements Runnable {
             Ping connectionChecker = new Ping(this);
             Thread pingThread = new Thread(connectionChecker);
             pingThread.start();
-
+//
             do{
                 message = (Message) input.readObject();
             }while (message.getMessageID() != 201);
@@ -43,46 +44,30 @@ public class VirtualView implements Runnable {
                 message = (Message) input.readObject();
             }while (message.getMessageID() != 202);
             numPlayers = ((NumPlayersResponse)message).getNumPlayers();
-            insertInLobby ();
+
+//
             while (isConnected) receiveMessage();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
     }
 
-
-
-    /**
-     * This method insert the new client connected in to the lobby categorized by the number of players it wants to play with.
-     */
-    private void insertInLobby() {
-        if(numPlayers==2 && checkUsername(username)) serverLobby.addPlayerToTwoPlayersLobby(username,this);
-        else if (numPlayers==3 && checkUsername(username) ) serverLobby.addPlayerToThreePlayersLobby(username,this);
-
-        //Errore nel caso lo username già è presente
-        serverLobby.checkReady();
-    }
-
-
     /**
      * This is the constructor of VirtualView class.
      * @param client specifies the client connected to the server.
      */
     public VirtualView(Socket client,Lobby lobby) throws IOException {
-        {
-            this.client = client;
-            this.output = new ObjectOutputStream(client.getOutputStream());
-            this.input = new ObjectInputStream(client.getInputStream());
-            serverLobby = lobby;
-
-        }
+        this.client = client;
+        this.output = new ObjectOutputStream(client.getOutputStream());
+        this.input = new ObjectInputStream(client.getInputStream());
+        serverLobby = lobby;
         this.isConnected = true;
     }
 
 
 
     /**
-     * This methods receives messages from client, adds them into the queue and notify the cotroller of the update.
+     * This methods receives messages from client, adds them into the queue and notify the controller of the update.
      *
      * @throws IOException            if there are exceptions that cannot be handled.
      * @throws ClassNotFoundException if the message does not belong to one of the expected types.
@@ -90,16 +75,13 @@ public class VirtualView implements Runnable {
     private void receiveMessage() throws IOException, ClassNotFoundException {
         try {
             Message message= (Message) input.readObject();
-
-            incomingMessages.enqueueEvent(message);
+            if (message.getMessageID() == Message.PING_MESSAGE) pingReceived = true;
+            else incomingMessages.enqueueEvent(message);
         }
         catch (ClassNotFoundException | IOException e) {
-
-        e.printStackTrace();
-
+            e.printStackTrace();
         }
     }
-
 
     /**
      * This method allows the server to send a message.
@@ -107,7 +89,9 @@ public class VirtualView implements Runnable {
      * @param message indicates the output message from server.
      */
     public synchronized void sendMessage(Message message) throws IOException {
-        output.writeObject(message);
+        synchronized (output){
+            output.writeObject(message);
+        }
     }
 
     /**
@@ -146,15 +130,6 @@ public class VirtualView implements Runnable {
 
 
     /**
-     * This method checks that there is no other client that have the same username choose by the new client connected
-     * @param username is referred to the new client
-     * @return true if there is no other username like this, false if there is already a client connected that had choose that username
-     */
-    public boolean checkUsername(String username) {
-        return ((serverLobby.getTwoPlayersLobby().contains(username))||(serverLobby.getThreePlayersLobby().contains(username)));
-    }
-
-    /**
      * Getter of the queue of the incoming messages.
      * @return the queue of the incoming messages.
      */
@@ -167,10 +142,12 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * Inner class Ping implements the separate thread for each virtual view. It sends a ping message to the client
+     * Inner class Ping implements the separate thread for each virtual view. It sends a ping message to the client and waits at least 10 seconds.
+     * After the timeout the thread checks if ping was received, if not it enqueues a disconnection message which will cause the end of the game.
      */
     private static class Ping implements Runnable {
         private final VirtualView client;
+        private static final int CONNECTION_TIMEOUT = 10000;//10 seconds
 
         public Ping(VirtualView userVirtualView){
             client = userVirtualView;
@@ -179,12 +156,15 @@ public class VirtualView implements Runnable {
         public void run() {
             do{
                 try {
+                    client.pingReceived = false;
                     client.sendMessage(new PingMessage());
-                } catch (IOException e) {
+                    wait(CONNECTION_TIMEOUT);
+                    if (!client.pingReceived) client.incomingMessages.enqueueEvent(new Disconnection());
+                } catch (IOException | InterruptedException e) {
                     client.incomingMessages.enqueueEvent(new Disconnection());
                     client.isConnected = false;
                 }
-            } while (client.isConnected);
+            } while (client.pingReceived);
 
         }
     }

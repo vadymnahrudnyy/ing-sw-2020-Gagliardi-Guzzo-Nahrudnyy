@@ -9,7 +9,7 @@ import java.io.Serializable;
 
 public class IslandBoard implements Serializable {
     private static final long serialVersionUID = 50002L;
-    private static final int TABLE_DIMENSION = 4; //Indicates the dimension of the game board, assumed to be a square. Count starting from 0
+    public static final int TABLE_DIMENSION = 5; //Indicates the dimension of the game board, assumed to be a square. Count starting from 0
     private int numberCompleteTowers;
     private Space[][] matrix;
 
@@ -19,11 +19,11 @@ public class IslandBoard implements Serializable {
      */
     public IslandBoard() {
         this.numberCompleteTowers = 0;
-        this.matrix = new Space[TABLE_DIMENSION+1][TABLE_DIMENSION +1];
+        this.matrix = new Space[TABLE_DIMENSION][TABLE_DIMENSION];
         int coordinateX,coordinateY;
-        for (coordinateX = 0;coordinateX<=TABLE_DIMENSION;++coordinateX){
-            for (coordinateY = 0; coordinateY <= TABLE_DIMENSION; ++coordinateY){
-                matrix [coordinateX][coordinateY] = new Space(coordinateX+1,coordinateY+1,TABLE_DIMENSION);
+        for (coordinateX = 0;coordinateX < TABLE_DIMENSION;++coordinateX){
+            for (coordinateY = 0; coordinateY < TABLE_DIMENSION; ++coordinateY){
+                matrix [coordinateX][coordinateY] = new Space(coordinateX,coordinateY);
             }
         }
     }
@@ -47,7 +47,7 @@ public class IslandBoard implements Serializable {
      * @return the desired Space.
      */
     public Space getSpace(int coordinateX, int coordinateY) {
-        return matrix[coordinateX][coordinateY];
+        return matrix[coordinateX-1][coordinateY-1];
     }
 
     public void setNumberCompleteTowers(int numberCompleteTowers) {

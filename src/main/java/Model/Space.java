@@ -23,15 +23,14 @@ public class Space implements Serializable {
     /**
      * @param coordinateX indicates the column of the table where the new Space will be located
      * @param coordinateY indicates the line of the table where the new Space will be located
-     * @param TableDimension indicates the dimension (counting from 0) of the Game Table, supposed to be a square
      */
-    public Space(int coordinateX, int coordinateY,int TableDimension) {
+    public Space(int coordinateX, int coordinateY) {
         this.height = 0;
         this.hasDome = false;
         this.coordinateX = coordinateX;
         this.coordinateY = coordinateY;
         this.workerInPlace = null; //Workers will be placed by players during the Setup.
-        this.isPerimeter = (coordinateX == 1) || (coordinateY == 1) || (coordinateX == TableDimension + 1) || (coordinateY == TableDimension + 1);
+        this.isPerimeter = (coordinateX == 1)||(coordinateY == 1)||(coordinateX == IslandBoard.TABLE_DIMENSION)||(coordinateY == IslandBoard.TABLE_DIMENSION);
     }
 
     public void setHeight(int height) {
