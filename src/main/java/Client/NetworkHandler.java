@@ -19,6 +19,9 @@ public class NetworkHandler implements Runnable {
     private final String serverAddress;
     private final int serverPort;
     private QueueOfEvents incomingMessages= new QueueOfEvents();
+    private boolean isPing=false;
+
+
     public NetworkHandler(String serverAddress, int serverPort) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
@@ -37,7 +40,8 @@ public class NetworkHandler implements Runnable {
 
     public QueueOfEvents receive() throws IOException {
         Message message=new Message();
-        incomingMessages.enqueueEvent(message);
+        isPing(message);
+        if(!isPing) incomingMessages.enqueueEvent(message);
         return incomingMessages;
     }
 
@@ -112,4 +116,26 @@ public class NetworkHandler implements Runnable {
         return serverPort;
     }
 
+
+    /**
+     * Setter parameter ping
+     * @param ping value of the parameter
+     */
+    public void setPing(boolean ping) {
+        isPing = ping;
+    }
+
+    /**
+     * Method that manages the ping message
+     * @param message value of the message
+     * @return true if the message was a ping
+     * @throws IOException if there are connection problems.
+     */
+    public boolean isPing(Message message) throws IOException {
+        if (message.getMessageID()==501){
+            setPing(true);
+            sendMessage(new PingMessage());
+        }
+        return true;
+    }
 }
