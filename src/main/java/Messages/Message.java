@@ -18,6 +18,7 @@ public class Message implements Serializable {
     public static final int CHOSE_GOD_REQUEST = 108;
     public static final int BUILD_REQUEST = 109;
     public static final int USE_POWER_REQUEST = 110;
+    public static final int OTHER_WORKER_MOVE_REQUEST = 111;
 
     public static final int USERNAME_RESPONSE = 201;
     public static final int NUM_PLAYERS_RESPONSE = 202;
@@ -37,6 +38,8 @@ public class Message implements Serializable {
     public static final int LAST_GOD_NOTIFICATION = 305;
 
     public static final int USERNAME_TAKEN_ERROR = 401;
+    public static final int NO_POSSIBLE_MOVE_ERROR = 402;
+    public static final int INVALID_MOVE_ERROR = 403;
 
     public static final int PING_MESSAGE = 501;
     public static final int DISCONNECTION_MESSAGE = 502;

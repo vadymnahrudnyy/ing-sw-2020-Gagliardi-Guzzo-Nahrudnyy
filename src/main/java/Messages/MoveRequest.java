@@ -8,13 +8,17 @@ package Messages;
 public class MoveRequest extends Message {
     private static final long serialVersionUID = 100015L;
     private final boolean[][] allowedMoves;
+    private final boolean canChangeWorker;
 
-    public MoveRequest(boolean[][] movesMatrix){
+    public MoveRequest(boolean[][] movesMatrix,boolean workerChangeAllowed){
         messageID = MOVE_REQUEST;
         allowedMoves = movesMatrix;
+        canChangeWorker = workerChangeAllowed;
     }
 
     public boolean[][] getAllowedMoves() {
         return allowedMoves;
     }
+
+    public boolean chaChangeWorker(){return canChangeWorker;}
 }
