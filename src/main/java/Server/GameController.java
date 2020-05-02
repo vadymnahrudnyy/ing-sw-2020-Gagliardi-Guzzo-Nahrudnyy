@@ -20,6 +20,7 @@ public class GameController implements Runnable {
     private boolean receivedValidMessage;
     private boolean MoveAllowed,BuildAllowed;
     private static final int RESPONSE_MESSAGE_WAIT_TIMEOUT = 2000;
+    private Worker movedWorker;
 
     public GameController(ArrayList<God> gods, ArrayList<Power> powers, ArrayList<VirtualView> virtualViews, int numPlayers) {
         godList = gods;
@@ -156,6 +157,7 @@ public class GameController implements Runnable {
                                                 e.printStackTrace(); }
                                         }
                                     } while(!moveMade);
+                                    movedWorker = selectedWorker;
                                 }
                             } catch (IOException e) {
                                 e.printStackTrace(); }
@@ -204,14 +206,14 @@ public class GameController implements Runnable {
         if (!PrometheusFlag){
             Move(currentPlayer,currentClient,currentBoard,currentGodPower);
         }
-
-
         //BUILD PHASE
         currentGame.setCurrentPhase(TurnPhase.BUILD);
-        boolean hasBuilt = false;
-        do {
+        if (BuildAllowed) Build(currentPlayer,currentClient,currentBoard,currentGodPower,movedWorker);
+        if ((opponentHasPower(Power.FIVE_TOWER_VICTORY_POWER)||currentGodPower.getPowerID()==Power.FIVE_TOWER_VICTORY_POWER)&&(currentBoard.getNumberCompleteTowers()>=5)){
+            for (Player player:currentGame.getPlayers())
+                if (player.getGod().getSinglePower(0)==Power.FIVE_TOWER_VICTORY_POWER) victory(player.getUsername());
+        }
 
-        }while(!hasBuilt);
     }
 
     private void Build(Player player,VirtualView client,IslandBoard gameBoard,Power actualPower,Worker selectedWorker){
@@ -221,7 +223,97 @@ public class GameController implements Runnable {
             client.sendMessage(new BuildRequest(allowedBuild));
         } catch (IOException e) {
             e.printStackTrace(); }
-
+        int[] validMessages = {Message.BUILD_RESPONSE};
+        waitValidMessage(client,validMessages);
+        receivedMessage = (BuildResponse) receivedMessage;
+        Space toBuildSpace = gameBoard.getSpace(((BuildResponse) receivedMessage).getBuildCoordinateX(),((BuildResponse) receivedMessage).getBuildCoordinateY());
+        if (actualPower.getPowerID() == Power.BUILD_DOME_EVERYWHERE_POWER&&toBuildSpace.getHeight()!=3){
+            try{
+                client.sendMessage(new UsePowerRequest());
+            } catch (IOException e) {
+                e.printStackTrace(); }
+            validMessages = new int[]{Message.USE_POWER_RESPONSE};
+            waitValidMessage(client,validMessages);
+            if(((UsePowerResponse) receivedMessage).wantUsePower()){
+                toBuildSpace.setHasDome(true);
+                toBuildSpace.incrementHeight();
+            }
+        }
+        else {
+            toBuildSpace.incrementHeight();
+            if (toBuildSpace.getHeight() == 4) {
+                toBuildSpace.setHasDome(true);
+                gameBoard.incrementNumberCompleteTowers();
+            }
+        }
+        if (actualPower.getTurnPhase()==TurnPhase.BUILD && actualPower.getActive()&&actualPower.getPowerID()!=Power.BUILD_DOME_EVERYWHERE_POWER){
+            switch (actualPower.getPowerID()){
+                case Power.DIFFERENT_SPACE_DOUBLE_BUILD_POWER:
+                    allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());
+                    allowedBuild[toBuildSpace.getCoordinateX()-1][toBuildSpace.getCoordinateY()-1] = false;
+                    if (workerCanMakeMove(allowedBuild)){
+                        try{
+                            client.sendMessage(new UsePowerRequest());
+                            waitValidMessage(client,new int[]{Message.USE_POWER_RESPONSE});
+                            if (((UsePowerResponse)receivedMessage).wantUsePower()){
+                                client.sendMessage(new BuildRequest(allowedBuild));
+                                waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});
+                                receivedMessage=(BuildResponse)receivedMessage;
+                                toBuildSpace = gameBoard.getSpace(((BuildResponse) receivedMessage).getBuildCoordinateX(),((BuildResponse) receivedMessage).getBuildCoordinateY());
+                                toBuildSpace.incrementHeight();
+                                if(toBuildSpace.getHeight()==4) {
+                                    toBuildSpace.setHasDome(true);
+                                    gameBoard.incrementNumberCompleteTowers();
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace(); }
+                    }
+                    break;
+                case Power.SAME_SPACE_DOUBLE_BUILD_POWER:
+                    if(toBuildSpace.getHeight()<3){
+                        try {
+                            client.sendMessage(new UsePowerRequest());
+                            waitValidMessage(client,new int[]{Message.USE_POWER_RESPONSE});
+                            if(((UsePowerResponse) receivedMessage).wantUsePower()){
+                                toBuildSpace.incrementHeight();
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace(); }
+                    }
+                    break;
+                case Power.NON_PERIMETER_DOUBLE_BUILD:
+                    allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());
+                    int tempX = 0;
+                    int tempY = 0;
+                    for (tempY = 0; tempY < IslandBoard.TABLE_DIMENSION; ++tempY) allowedBuild[tempX][tempY] = false;
+                    tempX = IslandBoard.TABLE_DIMENSION - 1;
+                    for (tempY = 0; tempY < IslandBoard.TABLE_DIMENSION; ++tempY) allowedBuild[tempX][tempY] = false;
+                    tempY = 0;
+                    for (tempX = 0; tempX < IslandBoard.TABLE_DIMENSION; ++tempX) allowedBuild[tempX][tempY] = false;
+                    tempY = IslandBoard.TABLE_DIMENSION - 1;
+                    for (tempX = 0; tempX < IslandBoard.TABLE_DIMENSION; ++tempX) allowedBuild[tempX][tempY] = false;
+                    if (workerCanMakeMove(allowedBuild)){
+                        try {
+                            client.sendMessage(new UsePowerRequest());
+                            waitValidMessage(client,new int[]{Message.USE_POWER_RESPONSE});
+                            if(((UsePowerResponse)receivedMessage).wantUsePower()){
+                                client.sendMessage(new BuildRequest(allowedBuild));
+                                waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});
+                                toBuildSpace = gameBoard.getSpace(((BuildResponse) receivedMessage).getBuildCoordinateX(),((BuildResponse) receivedMessage).getBuildCoordinateY());
+                                toBuildSpace.incrementHeight();
+                                if(toBuildSpace.getHeight()==4) {
+                                    toBuildSpace.setHasDome(true);
+                                    gameBoard.incrementNumberCompleteTowers();
+                                }
+                            }
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+            }
+        }
     }
 
 

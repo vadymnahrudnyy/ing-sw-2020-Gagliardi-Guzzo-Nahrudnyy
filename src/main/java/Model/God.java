@@ -16,7 +16,7 @@ public class God implements Serializable {
     private final String description;
     private final int[] powers;
     private final int numPowers;
-
+    
     /**
      * @param name is the God's name
      * @param numPowers states how many powers can be used by the God considered, some have only one power but others have two powers
