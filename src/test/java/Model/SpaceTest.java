@@ -21,7 +21,7 @@ public class SpaceTest {
         testCoordinateY = 3;
         testTableDimension = 4;
         testedSpace = new Space(testCoordinateX,testCoordinateY);
-        Worker testWorker = new Worker(12,"TestOwner", 'f',testedSpace);
+        Worker testWorker = new Worker("TestOwner",'f',testedSpace ,1);
     }
 
     @Test
