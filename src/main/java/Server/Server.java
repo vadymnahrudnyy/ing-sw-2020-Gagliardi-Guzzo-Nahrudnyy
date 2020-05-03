@@ -8,24 +8,24 @@ import Model.*;
 
 /**
  * This class creates and manages the server
- * @version 1.1
+ * @version 1.3
  */
 
 public class Server {
 
-    private static final ArrayList<God> godsList = new ArrayList<God>();
-    private static final ArrayList<Power> powerList = new ArrayList<Power>();
+    private static final ArrayList<God> godsList = new ArrayList<>();
+    private static final ArrayList<Power> powerList = new ArrayList<>();
     private static final int MAX_PLAYERS = 100;
     private static final int SOCKET_PORT = 50000;
     private static final Lobby serverLobby = new Lobby ();
     private static ServerSocket server;
-    private ArrayList<VirtualView> clients = new ArrayList<VirtualView>();
+    private static boolean Running = true;
 
 
-    public void main () {
+    public static void main() {
         try {
             server = new ServerSocket(SOCKET_PORT);
-            ConnectionAcceptance connectionAcceptor = new ConnectionAcceptance(this);
+            ConnectionAcceptance connectionAcceptor = new ConnectionAcceptance();
             Thread ConnectionsAcceptThread = new Thread(connectionAcceptor);
             ConnectionsAcceptThread.start();
         }
@@ -34,17 +34,21 @@ public class Server {
         }
     }
 
+    public static Lobby getServerLobby(){return serverLobby;}
+
+    public static ServerSocket getServerSocket(){return server;}
 
 
-    public void startGame (){
-        /*if(serverLobby.getThreePlayersLobbyReady()| serverLobby.getTwoPlayersLobbyReady())
-            controller= new GameController;
-*/
+    public static ArrayList<God> getGodsList() {
+        return godsList;
     }
 
-    public Lobby getServerLobby(){return serverLobby;}
-
-    public ServerSocket getServerSocket(){return server;}
+    public static ArrayList<Power> getPowerList() {
+        return powerList;
+    }
+    public static boolean isRunning() {
+        return Running;
+    }
 
 
 }

@@ -12,6 +12,7 @@ import java.util.ArrayList;
  */
 
 public class Lobby {
+    private Server server;
     private boolean twoPlayersLobbyReady;
     private boolean threePlayersLobbyReady;
     private final ArrayList<String> twoPlayersLobby;
@@ -25,8 +26,8 @@ public class Lobby {
     public Lobby() {
         twoPlayersLobbyReady = false;
         threePlayersLobbyReady = false;
-        twoPlayersLobby = new ArrayList<String>();
-        threePlayersLobby = new ArrayList<String>();
+        twoPlayersLobby = new ArrayList<>();
+        threePlayersLobby = new ArrayList<>();
         twoPlayersLobbyVirtualViews = new ArrayList<VirtualView>();
         threePlayersLobbyVirtualViews = new ArrayList<VirtualView>();
     }
@@ -163,18 +164,32 @@ public class Lobby {
      * @param username username of the player.
      */
     public synchronized void addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username){
-        if (desiredNumPlayers == 2){
-            if (!(getTwoPlayersLobby().contains(username))) {
-                addPlayerToTwoPlayersLobby(username,client);
-            }
-        }
-        else {
-            if (!(getThreePlayersLobby().contains(username))) {
-                addPlayerToThreePlayersLobby(username,client);
-            }
-        }
         try{
-            client.sendMessage(new UsernameTakenError());
+            if (desiredNumPlayers == 2){
+                if (!(getTwoPlayersLobby().contains(username))) addPlayerToTwoPlayersLobby(username,client);
+                else client.sendMessage(new UsernameTakenError());
+            }
+            else {
+                if (!(getThreePlayersLobby().contains(username))) addPlayerToThreePlayersLobby(username,client);
+                else client.sendMessage(new UsernameTakenError());
+                checkReady();
+                if (getTwoPlayersLobbyReady()||getThreePlayersLobbyReady()){
+                    GameController newGame;
+                    Thread newGameThread;
+                    if (getTwoPlayersLobbyReady()){
+                        newGame = new GameController(getTwoPlayersLobbyVirtualViews(),2);
+                        newGameThread = new Thread(newGame);
+                        newGameThread.start();
+                        resetTwoPlayersLobby();
+                    }
+                    if (getThreePlayersLobbyReady()) {
+                        newGame = new GameController(getThreePlayersLobbyVirtualViews(),3);
+                        newGameThread = new Thread(newGame);
+                        newGameThread.start();
+                        resetThreePlayersLobby();
+                    }
+                }
+            }
         } catch (IOException e){
             System.out.println("Username Taken Notification failed");
         }

@@ -10,9 +10,9 @@ public class ConnectionAcceptance implements Runnable {
     private Socket newClient;
     private VirtualView newVirtualView;
 
-    public ConnectionAcceptance(Server server){
-        serverLobby = server.getServerLobby();
-        serverSocket = server.getServerSocket();
+    public ConnectionAcceptance(){
+        serverLobby = Server.getServerLobby();
+        serverSocket = Server.getServerSocket();
         newClient = null;
         newVirtualView = null;
 
@@ -21,7 +21,7 @@ public class ConnectionAcceptance implements Runnable {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (Server.isRunning()) {
                 newClient = serverSocket.accept();
                 newVirtualView = new VirtualView(newClient, serverLobby);
             }

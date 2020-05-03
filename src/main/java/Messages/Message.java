@@ -19,6 +19,7 @@ public class Message implements Serializable {
     public static final int BUILD_REQUEST = 109;
     public static final int USE_POWER_REQUEST = 110;
     public static final int OTHER_WORKER_MOVE_REQUEST = 111;
+    public static final int BLOCK_REMOVAL_REQUEST = 112;
 
     public static final int USERNAME_RESPONSE = 201;
     public static final int NUM_PLAYERS_RESPONSE = 202;
@@ -30,6 +31,7 @@ public class Message implements Serializable {
     public static final int CHOSE_GOD_RESPONSE = 208;
     public static final int BUILD_RESPONSE = 209;
     public static final int USE_POWER_RESPONSE = 210;
+    public static final int BLOCK_REMOVAL_RESPONSE = 212;
 
     public static final int LOBBY_STATUS_NOTIFICATION = 301;
     public static final int GAME_START_NOTIFICATION = 302;

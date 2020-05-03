@@ -2,12 +2,15 @@ package Server;
 
 import Messages.*;
 import Model.*;
+import com.sun.security.sasl.gsskerb.JdkSASL;
 
 import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  * GameController class implement the Logic level of the game.
+ * @author Vadym Nahrudnyy
+ * @version 1.0
  */
 public class GameController implements Runnable {
     private final ArrayList<God> godList;
@@ -22,9 +25,9 @@ public class GameController implements Runnable {
     private static final int RESPONSE_MESSAGE_WAIT_TIMEOUT = 2000;
     private Worker movedWorker;
 
-    public GameController(ArrayList<God> gods, ArrayList<Power> powers, ArrayList<VirtualView> virtualViews, int numPlayers) {
-        godList = gods;
-        powerList = powers;
+    public GameController(ArrayList<VirtualView> virtualViews, int numPlayers) {
+        godList = Server.getGodsList();
+        powerList = Server.getPowerList();
         virtualViewsList = (VirtualView[]) virtualViews.toArray();
         Player[] playersArray = new Player[numPlayers];
         for (int i=0;i<numPlayers;++i) {playersArray[i] = new Player(virtualViewsList[i].getUsername(),i,null,null);}
@@ -38,6 +41,7 @@ public class GameController implements Runnable {
     }
     private void turnStart(Player player, VirtualView client, IslandBoard gameBoard,Power actualGodPower){
         currentGame.setCurrentPhase(TurnPhase.START);
+        MoveAllowed = BuildAllowed = true;
         player.getWorkers()[0].setMovedUp(false);
         player.getWorkers()[1].setMovedUp(false);
         if (actualGodPower.getPowerID() == Power.OPPONENTS_NOT_MOVE_UP_POWER) currentGame.setAthenaMovedUp(false);
@@ -46,15 +50,38 @@ public class GameController implements Runnable {
             try{
                 client.sendMessage(new UsePowerRequest());
                 waitValidMessage(client,validMessages);
+                if(((UsePowerResponse)receivedMessage).wantUsePower()){
+                    client.sendMessage(new SelectWorkerRequest());
+                    waitValidMessage(client,new int[Message.SELECT_WORKER_RESPONSE]);
+                    Worker selectedWorker = getWorkerByCoordinates(((SelectWorkerResponse)receivedMessage).getCoordinateX(),((SelectWorkerResponse)receivedMessage).getCoordinateY());
+                    boolean[][] allowedBuild = checkPossibleBuilds(selectedWorker.getWorkerPosition().getCoordinateX(),selectedWorker.getWorkerPosition().getCoordinateY());
+                    Space buildSpace;
+                    client.sendMessage(new BuildRequest(allowedBuild));
+                    waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});
+                    buildSpace = gameBoard.getSpace(((BuildResponse)receivedMessage).getBuildCoordinateX(),((BuildResponse)receivedMessage).getBuildCoordinateY());
+                    buildSpace.incrementHeight();
+                    if (buildSpace.getHeight()==4) {
+                        buildSpace.setHasDome(true);
+                        gameBoard.incrementNumberCompleteTowers();
+                    }
+                    boolean[][] allowedMoves = checkPossibleMoves(selectedWorker.getWorkerPosition().getCoordinateX(),selectedWorker.getWorkerPosition().getCoordinateY());
+                    for (int X = 0; X < IslandBoard.TABLE_DIMENSION;++X){
+                        for(int Y = 0; Y < IslandBoard.TABLE_DIMENSION; ++Y){
+                            if (gameBoard.getSpace(X+1,Y+1).getHeight()>selectedWorker.getWorkerPosition().getHeight()) allowedMoves[X][Y] = false;}}
+                    if (workerCanMakeMove(allowedMoves)){
+                        client.sendMessage(new MoveRequest(allowedMoves,false));
+                        waitValidMessage(client,new int[]{Message.MOVE_RESPONSE});
+                        Space movedToSpace;
+                        selectedWorker.changePosition(gameBoard.getSpace(((MoveResponse)receivedMessage).getDestCoordinateX(),((MoveResponse)receivedMessage).getDestCoordinateY()));
+                        MoveAllowed = false;
+                    }
+                }
             } catch (IOException e) {
                 e.printStackTrace();
             }
             //tratto la prima parte di turno di Prometeo
         }
     }
-
-
-
 
     private void Move(Player player, VirtualView client,IslandBoard gameBoard,Power actualGodPower){
         int[] validMessages = {Message.SELECT_WORKER_RESPONSE,Message.MOVE_RESPONSE};
@@ -92,7 +119,7 @@ public class GameController implements Runnable {
                                     getVirtualViewByUsername(winner).sendMessage(new WinnerNotification(winner));
                                 } catch (IOException e){
                                     System.out.println("winner Notification failed");
-                                };
+                                }
                             } else {
                                 BuildAllowed = false;
                                 moveMade = true;
@@ -200,10 +227,9 @@ public class GameController implements Runnable {
         boolean PrometheusFlag = false;
         //SETUP PHASE
         turnStart(currentPlayer,currentClient,currentBoard,currentGodPower);
-
         //MOVE PHASE
         currentGame.nextTurnPhase();
-        if (!PrometheusFlag){
+        if (MoveAllowed){
             Move(currentPlayer,currentClient,currentBoard,currentGodPower);
         }
         //BUILD PHASE
@@ -212,6 +238,25 @@ public class GameController implements Runnable {
         if ((opponentHasPower(Power.FIVE_TOWER_VICTORY_POWER)||currentGodPower.getPowerID()==Power.FIVE_TOWER_VICTORY_POWER)&&(currentBoard.getNumberCompleteTowers()>=5)){
             for (Player player:currentGame.getPlayers())
                 if (player.getGod().getSinglePower(0)==Power.FIVE_TOWER_VICTORY_POWER) victory(player.getUsername());
+        }
+        //End of turn
+        currentGame.nextTurnPhase();
+        if (currentGodPower.getPowerID() == Power.BLOCK_REMOVE_POWER){
+            try{
+                Worker otherWorker = getPlayersOtherWorker(currentPlayer,movedWorker);
+                boolean [][] allowedRemovals = checkPossibleBuilds(otherWorker.getWorkerPosition().getCoordinateX(),otherWorker.getWorkerPosition().getCoordinateY());
+                if (workerCanMakeMove(allowedRemovals)) {
+                    currentClient.sendMessage(new UsePowerRequest());
+                    waitValidMessage(currentClient,new int[]{Message.USE_POWER_RESPONSE});
+                    if (((UsePowerResponse)receivedMessage).wantUsePower()){
+                        currentClient.sendMessage(new BlockRemovalRequest(allowedRemovals));
+                        waitValidMessage(currentClient,new int[]{Message.BLOCK_REMOVAL_RESPONSE});
+                        currentBoard.getSpace(((BlockRemovalResponse) receivedMessage).getRemoveCoordinateX(),((BlockRemovalResponse) receivedMessage).getRemoveCoordinateY()).decrementHeight();
+                    }
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
 
     }
@@ -258,7 +303,6 @@ public class GameController implements Runnable {
                             if (((UsePowerResponse)receivedMessage).wantUsePower()){
                                 client.sendMessage(new BuildRequest(allowedBuild));
                                 waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});
-                                receivedMessage=(BuildResponse)receivedMessage;
                                 toBuildSpace = gameBoard.getSpace(((BuildResponse) receivedMessage).getBuildCoordinateX(),((BuildResponse) receivedMessage).getBuildCoordinateY());
                                 toBuildSpace.incrementHeight();
                                 if(toBuildSpace.getHeight()==4) {
@@ -285,7 +329,7 @@ public class GameController implements Runnable {
                 case Power.NON_PERIMETER_DOUBLE_BUILD:
                     allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());
                     int tempX = 0;
-                    int tempY = 0;
+                    int tempY;
                     for (tempY = 0; tempY < IslandBoard.TABLE_DIMENSION; ++tempY) allowedBuild[tempX][tempY] = false;
                     tempX = IslandBoard.TABLE_DIMENSION - 1;
                     for (tempY = 0; tempY < IslandBoard.TABLE_DIMENSION; ++tempY) allowedBuild[tempX][tempY] = false;
@@ -317,14 +361,6 @@ public class GameController implements Runnable {
     }
 
 
-
-    private boolean playerHasPowerUsable(Player player,TurnPhase phase){
-        Power playersGodPower = getPowerByID(player.getGod().getSinglePower(0));
-        if (playersGodPower.getUsableOnPlayerTurn()&&(playersGodPower.getTurnPhase()==phase)) return true;
-        else return false;
-    }
-
-
     private void setupPhase() {
         sendStartGameMessage();
         chooseGods();
@@ -346,10 +382,7 @@ public class GameController implements Runnable {
     private boolean verifyValidPosition(boolean[][] allowedPositions,WorkerPositionResponse response){
         int coordinateX = response.getCoordinateX();
         int coordinateY = response.getCoordinateY();
-        if (allowedPositions[coordinateX - 1][coordinateY - 1]){
-            return true;
-        }
-        else return false;
+        return allowedPositions[coordinateX - 1][coordinateY - 1];
     }
 
 
@@ -464,7 +497,7 @@ public class GameController implements Runnable {
                                         allowedMoves[X][Y] = true;
                                         break;
                                     case Power.PUSH_WORKER_POWER:
-                                        int tempX = X, tempY = Y;
+                                        int tempX, tempY;
                                         tempX = X + (X - (workerCoordinateX - 1));
                                         tempY = Y + (Y - (workerCoordinateY - 1));
                                         if (tempX >= 0 && tempY >= 0) {
