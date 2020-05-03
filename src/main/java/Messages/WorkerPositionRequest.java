@@ -22,4 +22,6 @@ public class WorkerPositionRequest extends Message{
     public boolean[][] getAllowedPositions(){
         return allowedPositions;
     }
+
+    public int getCurrentWorker() { return currentWorker; }
 }

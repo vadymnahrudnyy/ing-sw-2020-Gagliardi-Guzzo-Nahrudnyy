@@ -8,15 +8,16 @@ import Model.*;
 
 public class CLI implements UI {
 
-    int i,j;
+    int i, j;
     Scanner input;
+    String circle= "\uD83D\uDD35";
 
     @Override
     public void gameInfo() {
         System.out.println("Benvenuto in Santorini!");
         System.out.println("Dovrai scegliere una carta divinità, la quale possiede un potere particolare, che potrai utilizzare nel gioco. Inoltre disporrai di 2 worker.");
         System.out.println("Durante il tuo turno potrai muoverti: il movimento può essere solo nelle caselle direttamente adiacenti alla tua posizione.");
-        System.out.println("Dopodiché potrai costruire, ci sono 4 tipo di blocchi: livello 1 VERDE, livello 2 ROSSO, livello 3 GIALLO e cupola BLU");
+        System.out.println("Dopodiché potrai costruire, ci sono 4 tipo di blocchi: livello 1, livello 2, livello 3 e cupola 4.");
     }
 
     @Override
@@ -35,14 +36,14 @@ public class CLI implements UI {
     }
 
     @Override
-    public void startNotification(){
+    public void startNotification() {
         System.out.println("Lobby piena: il gioco può cominciare, buona partita!");
     }
 
     @Override
     public void showGodList(ArrayList<God> gods, int numPlayers) {
         System.out.println("Scegli " + numPlayers + " carte tra quelle disponibili.");
-        for(int i=0; i<gods.size(); i++) {
+        for (int i = 0; i < gods.size(); i++) {
             System.out.println("Dio: " + gods.get(i).getName() + ", " + gods.get(i).getDescription());
         }
     }
@@ -50,21 +51,21 @@ public class CLI implements UI {
     @Override
     public void printAllPlayers(Player[] players) {
         System.out.println("Scegli tra questi giocatori quale dovrà iniziare: ");
-        for(int i=0; i<players.length; i++) {
+        for (int i = 0; i < players.length; i++) {
             System.out.print(players[i] + ", ");
         }
     }
 
-   @Override
+    @Override
     public void chooseGod(ArrayList<God> godList, ArrayList<God> unavailableList) {
         System.out.println("Questi sono tutti gli dei scelti per la partita: ");
-        for(int i=0; i<godList.size(); i++){
-            System.out.print( godList.get(i).getName() + ", ");
+        for (int i = 0; i < godList.size(); i++) {
+            System.out.print(godList.get(i).getName() + ", ");
         }
 
         System.out.println("Dei già scelti (non disponibili): ");
-        for(int i=0; i<unavailableList.size(); i++){
-            System.out.print( unavailableList.get(i).getName() + ", ");
+        for (int i = 0; i < unavailableList.size(); i++) {
+            System.out.print(unavailableList.get(i).getName() + ", ");
         }
 
         System.out.println("Devi sceglierne uno evitando quelli già scelti.");
@@ -73,84 +74,153 @@ public class CLI implements UI {
     @Override
     public void printLastGod(ArrayList<God> godList, God lastGod) {
         System.out.println("Questi sono tutti gli dei che hai scelto per la partita: ");
-        for(int i=0; i<godList.size(); i++){
-            System.out.print( godList.get(i).getName() + ", ");
+        for (int i = 0; i < godList.size(); i++) {
+            System.out.print(godList.get(i).getName() + ", ");
         }
         System.out.println("Ne è rimasto solo uno, devi scegliere questo: " + lastGod.getName());
     }
 
     @Override
-    public void askWorkerPosition(){
+    public void askWorkerPosition() {
         System.out.println("Scegli dove mettere il tuo worker: ");
+
     }
 
     @Override
     public void chooseWorker() {
+
         System.out.println("Scegli le coordinate del worker che desideri muovere: ");
     }
 
     @Override
     public boolean confirmChoice() {
-        System.out.println("Confermi di voler muovere il worker scelto? Rispondi Y o N. ");
-         input=new Scanner(System.in);
-         String choice=input.nextLine();
-         if("y".equals(choice)){
-             System.out.print("Inserisci le coordinate del worker che vuoi scegliere.");
-             return true;
-         }
-         else
-             return false;
+        System.out.println("Confermi di voler muovere il worker scelto? Rispondi y o n. ");
+        input = new Scanner(System.in);
+        String choice = input.nextLine();
+        if ("y".equals(choice)) {
+            System.out.print("Inserisci le coordinate del worker che vuoi scegliere.");
+            return true;
+        } else
+            return false;
     }
 
     @Override
     public void moveWorker() {
         System.out.println("Scegli in quale casella vuoi spostare il tuo worker indicando le coordinate numeriche x e y.");
-        //stampo board con un cerchio in quella posizione
     }
+
+
+    @Override
+    public void otherWorker() {
+        System.out.println("Il lavoratore scelto non poteva muoversi, seleziona una mossa per l'altro worker: ");
+    }
+
 
     @Override
     public void printPossibleAction(boolean[][] allowed) {
         System.out.println("Mosse possibili (in coordinate): ");
-        //stampo l'elenco delle mosse possibili
-        for(i=0; i<5; i++){
-            for(j=0;j<5;j++){
-                if(allowed[i][j]==true)
-                    System.out.println("(" + i+1 + "," + j+1 + "), ");
+        for (i = 0; i < 5; i++) {
+            for (j = 0; j < 5; j++) {
+                if (allowed[i][j] == true)
+                    System.out.println("(" + i + 1 + "," + j + 1 + "), ");
             }
         }
     }
 
     @Override
-    public void buildTower()
-    {
+    public void buildTower() {
         System.out.println("Scegli in quale casella vuoi costruire, indicando le coordinate numeriche x e y:");
     }
 
 
     @Override
-    public void askPowerUsage() {
-        System.out.println("Vuoi usare il potere del tuo dio in questo turno?");
-    } //si o no (booleano nella risposta)
+    public boolean askPowerUsage() {
+        System.out.println("Vuoi usare il potere del tuo dio? Rispondi y o n");
+        input = new Scanner(System.in);
+        String choice = input.nextLine();
+        return "y".equals(choice);
+    }
 
 
     @Override
-    public void printCurrentBoard(Game updatedGame) {
- //colore nel worker
-        System.out.println(" _____________________________");
-        for(i=0; i<5; i++){
-            for(j=0;j<5;j++) {
-                Worker checkedWorker;
-                if ((checkedWorker = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getWorkerInPlace())!=null){
-                   int workerColor= checkedWorker.getColor();
-                   //controllo livello
-                    int checkedHeight = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getHeight();
+    public void noPossibleMoves() {
+        System.out.println("Non hai più possibilità di muoverti! Mi dispiace, hai perso.");
+    }
 
+
+    @Override
+    public void chooseRemoval() {
+        System.out.println("Inserisci le coordinate del blocco che vuoi rimuovere: ");
+    }
+
+    @Override
+    public void invalidMove() {
+        System.out.println("Mossa non consentita!");
+    }
+
+    @Override
+    public void printCurrentBoard(Game updatedGame) {
+        System.out.println(" ______________________________");
+        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++)
+            for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++) {
+                Worker checkedWorker = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getWorkerInPlace();
+                int checkedHeight = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getHeight();
+
+                if (checkedWorker != null && checkedHeight != 0) {
+                    int workerColor = checkedWorker.getColor();
+                    if (workerColor == 1) {
+                        if (j == 4)
+                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "|");
+                        else
+                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
+                    } else if (workerColor == 2) {
+                        if (j == 4)
+                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET + "|");
+                        else
+                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET);
+                    } else if (workerColor == 3) {
+                        if (j == 4)
+                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_BLUE + circle + Color.RESET + "|");
+                        else
+                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_BLUE + circle + Color.RESET);
+                    }
                 }
 
+                if (checkedHeight != 0) {
+                    if (j == 4)
+                        System.out.print("|__" + checkedHeight + "__|");
+                    else
+                        System.out.print("|__" + checkedHeight + "__");
+                }
 
-                //stampa la board corrente
-                // round, fase
-            }} }
+                if (checkedWorker != null) {
+                    int workerColor = checkedWorker.getColor();
+                    if (workerColor == 1) {
+                        if (j == 4)
+                            System.out.print("|__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "|");
+                        else
+                            System.out.print("|__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
+                    } else if (workerColor == 2) {
+                        if (j == 4)
+                            System.out.print("|__" + Color.ANSI_WHITE + circle + Color.RESET + "|");
+                        else
+                            System.out.print("|__" + Color.ANSI_WHITE + circle + Color.RESET);
+                    } else if (workerColor == 3) {
+                        if (j == 4)
+                            System.out.print("|__" + Color.ANSI_BLUE + circle + Color.RESET + "|");
+                        else
+                            System.out.print("|__" + Color.ANSI_BLUE + circle + Color.RESET);
+                    }
+                }
+
+                else {
+                    if (j == 4)
+                        System.out.print("|_____|");
+                    else
+                        System.out.print("|_____");
+                }
+            }
+    }
 
     @Override
     public void isWinner(String winner) {

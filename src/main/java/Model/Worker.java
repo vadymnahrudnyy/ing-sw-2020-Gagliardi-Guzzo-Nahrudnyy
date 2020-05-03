@@ -22,9 +22,9 @@ public class Worker implements Serializable {
     private final char gender;
     private Space workerPosition;
     private int color;
-    public final static int COLOR_WHITE=1;
-    public final static int COLOR_GREY=2;
-    public final static int COLOR_LIGHT_BLUE=3;
+    public final static int COLOR_YELLOW=1;
+    public final static int COLOR_WHITE=2;
+    public final static int COLOR_BLUE=3;
 
 
 
