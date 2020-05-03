@@ -2,7 +2,6 @@ package Server;
 
 import Messages.*;
 import Model.*;
-import com.sun.security.sasl.gsskerb.JdkSASL;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -376,7 +375,7 @@ public class GameController implements Runnable {
         char gender = 'm';
         if (numWorker == 1) gender = 'f';
         Space workerPosition = currentGame.getGameBoard().getSpace(coordinateX,coordinateY);
-        workers[numWorker-1] = new Worker(numWorker,owner.getUsername(),gender,workerPosition);
+        workers[numWorker-1] = new Worker(owner.getUsername(),gender,workerPosition, 1); //da sistemare
     }
 
     private boolean verifyValidPosition(boolean[][] allowedPositions,WorkerPositionResponse response){

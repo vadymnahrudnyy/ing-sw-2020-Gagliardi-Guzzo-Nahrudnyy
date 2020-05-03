@@ -18,11 +18,11 @@ public class PlayerTest {
         power= new int[1];
         power[0]=8;
         testGod = new God("Minotauro", 1, 3, "il mostro dalla testa di toro", power);
-        firstCurrentPosition = new Space(4,3,4);
-        secondCurrentPosition = new Space(2,3,4);
+        firstCurrentPosition = new Space(4,3);
+        secondCurrentPosition = new Space(2,3);
         testWorkers=new Worker[2];
-        testWorkers[0] = new Worker(30, "Tom", 'm', firstCurrentPosition);
-        testWorkers[1] = new Worker(50, "Tom", 'm', secondCurrentPosition);
+        testWorkers[0] = new Worker("Tom", 'm', firstCurrentPosition, 1);
+        testWorkers[1] = new Worker("Tom", 'm', secondCurrentPosition, 1);
 
     }
 

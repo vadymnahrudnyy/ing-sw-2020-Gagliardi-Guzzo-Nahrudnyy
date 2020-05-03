@@ -152,7 +152,7 @@ public class Lobby {
     /**
      * Method checkReady verifies if the lobbies are ready to start the game.
      */
-    private synchronized void checkReady(){
+    public synchronized void checkReady(){
         if(getTwoPlayersLobbySlotsOccupied()==2) setTwoPlayersLobbyReady(true);
         if (getThreePlayersLobbySlotsOccupied()==3) setThreePlayersLobbyReady(true);
     }
