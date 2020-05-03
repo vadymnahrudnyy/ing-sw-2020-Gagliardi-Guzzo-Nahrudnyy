@@ -15,6 +15,7 @@ import org.w3c.dom.Element;
  * PowerParser class is used for read from the configuration file for powers and create an ArrayList of Power
  */
 
+
 public class PowerParser {
 
     /**
@@ -27,7 +28,8 @@ public class PowerParser {
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder pBuilder = factory.newDocumentBuilder();
-            Document pDocument = pBuilder.parse("./Resources/configurationfilepower.xml");
+            //return pBuilder.parse(PowerParser.class.getClassLoader().getResourceAsStream("configurationfilepower.xml")); //(InputSource containing the content to be parsed) - returns a new DOM Document object.
+            Document pDocument = pBuilder.parse("./resources/configurationfilepower.xml");
             return pDocument;
 
         } catch(Exception e) {

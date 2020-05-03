@@ -26,7 +26,7 @@ public class GodParser {
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder gBuilder = factory.newDocumentBuilder();
-            Document gDocument = gBuilder.parse("./Resources/configurationfilegod.xml");
+            Document gDocument = gBuilder.parse("./resources/configurationfilegod.xml");
             return gDocument;
 
         } catch(Exception e) {

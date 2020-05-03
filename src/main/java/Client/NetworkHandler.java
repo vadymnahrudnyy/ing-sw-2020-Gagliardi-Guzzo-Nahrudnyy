@@ -87,7 +87,7 @@ public class NetworkHandler implements Runnable {
     /**
      *This class disconnect the client.
      */
-    private void disconnect(){
+    public void disconnect(){
         try {
             close();
         } catch (Exception e) {
