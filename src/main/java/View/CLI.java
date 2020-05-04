@@ -8,9 +8,15 @@ import Model.*;
 
 public class CLI implements UI {
 
-    int i, j;
+    int i;
+    int j;
     Scanner input;
     String circle= "\uD83D\uDD35";
+
+    public CLI() {
+    }
+
+
 
     @Override
     public void gameInfo() {
@@ -18,6 +24,11 @@ public class CLI implements UI {
         System.out.println("Dovrai scegliere una carta divinità, la quale possiede un potere particolare, che potrai utilizzare nel gioco. Inoltre disporrai di 2 worker.");
         System.out.println("Durante il tuo turno potrai muoverti: il movimento può essere solo nelle caselle direttamente adiacenti alla tua posizione.");
         System.out.println("Dopodiché potrai costruire, ci sono 4 tipo di blocchi: livello 1, livello 2, livello 3 e cupola 4.");
+    }
+
+    @Override
+    public void chooseServerAddress() {
+        System.out.println("Inserisci l'indirizzo del server a cui vuoi collegarti per giocare: ");
     }
 
     @Override

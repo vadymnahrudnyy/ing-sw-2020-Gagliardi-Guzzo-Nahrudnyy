@@ -15,24 +15,24 @@ import View.CLI;
 
 public class Client {
     private static String serverAddress;
-    private QueueOfEvents incomingMessages= new QueueOfEvents();
-    private NetworkHandler networkHandler;
+    private static QueueOfEvents incomingMessages= new QueueOfEvents();
+    private static NetworkHandler networkHandler;
     private static final int SOCKET_PORT = 50000;
-    private Scanner input;
-    private int numPlayers;
-    private CLI cli;
-    private int x,y;
-    private ArrayList<String> chosenGods;
-    private String chosen;
-    private boolean[][] allowedPosition, allowedMoves, allowedBuild, allowedToRemove;
-    private int numWorker=0;
-    private int i,j;
+    private static Scanner input;
+    private static int numPlayers;
+    private static CLI cli=new CLI();
+    private static int x,y;
+    private static ArrayList<String> chosenGods;
+    private static String chosen;
+    private static boolean[][] allowedPosition, allowedMoves, allowedBuild, allowedToRemove;
+    private static int numWorker=0;
+    private static int i,j;
 
     /**
      *This method creates a new network handler and creates a new thread
      * @throws Exception
      */
-    public void startConnection() throws Exception {
+    public static void startConnection(String serverAddress) throws Exception {
         networkHandler=new NetworkHandler(serverAddress, SOCKET_PORT);
         Thread network= new Thread(networkHandler);
         network.start();
@@ -43,12 +43,17 @@ public class Client {
      *This is the main of the class: it starts the connection and manages all the messages received from the network handler
      * @throws Exception
      */
-    public void main() throws Exception {
+    public static void main(String[] args) throws Exception {
         cli.gameInfo();
-        startConnection();
+        cli.chooseServerAddress();
+        input=new Scanner(System.in);
+        serverAddress= input.nextLine();
+        startConnection(serverAddress);
+
+
         boolean disconnected=false;
         while (!disconnected){
-            wait(50);
+            Thread.sleep(50);
             if(incomingMessages.dequeueEvent()!=null){
                 Message receivedMessage = incomingMessages.dequeueEvent();
                 switch (receivedMessage.getMessageID()){
@@ -125,7 +130,7 @@ public class Client {
      *This method manages the username request and send to the network handler the player's response
      * @throws IOException
      */
-    public void askUsername() throws IOException {
+    public static void askUsername() throws IOException {
         cli.chooseUsername();
         input=new Scanner(System.in);
         String username= input.nextLine();
@@ -137,7 +142,7 @@ public class Client {
      * This method manages not valid username error
      * @throws IOException
      */
-    private void usernameError() throws IOException {
+    private static void usernameError() throws IOException {
         System.out.println("Username già scelto da un altro giocatore!");
         askUsername();
     }
@@ -147,7 +152,7 @@ public class Client {
      * This method manages the number of player request and sends to the network handler the player's response
      * @throws IOException
      */
-    public void askNumPlayers() throws IOException {
+    public static void askNumPlayers() throws IOException {
         cli.chooseNumPlayers();
         input = new Scanner(System.in);
         numPlayers = input.nextInt();
@@ -164,7 +169,7 @@ public class Client {
      * This method manages the lobby status notification and shows number and status of the current lobby,
      * in order to inform if it isn't full yet
      */
-    private void lobbyStatusNotification(Message message) {
+    private static void lobbyStatusNotification(Message message) {
         cli.printLobbyStatus(((LobbyStatusNotification)message).getSelectedLobby(),((LobbyStatusNotification)message).getSlotsOccupied());
     }
 
@@ -172,7 +177,7 @@ public class Client {
     /**
      * This method manages the start notification and warns all the players in the lobby the game can start
      */
-    private void startNotification() {
+    private static void startNotification() {
         cli.startNotification();
     }
 
@@ -183,7 +188,7 @@ public class Client {
      * @param message GodListRequest
      * @throws IOException
      */
-    public  void chooseGodsList(Message message) throws IOException {
+    public static void chooseGodsList(Message message) throws IOException {
         cli.showGodList(((GodsListRequest)message).getDeck(),((GodsListRequest)message).getNumPlayers());
         for (int i=0; i<numPlayers; i++){
             input = new Scanner(System.in);
@@ -199,7 +204,7 @@ public class Client {
      * and sends to the network handler the player's response
      * @throws IOException
      */
-    public void selectFirstPlayer(Message message) throws IOException {
+    public static void selectFirstPlayer(Message message) throws IOException {
         cli.printAllPlayers(((StartPlayerRequest)message).getPlayers());
         input=new Scanner(System.in);
         String firstPlayer=input.nextLine();
@@ -211,7 +216,7 @@ public class Client {
      * This method manages the request of choosing a list of gods message and send to the network handler the player's response
      * @throws IOException
      */
-    public void chooseGod(Message message) throws IOException {
+    public static void chooseGod(Message message) throws IOException {
         cli.chooseGod(((ChoseGodRequest) message).getGods(), ((ChoseGodRequest) message).getUnavailableGods());
         input = new Scanner(System.in);
         String chosen = input.nextLine();
@@ -222,7 +227,7 @@ public class Client {
     /**
      * This method shows the remaining god to the last player (whom has chosen the GodList of the current game)
      */
-    public void remainingGod(Message message){
+    public static void remainingGod(Message message){
         cli.printLastGod(((LastGodNotification) message).getGodsList(), ((LastGodNotification) message).getLastGod());
     }
 
@@ -231,7 +236,7 @@ public class Client {
      * This method shows where the player can put the selected worker and then he inserts the chosen coordinate
      * @throws IOException
      */
-    public void placeWorker(Message message) throws IOException {
+    public static void placeWorker(Message message) throws IOException {
         cli.askWorkerPosition();
 
         input = new Scanner(System.in);
@@ -256,7 +261,7 @@ public class Client {
      * This method allows the player to choose what worker will be moved
      * @throws IOException
      */
-    public void selectWorker() throws IOException {
+    public static void selectWorker() throws IOException {
         cli.chooseWorker();
         input=new Scanner(System.in);
         int x=input.nextInt();
@@ -271,7 +276,7 @@ public class Client {
      * @param message OtherWorkerMoveRequest
      * @throws IOException
      */
-    private void otherWorkerMove(Message message) throws IOException {
+    private static void otherWorkerMove(Message message) throws IOException {
 
         cli.otherWorker();
 
@@ -294,7 +299,7 @@ public class Client {
      * This method asks the player if he wants to use the God's power
      * @throws IOException
      */
-    private void usePower() throws IOException {
+    private static void usePower() throws IOException {
         cli.askPowerUsage();
         networkHandler.sendMessage(new UsePowerResponse(cli.askPowerUsage()));
 
@@ -308,7 +313,7 @@ public class Client {
      * @param message MoveRequest
      * @throws IOException
      */
-    public void chooseMove(Message message) throws IOException {
+    public static void chooseMove(Message message) throws IOException {
         cli.printPossibleAction(((MoveRequest) message).getAllowedMoves());
         cli.confirmChoice();
 
@@ -342,7 +347,7 @@ public class Client {
      * @param message BuildRequest
      * @throws IOException
      */
-    public void chooseConstruction(Message message) throws IOException {
+    public static void chooseConstruction(Message message) throws IOException {
         cli.printPossibleAction(((BuildRequest) message).getAllowedMoves());
         cli.buildTower();
 
@@ -367,7 +372,7 @@ public class Client {
      * @param message BlockRemovalRequest
      * @throws IOException
      */
-    private void removeBlock(Message message) throws IOException {
+    private static void removeBlock(Message message) throws IOException {
         cli.chooseRemoval();
         input = new Scanner(System.in);
         x = input.nextInt();
@@ -386,7 +391,7 @@ public class Client {
     /**
      * This method warns the chosen move is not valid
      */
-    private void invalidMove() {
+    private static void invalidMove() {
         cli.invalidMove();
     }
 
@@ -394,7 +399,7 @@ public class Client {
     /**
      * This method warns there aren't more possible moves for the player
      */
-    private void noMovesAllowed() {
+    private static void noMovesAllowed() {
         cli.noPossibleMoves();
     }
 
@@ -403,7 +408,7 @@ public class Client {
      * This method shows the current (new) status of the Game
      * @param message GameStatusNotification
      */
-    private void statusNotification(Message message) {
+    private static void statusNotification(Message message) {
         cli.printCurrentBoard(((GameStatusNotification) message).getUpdatedGame());
     }
 
@@ -412,7 +417,7 @@ public class Client {
      * This method announces the name of the winner
      * @param message WinnerNotification
      */
-    private void winnerNotification(Message message) {
+    private static void winnerNotification(Message message) {
         cli.isWinner(((WinnerNotification) message).getWinnerUsername());
 
     }

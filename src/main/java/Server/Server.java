@@ -22,12 +22,13 @@ public class Server {
     private static boolean Running = true;
 
 
-    public static void main() {
+    public static void main(String[] args) {
         try {
             server = new ServerSocket(SOCKET_PORT);
             ConnectionAcceptance connectionAcceptor = new ConnectionAcceptance();
             Thread ConnectionsAcceptThread = new Thread(connectionAcceptor);
             ConnectionsAcceptThread.start();
+            System.out.println("Connection acceptance created");
         }
         catch(Exception e){
             System.out.println("Error: The server could not be initialized");

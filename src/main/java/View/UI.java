@@ -20,6 +20,12 @@ public interface UI {
 
 
     /**
+     * This method asks the player the address of the server
+     */
+    void chooseServerAddress();
+
+
+    /**
      * This method asks to choose the username
      */
     void chooseUsername();

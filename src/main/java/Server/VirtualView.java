@@ -29,6 +29,7 @@ public class VirtualView implements Runnable {
     @Override
     public void run() {
         try {
+            System.out.println("User connected");
             Message message;
             sendMessage(new UsernameRequest());
             Ping connectionChecker = new Ping(this);
@@ -57,9 +58,12 @@ public class VirtualView implements Runnable {
      * @param client specifies the client connected to the server.
      */
     public VirtualView(Socket client,Lobby lobby) throws IOException {
+        System.out.println("creating virtual view");
         this.client = client;
         this.output = new ObjectOutputStream(client.getOutputStream());
+        System.out.println("prova1");
         this.input = new ObjectInputStream(client.getInputStream());
+        System.out.println("prova2");
         serverLobby = lobby;
         this.isConnected = true;
     }
