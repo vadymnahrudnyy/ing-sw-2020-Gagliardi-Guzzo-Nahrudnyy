@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<AnchorPane prefHeight="478.0" prefWidth="705.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+
+   <stylesheets><URL value="@Style.css" /></stylesheets>
+
+   <children>
+
+      <ImageView fitHeight="567.0" fitWidth="717.0" pickOnBounds="true" preserveRatio="true">
+         <image><Image url="@Images/Backgrounds/title_water.png" /></image>
+      </ImageView>
+
+      <ImageView fitHeight="492.0" fitWidth="717.0" layoutY="227.0" pickOnBounds="true" preserveRatio="true">
+         <image><Image url="@Images/Backgrounds/title_FG_grass.png" /></image>
+      </ImageView>
+
+      <Pane layoutX="223.0" layoutY="7.0" prefHeight="325.0" prefWidth="286.0">
+         <children>
+
+            <ImageView fitHeight="312.0" fitWidth="323.0" layoutX="-1.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+               <image><Image url="@Images/Backgrounds/title_island.png" /></image>
+            </ImageView>
+      
+      
+            <TilePane alignment="CENTER" layoutX="-7.0" layoutY="175.0" prefHeight="96.0" prefWidth="297.0">
+                  <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                     <image><Image url="@Images/Backgrounds/logo.png" /></image>
+                  </ImageView>
+            </TilePane>
+         </children>
+      </Pane>
+
+      <BorderPane prefHeight="501.0" prefWidth="717.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+
+         <bottom>
+            <HBox alignment="CENTER" prefHeight="134.0" prefWidth="598.0" >
+               <TextField styleClass="usernameBox" text="Insert IPAddress" />
+               <Region prefHeight="10.0" prefWidth="10.0"/>
+            <TextField styleClass="usernameBox" text="Insert Username" />
+               <Region prefHeight="10.0" prefWidth="10.0"/>
+            <ImageView id="playButton" fx:id="playButton" fitHeight="80.0" fitWidth="80.0" styleClass="button" />
+
+            </HBox>
+
+         </bottom>
+
+      </BorderPane>
+
+
+   </children>
+</AnchorPane>
