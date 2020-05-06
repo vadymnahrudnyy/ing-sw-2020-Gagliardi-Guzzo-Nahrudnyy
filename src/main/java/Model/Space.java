@@ -20,6 +20,7 @@ public class Space implements Serializable {
 
     private Worker workerInPlace;
 
+    public static final int DOME_LEVEL = 4;
     /**
      * @param coordinateX indicates the column of the table where the new Space will be located
      * @param coordinateY indicates the line of the table where the new Space will be located

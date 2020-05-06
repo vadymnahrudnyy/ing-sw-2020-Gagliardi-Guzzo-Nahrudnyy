@@ -12,13 +12,13 @@ import java.util.ArrayList;
  */
 
 public class Lobby {
-    private Server server;
-    private boolean twoPlayersLobbyReady;
-    private boolean threePlayersLobbyReady;
-    private final ArrayList<String> twoPlayersLobby;
-    private final ArrayList<String> threePlayersLobby;
-    private final ArrayList<VirtualView> twoPlayersLobbyVirtualViews;
-    private final ArrayList<VirtualView> threePlayersLobbyVirtualViews;
+    private static Server server;
+    private static boolean twoPlayersLobbyReady;
+    private static boolean threePlayersLobbyReady;
+    private static final ArrayList<String> twoPlayersLobby = new ArrayList<>();
+    private static final ArrayList<String> threePlayersLobby = new ArrayList<>();
+    private static final ArrayList<VirtualView> twoPlayersLobbyVirtualViews = new ArrayList<VirtualView>();
+    private static final ArrayList<VirtualView> threePlayersLobbyVirtualViews = new ArrayList<VirtualView>();
 
     /**
      * Constructor of the server lobby.
@@ -26,17 +26,13 @@ public class Lobby {
     public Lobby() {
         twoPlayersLobbyReady = false;
         threePlayersLobbyReady = false;
-        twoPlayersLobby = new ArrayList<>();
-        threePlayersLobby = new ArrayList<>();
-        twoPlayersLobbyVirtualViews = new ArrayList<VirtualView>();
-        threePlayersLobbyVirtualViews = new ArrayList<VirtualView>();
     }
 
     /**
      * Method getTwoPlayersLobby
      * @return the list of players waiting for a two players game.
      */
-    public synchronized ArrayList<String> getTwoPlayersLobby(){
+    public static synchronized ArrayList<String> getTwoPlayersLobby(){
         return twoPlayersLobby;
     }
     /**
@@ -44,14 +40,14 @@ public class Lobby {
      * @since versione 2.0
      * @return the list of virtual views of the players in the two players lobby.
      */
-    public synchronized ArrayList<VirtualView> getTwoPlayersLobbyVirtualViews(){
+    public static synchronized ArrayList<VirtualView> getTwoPlayersLobbyVirtualViews(){
         return twoPlayersLobbyVirtualViews;
     }
     /**
      * Method getTwoPlayersLobbySlotsOccupied
      * @return the number of players waiting for a two players game.
      */
-    public synchronized int getTwoPlayersLobbySlotsOccupied(){
+    public static synchronized int getTwoPlayersLobbySlotsOccupied(){
         return twoPlayersLobby.size();
     }
     /**
@@ -59,7 +55,7 @@ public class Lobby {
      * @param playerToAddUsername Username of the new player.
      * @param playerToAddVirtualView Virtual view of the new player;
      */
-    public synchronized void addPlayerToTwoPlayersLobby(String playerToAddUsername,VirtualView playerToAddVirtualView){
+    public static synchronized void addPlayerToTwoPlayersLobby(String playerToAddUsername,VirtualView playerToAddVirtualView){
         twoPlayersLobby.add(playerToAddUsername);
         twoPlayersLobbyVirtualViews.add(playerToAddVirtualView);
     }
@@ -68,7 +64,7 @@ public class Lobby {
      * @param playerToRemoveUsername Username of the player to remove.
      * @param playerToRemoveVirtualView Virtual view of the player to remove.
      */
-    public synchronized void removePlayerFromTwoPlayersLobby(String playerToRemoveUsername,VirtualView playerToRemoveVirtualView){
+    public static synchronized void removePlayerFromTwoPlayersLobby(String playerToRemoveUsername,VirtualView playerToRemoveVirtualView){
         twoPlayersLobbyVirtualViews.remove(playerToRemoveVirtualView);
         twoPlayersLobby.remove(playerToRemoveUsername);
     }
@@ -76,7 +72,7 @@ public class Lobby {
      * Method getThreePlayersLobby
      * @return the list of players waiting for a three players game.
      */
-    public synchronized ArrayList<String> getThreePlayersLobby() {
+    public static synchronized ArrayList<String> getThreePlayersLobby() {
         return threePlayersLobby;
     }
     /**
@@ -84,14 +80,14 @@ public class Lobby {
      * @since version 2.0
      * @return the list of virtual views of the players in the three players lobby.
      */
-    public synchronized ArrayList<VirtualView> getThreePlayersLobbyVirtualViews(){
+    public static synchronized ArrayList<VirtualView> getThreePlayersLobbyVirtualViews(){
         return threePlayersLobbyVirtualViews;
     }
     /**
      * Method getThreePlayersLobbySlotsOccupied
      * @return the number of players waiting for a three players game.
      */
-    public synchronized int getThreePlayersLobbySlotsOccupied() {
+    public static synchronized int getThreePlayersLobbySlotsOccupied() {
         return threePlayersLobby.size();
     }
     /**
@@ -99,7 +95,7 @@ public class Lobby {
      * @param playerToAddUsername Username of the player to add.
      * @param playerToAddVirtualView Virtual view of the new player.
      */
-    public synchronized void addPlayerToThreePlayersLobby(String playerToAddUsername,VirtualView playerToAddVirtualView){
+    public static synchronized void addPlayerToThreePlayersLobby(String playerToAddUsername,VirtualView playerToAddVirtualView){
         threePlayersLobby.add(playerToAddUsername);
         threePlayersLobbyVirtualViews.add(playerToAddVirtualView);
     }
@@ -108,7 +104,7 @@ public class Lobby {
      * @param playerToRemoveUsername Username of the player to remove.
      * @param playerToRemoveVirtualView Virtual view of the player to remove.
      */
-    public synchronized void removePlayerFromThreePlayersLobby(String playerToRemoveUsername,VirtualView playerToRemoveVirtualView) {
+    public static synchronized void removePlayerFromThreePlayersLobby(String playerToRemoveUsername,VirtualView playerToRemoveVirtualView) {
         threePlayersLobby.remove(playerToRemoveUsername);
         threePlayersLobbyVirtualViews.remove(playerToRemoveVirtualView);
     }
@@ -138,7 +134,7 @@ public class Lobby {
      * @param ready the new status value.
      */
 
-    public synchronized void setTwoPlayersLobbyReady(boolean ready){
+    public static synchronized void setTwoPlayersLobbyReady(boolean ready){
         twoPlayersLobbyReady = ready;
     }
     /**
@@ -146,13 +142,13 @@ public class Lobby {
      * @since version 2.0
      * @param ready the new status value.
      */
-    public synchronized void setThreePlayersLobbyReady(boolean ready){
+    public static synchronized void setThreePlayersLobbyReady(boolean ready){
         threePlayersLobbyReady = ready;
     }
     /**
      * Method checkReady verifies if the lobbies are ready to start the game.
      */
-    public synchronized void checkReady(){
+    public static synchronized void checkReady(){
         if(getTwoPlayersLobbySlotsOccupied()==2) setTwoPlayersLobbyReady(true);
         if (getThreePlayersLobbySlotsOccupied()==3) setThreePlayersLobbyReady(true);
     }
@@ -163,35 +159,43 @@ public class Lobby {
      * @param client VirtualView of the player.
      * @param username username of the player.
      */
-    public synchronized void addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username){
-        try{
+    public synchronized boolean addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username){
+        System.out.println("Adding user"+ username +" to lobby");
+        boolean added = false;
             if (desiredNumPlayers == 2){
-                if (!(getTwoPlayersLobby().contains(username))) addPlayerToTwoPlayersLobby(username,client);
+                if (!(getTwoPlayersLobby().contains(username))) {
+                    System.out.println(getTwoPlayersLobbySlotsOccupied());
+                    System.out.println("Adding to two players lobby");
+                    addPlayerToTwoPlayersLobby(username,client);
+                    added = true;
+                }
                 else client.sendMessage(new UsernameTakenError());
             }
             else {
-                if (!(getThreePlayersLobby().contains(username))) addPlayerToThreePlayersLobby(username,client);
-                else client.sendMessage(new UsernameTakenError());
-                checkReady();
-                if (getTwoPlayersLobbyReady()||getThreePlayersLobbyReady()){
-                    GameController newGame;
-                    Thread newGameThread;
-                    if (getTwoPlayersLobbyReady()){
-                        newGame = new GameController(getTwoPlayersLobbyVirtualViews(),2);
-                        newGameThread = new Thread(newGame);
-                        newGameThread.start();
-                        resetTwoPlayersLobby();
-                    }
-                    if (getThreePlayersLobbyReady()) {
-                        newGame = new GameController(getThreePlayersLobbyVirtualViews(),3);
-                        newGameThread = new Thread(newGame);
-                        newGameThread.start();
-                        resetThreePlayersLobby();
-                    }
+                if (!(getThreePlayersLobby().contains(username))) {
+                    addPlayerToThreePlayersLobby(username,client);
+                    added = true;
                 }
+                else client.sendMessage(new UsernameTakenError());
             }
-        } catch (IOException e){
-            System.out.println("Username Taken Notification failed");
+        System.out.println("Added to lobby");
+        checkReady();
+        if (getTwoPlayersLobbyReady()||getThreePlayersLobbyReady()) {
+            GameController newGame;
+            Thread newGameThread;
+            if (getTwoPlayersLobbyReady()) {
+                newGame = new GameController(getTwoPlayersLobbyVirtualViews(), 2);
+                newGameThread = new Thread(newGame);
+                newGameThread.start();
+                resetTwoPlayersLobby();
+            }
+            if (getThreePlayersLobbyReady()) {
+                newGame = new GameController(getThreePlayersLobbyVirtualViews(), 3);
+                newGameThread = new Thread(newGame);
+                newGameThread.start();
+                resetThreePlayersLobby();
+            }
         }
+        return added;
     }
 }

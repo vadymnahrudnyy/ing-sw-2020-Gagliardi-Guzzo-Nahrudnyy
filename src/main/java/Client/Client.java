@@ -22,17 +22,14 @@ public class Client {
     private static int numPlayers;
     private static CLI cli=new CLI();
     private static int x,y;
-    private static ArrayList<String> chosenGods;
-    private static String chosen;
     private static boolean[][] allowedPosition, allowedMoves, allowedBuild, allowedToRemove;
     private static int numWorker=0;
     private static int i,j;
 
     /**
      *This method creates a new network handler and creates a new thread
-     * @throws Exception
      */
-    public static void startConnection(String serverAddress) throws Exception {
+    public static void startConnection(String serverAddress){
         networkHandler=new NetworkHandler(serverAddress, SOCKET_PORT);
         Thread network= new Thread(networkHandler);
         network.start();
@@ -41,7 +38,6 @@ public class Client {
 
     /**
      *This is the main of the class: it starts the connection and manages all the messages received from the network handler
-     * @throws Exception
      */
     public static void main(String[] args) throws Exception {
         cli.gameInfo();
@@ -54,8 +50,8 @@ public class Client {
         boolean disconnected=false;
         while (!disconnected){
             Thread.sleep(50);
-            if(incomingMessages.dequeueEvent()!=null){
-                Message receivedMessage = incomingMessages.dequeueEvent();
+            Message receivedMessage;
+            if((receivedMessage = NetworkHandler.incomingMessages.dequeueEvent())!=null){
                 switch (receivedMessage.getMessageID()){
                     case Message.START_PLAYER_REQUEST:
                         selectFirstPlayer(receivedMessage);
@@ -128,9 +124,8 @@ public class Client {
 
     /**
      *This method manages the username request and send to the network handler the player's response
-     * @throws IOException
      */
-    public static void askUsername() throws IOException {
+    public static void askUsername()  {
         cli.chooseUsername();
         input=new Scanner(System.in);
         String username= input.nextLine();
@@ -140,9 +135,8 @@ public class Client {
 
     /**
      * This method manages not valid username error
-     * @throws IOException
      */
-    private static void usernameError() throws IOException {
+    private static void usernameError() {
         System.out.println("Username già scelto da un altro giocatore!");
         askUsername();
     }
@@ -150,13 +144,12 @@ public class Client {
 
     /**
      * This method manages the number of player request and sends to the network handler the player's response
-     * @throws IOException
      */
-    public static void askNumPlayers() throws IOException {
+    public static void askNumPlayers() {
         cli.chooseNumPlayers();
         input = new Scanner(System.in);
         numPlayers = input.nextInt();
-        while(numPlayers!=2 || numPlayers!=3) {
+        while(numPlayers != 2 && numPlayers != 3) {
             System.out.println("Numero giocatori scelto non valido. Riprova.");
             input = new Scanner(System.in);
             numPlayers = input.nextInt();
@@ -190,6 +183,7 @@ public class Client {
      */
     public static void chooseGodsList(Message message) throws IOException {
         cli.showGodList(((GodsListRequest)message).getDeck(),((GodsListRequest)message).getNumPlayers());
+        ArrayList<String> chosenGods = new ArrayList<>();
         for (int i=0; i<numPlayers; i++){
             input = new Scanner(System.in);
             String chosen = input.nextLine();
@@ -239,18 +233,21 @@ public class Client {
     public static void placeWorker(Message message) throws IOException {
         cli.askWorkerPosition();
 
-        input = new Scanner(System.in);
-        x = input.nextInt();
-        y = input.nextInt();
-
-        System.out.println("Scegli dove posizionare il worker " + ((WorkerPositionRequest) message).getCurrentWorker());
+        System.out.println("Scegli posizione del worker " + ((WorkerPositionRequest) message).getCurrentWorker());
         allowedPosition=((WorkerPositionRequest) message).getAllowedPositions();
-        while(!allowedPosition[x - 1][y - 1]) {
-            System.out.println("Spazio già occupato! Scegli altre coordinate!");
+        input = new Scanner(System.in);
+        System.out.println("Inserisci coordinata X: ");
+        x = input.nextInt();
+        System.out.println("Inserisci coordinata Y: ");
+        y = input.nextInt();
+        while (((x < 0||y < 0)||(x > IslandBoard.TABLE_DIMENSION || y > IslandBoard.TABLE_DIMENSION))||(!allowedPosition[x-1][y-1])){
+            System.out.println("Posizione non valida.");
             input = new Scanner(System.in);
+            System.out.println("Inserisci coordinata X: ");
             x = input.nextInt();
+            System.out.println("Inserisci coordinata Y: ");
             y = input.nextInt();
-        }
+            }
 
         networkHandler.sendMessage(new WorkerPositionResponse(x, y));
 
@@ -269,7 +266,6 @@ public class Client {
 
         networkHandler.sendMessage(new SelectWorkerResponse(x, y));
     }
-
 
     /**
      * This method is used when the worker selected can't be moved, so he is advised to use the other worker and then he chooses the move
@@ -370,9 +366,8 @@ public class Client {
     /**
      * This method allows the player to choose what block remove
      * @param message BlockRemovalRequest
-     * @throws IOException
      */
-    private static void removeBlock(Message message) throws IOException {
+    private static void removeBlock(Message message) {
         cli.chooseRemoval();
         input = new Scanner(System.in);
         x = input.nextInt();

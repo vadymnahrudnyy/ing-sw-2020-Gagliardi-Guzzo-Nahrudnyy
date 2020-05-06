@@ -24,6 +24,7 @@ public class CLI implements UI {
         System.out.println("Dovrai scegliere una carta divinità, la quale possiede un potere particolare, che potrai utilizzare nel gioco. Inoltre disporrai di 2 worker.");
         System.out.println("Durante il tuo turno potrai muoverti: il movimento può essere solo nelle caselle direttamente adiacenti alla tua posizione.");
         System.out.println("Dopodiché potrai costruire, ci sono 4 tipo di blocchi: livello 1, livello 2, livello 3 e cupola 4.");
+        System.out.println("");
     }
 
     @Override
@@ -54,29 +55,29 @@ public class CLI implements UI {
     @Override
     public void showGodList(ArrayList<God> gods, int numPlayers) {
         System.out.println("Scegli " + numPlayers + " carte tra quelle disponibili.");
-        for (int i = 0; i < gods.size(); i++) {
-            System.out.println("Dio: " + gods.get(i).getName() + ", " + gods.get(i).getDescription());
+        for (God god : gods) {
+            System.out.println(god.getName() + ", " + god.getDescription());
         }
     }
 
     @Override
     public void printAllPlayers(Player[] players) {
         System.out.println("Scegli tra questi giocatori quale dovrà iniziare: ");
-        for (int i = 0; i < players.length; i++) {
-            System.out.print(players[i] + ", ");
+        for (Player player : players) {
+            System.out.print(player.getUsername() + ", ");
         }
     }
 
     @Override
     public void chooseGod(ArrayList<God> godList, ArrayList<God> unavailableList) {
         System.out.println("Questi sono tutti gli dei scelti per la partita: ");
-        for (int i = 0; i < godList.size(); i++) {
-            System.out.print(godList.get(i).getName() + ", ");
+        for (God god : godList) {
+            System.out.print(god.getName() + "   ");
         }
-
+        System.out.println("");
         System.out.println("Dei già scelti (non disponibili): ");
-        for (int i = 0; i < unavailableList.size(); i++) {
-            System.out.print(unavailableList.get(i).getName() + ", ");
+        for (God god : unavailableList) {
+            System.out.print(god.getName() + ", ");
         }
 
         System.out.println("Devi sceglierne uno evitando quelli già scelti.");
@@ -85,10 +86,11 @@ public class CLI implements UI {
     @Override
     public void printLastGod(ArrayList<God> godList, God lastGod) {
         System.out.println("Questi sono tutti gli dei che hai scelto per la partita: ");
-        for (int i = 0; i < godList.size(); i++) {
-            System.out.print(godList.get(i).getName() + ", ");
+        for (God god : godList) {
+            System.out.print(god.getName() + "   ");
         }
-        System.out.println("Ne è rimasto solo uno, devi scegliere questo: " + lastGod.getName());
+        System.out.println("");
+        System.out.println("I giocatori hanno scelto le loro divinità. La tua divinità è " + lastGod.getName());
     }
 
     @Override
@@ -132,7 +134,7 @@ public class CLI implements UI {
         System.out.println("Mosse possibili (in coordinate): ");
         for (i = 0; i < 5; i++) {
             for (j = 0; j < 5; j++) {
-                if (allowed[i][j] == true)
+                if (allowed[i][j])
                     System.out.println("(" + i + 1 + "," + j + 1 + "), ");
             }
         }
@@ -172,7 +174,7 @@ public class CLI implements UI {
     @Override
     public void printCurrentBoard(Game updatedGame) {
         System.out.println(" ______________________________");
-        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++)
+        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++){
             for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++) {
                 Worker checkedWorker = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getWorkerInPlace();
                 int checkedHeight = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getHeight();
@@ -231,6 +233,7 @@ public class CLI implements UI {
                         System.out.print("|_____");
                 }
             }
+        System.out.println("");}
     }
 
     @Override

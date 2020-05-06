@@ -49,6 +49,7 @@ public class LobbyTest {
 
     @Test
     public void addPlayerToTwoPlayersLobby() {
+        resetTwoPlayersLobby();
         assertEquals(0,testLobby.getTwoPlayersLobbySlotsOccupied());
         testLobby.addPlayerToTwoPlayersLobby(username1,virtualView1);
         assertEquals(1,testLobby.getTwoPlayersLobbySlotsOccupied());
@@ -62,6 +63,7 @@ public class LobbyTest {
 
     @Test
     public void removePlayerFromTwoPlayersLobby() {
+        resetTwoPlayersLobby();
         testLobby.addPlayerToTwoPlayersLobby(username1,virtualView1);
         testLobby.addPlayerToTwoPlayersLobby(username2,virtualView2);
         assertEquals(2,testLobby.getTwoPlayersLobbySlotsOccupied());
@@ -193,7 +195,7 @@ public class LobbyTest {
 
     @Test
     public void checkReadyTest3(){
-        testLobby.checkReady();
+        Lobby.checkReady();
         assertFalse(testLobby.getTwoPlayersLobbyReady());
         assertFalse(testLobby.getThreePlayersLobbyReady());
         testLobby.addPlayerToTwoPlayersLobby(username1,virtualView1);

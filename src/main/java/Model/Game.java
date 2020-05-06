@@ -137,8 +137,7 @@ public class Game implements Serializable {
     }
 
     public Player getPlayerByUsername(String username){
-        int index = 0;
-        while (index < numPlayers){
+        for(int index = 0; index<numPlayers;++index){
             if (players[index].getUsername().equals(username)) return players[index];
         }
         return null;

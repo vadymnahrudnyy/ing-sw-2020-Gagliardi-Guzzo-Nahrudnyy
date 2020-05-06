@@ -29,8 +29,7 @@ public class PowerParser {
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder pBuilder = factory.newDocumentBuilder();
             //return pBuilder.parse(PowerParser.class.getClassLoader().getResourceAsStream("configurationfilepower.xml")); //(InputSource containing the content to be parsed) - returns a new DOM Document object.
-            Document pDocument = pBuilder.parse("./resources/configurationfilepower.xml");
-            return pDocument;
+            return pBuilder.parse("./resources/configurationfilepower.xml");
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -48,7 +47,7 @@ public class PowerParser {
 
         document.getDocumentElement().normalize();
         NodeList pList = document.getElementsByTagName("Power");
-        ArrayList<Power> powerList = new ArrayList<Power>();
+        ArrayList<Power> powerList = new ArrayList<>();
 
         for (int i = 0; i < pList.getLength(); i++) {
 
@@ -92,10 +91,9 @@ public class PowerParser {
      * This method initialize the DOM document and return the ArrayList obtained after the parsing
      * @return an ArrayList of Powers
      */
-    public ArrayList<Power> readPower(){
+    public static ArrayList<Power> readPowers(){
         Document pDocument = PowerParser.buildPowerDocument();
-        ArrayList<Power> powers = PowerParser.parsePower(pDocument);
-        return powers;
+        return PowerParser.parsePower(pDocument);
     }
 
 }

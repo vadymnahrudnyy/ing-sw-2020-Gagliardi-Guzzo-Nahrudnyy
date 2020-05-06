@@ -3,7 +3,6 @@ package Server;
 import Messages.*;
 import Utils.QueueOfEvents;
 
-
 import java.io.*;
 import java.net.*;
 
@@ -15,68 +14,69 @@ import java.net.*;
 
 public class VirtualView implements Runnable {
     private final Socket client;
-    private int numPlayers;
     private String username;
-    private Lobby serverLobby;
-    private boolean isConnected;
+    private final Lobby serverLobby;
+    private boolean connected = true;
     private boolean pingReceived;
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
-    private QueueOfEvents incomingMessages= new QueueOfEvents();
-    //private GameController controller;
+    private final QueueOfEvents incomingMessages= new QueueOfEvents();
+
+    /**
+     * Constructor of VirtualView class.
+     * @param client specifies the client connected to the server.
+     */
+    public VirtualView(Socket client,Lobby lobby) throws IOException {
+        this.client = client;
+        this.output = new ObjectOutputStream(client.getOutputStream());
+        this.input = new ObjectInputStream(client.getInputStream());
+        serverLobby = lobby;
+    }
 
 
     @Override
     public void run() {
         try {
-            System.out.println("User connected");
+            System.out.println("User "+client.getInetAddress()+" connected");
             Message message;
-            sendMessage(new UsernameRequest());
+            System.out.println("Ping Thread Created");
+            boolean insertedInLobby;
+            try{
+                do {
+                sendMessage(new NumPlayersRequest());
+                message = (Message) input.readObject();
+                } while (message.getMessageID() != Message.NUM_PLAYERS_RESPONSE);
+                int numPlayers = ((NumPlayersResponse) message).getNumPlayers();
+                do {
+                    do {
+                        sendMessage(new UsernameRequest());
+                        message = (Message) input.readObject();
+                    } while (message.getMessageID() != Message.USERNAME_RESPONSE);
+                    username = ((UsernameResponse) message).getUsername();
+                    insertedInLobby = serverLobby.addPlayerToLobby(numPlayers,this,username);
+                }while(!insertedInLobby);
+            } catch (SocketException e){
+                connected = false;
+            }
             Ping connectionChecker = new Ping(this);
             Thread pingThread = new Thread(connectionChecker);
             pingThread.start();
-//
-            do{
-                message = (Message) input.readObject();
-            }while (message.getMessageID() != 201);
-            username = ((UsernameResponse) message).getUsername();
-            sendMessage(new NumPlayersRequest());
-            do{
-                message = (Message) input.readObject();
-            }while (message.getMessageID() != 202);
-            numPlayers = ((NumPlayersResponse)message).getNumPlayers();
+            System.out.println("Ping Thread Created");
 
-//
-            while (isConnected) receiveMessage();
+            while (connected) try{
+                receiveMessage();
+            }catch(SocketException e){
+                connected = false;
+            }
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
     }
 
     /**
-     * This is the constructor of VirtualView class.
-     * @param client specifies the client connected to the server.
-     */
-    public VirtualView(Socket client,Lobby lobby) throws IOException {
-        System.out.println("creating virtual view");
-        this.client = client;
-        this.output = new ObjectOutputStream(client.getOutputStream());
-        System.out.println("prova1");
-        this.input = new ObjectInputStream(client.getInputStream());
-        System.out.println("prova2");
-        serverLobby = lobby;
-        this.isConnected = true;
-    }
-
-
-
-    /**
      * This methods receives messages from client, adds them into the queue and notify the controller of the update.
-     *
-     * @throws IOException            if there are exceptions that cannot be handled.
-     * @throws ClassNotFoundException if the message does not belong to one of the expected types.
      */
-    private void receiveMessage() throws IOException, ClassNotFoundException {
+    private void receiveMessage() {
         try {
             Message message= (Message) input.readObject();
             if (message.getMessageID() == Message.PING_MESSAGE) pingReceived = true;
@@ -92,9 +92,13 @@ public class VirtualView implements Runnable {
      *
      * @param message indicates the output message from server.
      */
-    public synchronized void sendMessage(Message message) throws IOException {
+    public synchronized void sendMessage(Message message) {
         synchronized (output){
-            output.writeObject(message);
+            try{
+                output.writeObject(message);
+        } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -117,17 +121,18 @@ public class VirtualView implements Runnable {
      */
     public synchronized void closeConnection() {
         try {
-            //togli player
+            input.close();
+            output.close();
             client.close();
+
         } catch (IOException e) {
             System.out.println("Disconnection Failed");
         }
-        isConnected = false;
+        connected = false;
     }
 
     /**
      * Getter that return the Id of the connection for the specific client
-     *
      * @return return the ID of the connection for the specific client
      */
     public SocketAddress getConnectionID() { return this.client.getRemoteSocketAddress(); }
@@ -162,14 +167,13 @@ public class VirtualView implements Runnable {
                 try {
                     client.pingReceived = false;
                     client.sendMessage(new PingMessage());
-                    wait(CONNECTION_TIMEOUT);
+                    Thread.sleep(CONNECTION_TIMEOUT);
                     if (!client.pingReceived) client.incomingMessages.enqueueEvent(new Disconnection());
-                } catch (IOException | InterruptedException e) {
+                } catch (InterruptedException e) {
                     client.incomingMessages.enqueueEvent(new Disconnection());
-                    client.isConnected = false;
+                    client.connected = false;
                 }
             } while (client.pingReceived);
-
         }
     }
 }

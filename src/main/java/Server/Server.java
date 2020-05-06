@@ -1,56 +1,60 @@
 package Server;
 
-import java.net.*;
-
-import java.util.ArrayList;
-
 import Model.*;
 
+import java.io.IOException;
+import java.net.*;
+import java.util.ArrayList;
+
 /**
- * This class creates and manages the server
+ * Implements the main class of the Server part.
+ * Creates list of gods and powers by reading configuration files, creates the Socket and finally accepts the connections from players.
  * @version 1.3
  */
-
 public class Server {
-
-    private static final ArrayList<God> godsList = new ArrayList<>();
-    private static final ArrayList<Power> powerList = new ArrayList<>();
-    private static final int MAX_PLAYERS = 100;
+    private static ServerSocket server;
     private static final int SOCKET_PORT = 50000;
     private static final Lobby serverLobby = new Lobby ();
-    private static ServerSocket server;
-    private static boolean Running = true;
+    private static final ArrayList<God> godsList = GodParser.readGods();
+    private static final ArrayList<Power> powerList = PowerParser.readPowers();
 
 
     public static void main(String[] args) {
+        System.out.println("Server Started");
         try {
             server = new ServerSocket(SOCKET_PORT);
-            ConnectionAcceptance connectionAcceptor = new ConnectionAcceptance();
-            Thread ConnectionsAcceptThread = new Thread(connectionAcceptor);
-            ConnectionsAcceptThread.start();
-            System.out.println("Connection acceptance created");
+            System.out.println("Server Socket created. Port used: "+ SOCKET_PORT);
+        } catch (IOException e) {
+            System.out.println("Server initialization failed: Server will shutdown");
         }
-        catch(Exception e){
-            System.out.println("Error: The server could not be initialized");
-        }
+        try{
+            //noinspection InfiniteLoopStatement
+            while (true) {
+                Socket newClient = server.accept();
+                VirtualView newVirtualView = new VirtualView(newClient, serverLobby);
+                Thread newVirtualViewThread = new Thread(newVirtualView);
+                newVirtualViewThread.start();
+                System.out.println("Virtual View for user "+newClient.getInetAddress()+" created");
+            }
+        } catch (IOException e){
+                System.out.println("Connection to the client failed");
+            }
     }
 
-    public static Lobby getServerLobby(){return serverLobby;}
-
-    public static ServerSocket getServerSocket(){return server;}
-
-
-    public static ArrayList<God> getGodsList() {
+    /**
+     * Method used to get the list of Gods by other components of the server.
+     * @return Array List containing the gods usable in game.
+     */
+    public static ArrayList<God> getGodsList(){
         return godsList;
     }
 
+    /**
+     * Method used to get the list of Power by other components of the server.
+     * @return Array List containing the powers of usable gods in game.
+     */
     public static ArrayList<Power> getPowerList() {
         return powerList;
     }
-    public static boolean isRunning() {
-        return Running;
-    }
-
-
 }
 

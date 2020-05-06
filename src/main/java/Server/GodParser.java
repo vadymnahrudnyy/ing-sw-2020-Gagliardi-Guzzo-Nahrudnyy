@@ -26,8 +26,7 @@ public class GodParser {
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder gBuilder = factory.newDocumentBuilder();
-            Document gDocument = gBuilder.parse("./resources/configurationfilegod.xml");
-            return gDocument;
+            return gBuilder.parse("./resources/configurationfilegod.xml");
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -45,7 +44,7 @@ public class GodParser {
 
         document.getDocumentElement().normalize();
         NodeList gList = document.getElementsByTagName("God");
-        ArrayList<God> godList = new ArrayList<God>();
+        ArrayList<God> godList = new ArrayList<>();
 
         for (int i = 0; i < gList.getLength(); i++) {
 
@@ -90,10 +89,9 @@ public class GodParser {
      * This method initialize the DOM document and return the ArrayList obtained after the parsing
      * @return an ArrayList of Gods
      */
-    public ArrayList<God> readGod() {
+    public static ArrayList<God> readGods() {
         Document document = GodParser.buildGodDocument();
-        ArrayList<God> gods = GodParser.parseGod(document);
-        return gods;
+        return GodParser.parseGod(document);
     }
 
 }

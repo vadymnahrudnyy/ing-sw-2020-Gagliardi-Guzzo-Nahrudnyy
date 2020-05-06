@@ -15,10 +15,9 @@ public class NetworkHandler implements Runnable {
     private ObjectInputStream input;
     private ObjectOutputStream output;
     private boolean isConnected=false;
-    private String username;
     private final String serverAddress;
     private final int serverPort;
-    private QueueOfEvents incomingMessages= new QueueOfEvents();
+    protected static final QueueOfEvents incomingMessages= new QueueOfEvents();
     private boolean isPing=false;
 
 
@@ -34,14 +33,19 @@ public class NetworkHandler implements Runnable {
         setConnected(true);
     }
 
-    public void sendMessage(Message message) throws IOException {
-        output.writeObject(message);
+    public void sendMessage(Message message) {
+        synchronized (output){
+            try {
+                output.writeObject(message);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
-    public QueueOfEvents receive() throws IOException {
-        Message message=new Message();
-        isPing(message);
-        if(!isPing) incomingMessages.enqueueEvent(message);
+    public QueueOfEvents receive(Message receivedMessage) throws IOException {
+        isPing(receivedMessage);
+        if(!isPing) incomingMessages.enqueueEvent(receivedMessage);
         return incomingMessages;
     }
 
@@ -52,15 +56,16 @@ public class NetworkHandler implements Runnable {
 
     public void run() {
         try {
-            Socket server=new Socket(serverAddress, serverPort);
-        } catch (IOException e) {
+            connect();
+        } catch (Exception e) {
             e.printStackTrace();
         }
+
         while (isConnected){
             try {
                 Message message= (Message) input.readObject();
                 if(message!=null){
-                    receive();
+                    receive(message);
                 }
             }
             catch (IOException e) {
@@ -95,13 +100,6 @@ public class NetworkHandler implements Runnable {
         }
     }
     /**
-     * Getter for the parameter username.
-     * @return the player's username
-     */
-    public String getUsername() {
-        return username;
-    }
-    /**
      * Getter of the server address.
      * @return the address of the server.
      */
@@ -132,7 +130,7 @@ public class NetworkHandler implements Runnable {
      * @throws IOException if there are connection problems.
      */
     public boolean isPing(Message message) throws IOException {
-        if (message.getMessageID()==501){
+        if (message.getMessageID()==Message.PING_MESSAGE){
             setPing(true);
             sendMessage(new PingMessage());
         }
