@@ -460,14 +460,6 @@ public class GameController implements Runnable {
         return gameGods.get(index);
     }
     /**
-     * Method used to ask the Challenger the username of the start player.
-     */
-    private void chooseStartPlayer(){
-        virtualViewsList[0].sendMessage(new StartPlayerRequest(currentGame.getPlayers()));
-        waitValidMessage(virtualViewsList[0],new int[]{Message.START_PLAYER_RESPONSE});
-        currentGame.setStarterPlayer(((StartPlayerResponse) receivedMessage).getStartPlayerUsername());
-    }
-    /**
      * Method used during the setup of the game. Create a worker instance in the position indicated by the player
      * @param numWorker used to distinguish between first and second player's worker.
      * @param owner indicates the player who owns the created worker.
@@ -482,33 +474,7 @@ public class GameController implements Runnable {
         Space workerPosition = currentGame.getGameBoard().getSpace(coordinateX,coordinateY);
         workerPosition.setWorkerInPlace(workers[numWorker-1] = new Worker(owner.getUsername(),gender,workerPosition,1));
     }
-    /**
-     * Used for asking the players the starter position of their workers.
-     */
-    private void chooseWorkerPositions(){
-        currentGame.setCurrentPlayer(currentGame.getStarterPlayer());
-        boolean [][] allowedPositions = initializeMatrix(true);
-        boolean validPosition;
-        do {
-            VirtualView currentClient = getVirtualViewByUsername(currentGame.getCurrentPlayer().getUsername());
-            assert currentClient != null;
-            do{
-                currentClient.sendMessage(new WorkerPositionRequest(1,allowedPositions));
-                waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});
-                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
-            }while(!validPosition);
-            createWorker(1,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
-            currentClient.sendMessage(new GameStatusNotification(currentGame));
-            do{
-                currentClient.sendMessage(new WorkerPositionRequest(2,allowedPositions));
-                waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});
-                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
-            }while(!validPosition);
-            createWorker(2,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
-            currentGame.nextPlayer();
-        }while(currentGame.getCurrentPlayer() != currentGame.getStarterPlayer());
 
-    }
     /**
      * Starts the game after that worker positions have been chosen.
      */
@@ -596,13 +562,11 @@ public class GameController implements Runnable {
         Player firstPlayer = currentGame.getCurrentPlayer();
         VirtualView firstVirtualView = virtualViewsList[0];
         System.out.println("Sending Gods List to first player");
-        firstVirtualView.sendMessage(new GodsListRequest(gameGodList,currentGame.getNumPlayers()));
-        waitValidMessage(firstVirtualView,new int[]{Message.GODS_LIST_RESPONSE});
-        System.out.println("Gods List received from first player");
-        ArrayList<String> gameGodsNames = ((GodsListResponse) receivedMessage).getGods();
-        ArrayList<God> gameGods = new ArrayList<>();
-        for (String godName:gameGodsNames) gameGods.add(getGodByName(godName));
-        ArrayList<God> chosenGods = new ArrayList<>();
+        boolean validGodsReceived;
+        ArrayList<God> gameGods=new ArrayList<>(),chosenGods = new ArrayList<>();
+        do {
+            if(!(validGodsReceived = correctGodChose(firstVirtualView,gameGods))) firstVirtualView.sendMessage(new InvalidGodError());
+        }while(!validGodsReceived);
         for(int Index = 1; Index< currentGame.getNumPlayers();++Index){
             virtualViewsList[Index].sendMessage(new ChoseGodRequest(gameGods, chosenGods));
             waitValidMessage(virtualViewsList[Index],new int[]{Message.CHOSE_GOD_RESPONSE});
@@ -620,7 +584,61 @@ public class GameController implements Runnable {
         virtualViewsList[0].sendMessage(new LastGodNotification(gameGods,remainedGod));
     }
 
-    private void lastGodNotification(){
+    /**
+     * Method asking the first player the list of gods and checks the validity of the answer.
+     * @param firstVirtualView virtual view of the first player.
+     * @param gameGods empty List where the gods will be inserted.
+     * @return a boolean value. True if the player has chosen the gods correctly.
+     */
+    private boolean correctGodChose(VirtualView firstVirtualView,ArrayList<God> gameGods){
+        gameGods.clear();
+        firstVirtualView.sendMessage(new GodsListRequest(gameGodList,currentGame.getNumPlayers()));
+        waitValidMessage(firstVirtualView,new int[]{Message.GODS_LIST_RESPONSE});
+        System.out.println("Gods List received from first player");
+        ArrayList<String> gameGodsNames = ((GodsListResponse) receivedMessage).getGods();
+        for (String receivedGodName:gameGodsNames){
+            God currentGod = getGodByName(receivedGodName);
+            if (currentGod == null) return false;
+            else gameGods.add(currentGod);
+        }
+        return true;
+
+    }
+    /**
+     * Method used to ask the Challenger the username of the start player.
+     */
+    private void chooseStartPlayer(){
+        virtualViewsList[0].sendMessage(new StartPlayerRequest(currentGame.getPlayers()));
+        waitValidMessage(virtualViewsList[0],new int[]{Message.START_PLAYER_RESPONSE});
+        currentGame.setStarterPlayer(((StartPlayerResponse) receivedMessage).getStartPlayerUsername());
+    }
+    /**
+     * Used for asking the players the starter position of their workers.
+     */
+    private void chooseWorkerPositions(){
+        currentGame.setCurrentPlayer(currentGame.getStarterPlayer());
+        boolean [][] allowedPositions = initializeMatrix(true);
+        boolean validPosition;
+        do {
+            VirtualView currentClient = getVirtualViewByUsername(currentGame.getCurrentPlayer().getUsername());
+            assert currentClient != null;
+            do{
+                currentClient.sendMessage(new WorkerPositionRequest(1,allowedPositions));
+                waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});
+                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
+            }while(!validPosition);
+            allowedPositions[((WorkerPositionResponse) receivedMessage).getCoordinateX()-1][((WorkerPositionResponse) receivedMessage).getCoordinateY()-1] = false;
+            createWorker(1,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
+            currentClient.sendMessage(new GameStatusNotification(currentGame));
+            do{
+                currentClient.sendMessage(new WorkerPositionRequest(2,allowedPositions));
+                waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});
+                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
+            }while(!validPosition);
+            allowedPositions[((WorkerPositionResponse) receivedMessage).getCoordinateX()-1][((WorkerPositionResponse) receivedMessage).getCoordinateY()-1] = false;
+            createWorker(2,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
+            currentGame.nextPlayer();
+        }while(currentGame.getCurrentPlayer() != currentGame.getStarterPlayer());
 
     }
 
