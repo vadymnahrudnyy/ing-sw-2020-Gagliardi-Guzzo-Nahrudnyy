@@ -16,20 +16,25 @@ public class GameController implements Runnable {
     private final Game currentGame;
     private Message receivedMessage;
     private boolean MoveAllowed,BuildAllowed;
-    private final ArrayList<God> godList;
+    private final ArrayList<God> gameGodList;
     private final ArrayList<Power> powerList;
     private final VirtualView[] virtualViewsList;
     private static final int RESPONSE_MESSAGE_WAIT_TIMEOUT = 2000;
 
 
     public GameController(ArrayList<VirtualView> virtualViews, int numPlayers) {
-        godList = Server.getGodsList();
+
         powerList = Server.getPowerList();
         virtualViewsList = new VirtualView[numPlayers];
         Player[] playersArray = new Player[numPlayers];
         for(int i=0;i<numPlayers;++i) virtualViewsList[i] = virtualViews.get(i);
         for (int i=0;i<numPlayers;++i) {playersArray[i] = new Player(virtualViewsList[i].getUsername(),i,null,null);}
         currentGame = new Game(numPlayers,playersArray[0],playersArray);
+        if(numPlayers == 3) {
+            gameGodList = new ArrayList<>();
+            for (God threePlayersGods:Server.getGodsList()) if (threePlayersGods.getPlayersAllowed() >= God.ONLY_THREE_PLAYERS_ALLOWED ) gameGodList.add(threePlayersGods);
+        }
+        else gameGodList = Server.getGodsList();
     }
 
     @Override
@@ -37,6 +42,15 @@ public class GameController implements Runnable {
         setupPhase();
         RoundHandle();
     }
+
+    private void setupPhase() {
+        sendStartGameMessage();
+        chooseGods();
+        chooseStartPlayer();
+        chooseWorkerPositions();
+        startGame();
+    }
+
     private void turnStart(Player player, VirtualView client, IslandBoard gameBoard,Power actualGodPower){
         currentGame.setCurrentPhase(TurnPhase.START);
         MoveAllowed = BuildAllowed = true;
@@ -70,11 +84,10 @@ public class GameController implements Runnable {
     }
 
     private void Move(Player player, VirtualView client,IslandBoard gameBoard,Power actualGodPower){
-        int[] validMessages = {Message.SELECT_WORKER_RESPONSE,Message.MOVE_RESPONSE};
         boolean moveMade = false;
         boolean[][] allowedMoves = new boolean[][]{};
         int selectedWorkerX = 0, selectedWorkerY = 0;
-        Worker selectedWorker = getWorkerByCoordinates(selectedWorkerX,selectedWorkerY);
+        Worker selectedWorker = null;// = getWorkerByCoordinates(selectedWorkerX,selectedWorkerY);
         client.sendMessage(new SelectWorkerRequest());
         do{
             waitValidMessage(client,new int[]{Message.SELECT_WORKER_RESPONSE,Message.MOVE_RESPONSE});
@@ -157,7 +170,6 @@ public class GameController implements Runnable {
             }
         }while(!moveMade);
     }
-
 
 
     private void victory(String winnerUsername){
@@ -285,13 +297,7 @@ public class GameController implements Runnable {
         }
     }
 
-    private void setupPhase() {
-        sendStartGameMessage();
-        chooseGods();
-        chooseStartPlayer();
-        chooseWorkerPositions();
-        startGame();
-    }
+
 
 
 
@@ -314,7 +320,7 @@ public class GameController implements Runnable {
         System.out.println("Waiting for a valid message");
         do {
             try{
-                while((receivedMessage = senderVirtualView.dequeueFirstMessage())==null) Thread.sleep(RESPONSE_MESSAGE_WAIT_TIMEOUT);
+                while((receivedMessage = senderVirtualView.dequeueFirstMessage())==null) Thread.sleep(RESPONSE_MESSAGE_WAIT_TIMEOUT+10000000);
                 System.out.println("New message received, checking validity");
                 receivedValidMessage = checkMessageValidity(receivedMessage,messageIDs);
             } catch (InterruptedException e) {
@@ -328,7 +334,7 @@ public class GameController implements Runnable {
      * @return object of class God taken from the list of gods of the game.
      */
     private God getGodByName(String name){
-        for (God god:godList) if (god.getName().equals(name)) return god;
+        for (God god:gameGodList) if (god.getName().equals(name)) return god;
         return null;
     }
     /**
@@ -440,46 +446,8 @@ public class GameController implements Runnable {
     }
 
 
-    //SETUP PHASE
-    /**
-     * Method used to notify all player about the game being start
-     */
-    private void sendStartGameMessage() {
-        for (VirtualView view : virtualViewsList) view.sendMessage(new GameStartNotification());
-    }
-    /**
-     * Method used to choose the gods before start playing.It asks the first player the list of gods to use, then the others chose their god card
-     * and the first player automatically receives the remained god card.
-     */
-    public void chooseGods() {
-        System.out.println("Choosing gods");
-        Player firstPlayer = currentGame.getCurrentPlayer();
-        VirtualView firstVirtualView = virtualViewsList[0];
-        System.out.println("Sending Gods List to first player");
-        firstVirtualView.sendMessage(new GodsListRequest(godList,currentGame.getNumPlayers()));
-        waitValidMessage(firstVirtualView,new int[]{Message.GODS_LIST_RESPONSE});
-        System.out.println("Gods List received from first player");
-        ArrayList<String> gameGodsNames = ((GodsListResponse) receivedMessage).getGods();
-        ArrayList<God> gameGods = new ArrayList<>();
-        for (String godName:gameGodsNames) gameGods.add(getGodByName(godName));
-        ArrayList<God> chosenGods = new ArrayList<>();
-        for(int Index = 1; Index< currentGame.getNumPlayers();++Index){
-            virtualViewsList[Index].sendMessage(new ChoseGodRequest(gameGods, chosenGods));
-            waitValidMessage(virtualViewsList[Index],new int[]{Message.CHOSE_GOD_RESPONSE});
-            System.out.println("Chosen god: "+((ChoseGodResponse)receivedMessage).getChosenGod());
-            God receivedGod = getGodByName(((ChoseGodResponse)receivedMessage).getChosenGod());
-            Player actualPlayer = currentGame.getPlayerByUsername(virtualViewsList[Index].getUsername());
-            if (actualPlayer == null) System.out.println("Wanted player doesn't exist");
-            else {
-                actualPlayer.setGod(receivedGod);
-                chosenGods.add(receivedGod);
-            }
-        }
-        God remainedGod = getRemainedGod(gameGods,chosenGods);
-        firstPlayer.setGod(remainedGod);
-        virtualViewsList[0].sendMessage(new LastGodNotification(gameGods,remainedGod));
 
-    }
+
     /**
      * Private method of the controller used to identify the god of the first player.
      * @param gameGods gods chosen to be used in game.
@@ -487,9 +455,9 @@ public class GameController implements Runnable {
      * @return the god which will be used by the first player.
      */
     private God getRemainedGod(ArrayList<God> gameGods,ArrayList<God> chosenGods){
-        for(int index = 0; index < chosenGods.size();++index)
-            if (!chosenGods.contains(gameGods.get(index))) return gameGods.get(index);
-        return null;
+        int index=0;
+        for (; index<gameGods.size()-1;++index) if (!chosenGods.contains(gameGods.get(index))) return gameGods.get(index);
+        return gameGods.get(index);
     }
     /**
      * Method used to ask the Challenger the username of the start player.
@@ -508,11 +476,11 @@ public class GameController implements Runnable {
      */
     private void createWorker(int numWorker,Player owner,int coordinateX, int coordinateY){
         Worker[] workers = owner.getWorkers();
-        if(workers == null) workers = new Worker[Game.WORKERS_PER_PLAYER];
+        if(workers == null) owner.setWorkers(workers = new Worker[Game.WORKERS_PER_PLAYER]);
         char gender = 'm';
         if (numWorker == 1) gender = 'f';
         Space workerPosition = currentGame.getGameBoard().getSpace(coordinateX,coordinateY);
-        workers[numWorker-1] = new Worker(owner.getUsername(),gender,workerPosition, 1); //da sistemare
+        workerPosition.setWorkerInPlace(workers[numWorker-1] = new Worker(owner.getUsername(),gender,workerPosition,1));
     }
     /**
      * Used for asking the players the starter position of their workers.
@@ -523,6 +491,7 @@ public class GameController implements Runnable {
         boolean validPosition;
         do {
             VirtualView currentClient = getVirtualViewByUsername(currentGame.getCurrentPlayer().getUsername());
+            assert currentClient != null;
             do{
                 currentClient.sendMessage(new WorkerPositionRequest(1,allowedPositions));
                 waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});
@@ -610,4 +579,49 @@ public class GameController implements Runnable {
     private void notifyGameStatusToAll(){
         for (VirtualView player:virtualViewsList) player.sendMessage(new GameStatusNotification(currentGame));
     }
+    //DOUBLE CHECKED
+    //SETUP PHASE
+    /**
+     * Method used to notify all player about the game being start
+     */
+    private void sendStartGameMessage() {
+        for (VirtualView view : virtualViewsList) view.sendMessage(new GameStartNotification());
+    }
+    /**
+     * Method used to choose the gods before start playing.It asks the first player the list of gods to use, then the others chose their god card
+     * and the first player automatically receives the remained god card.
+     */
+    public void chooseGods() {
+        System.out.println("Choosing gods");
+        Player firstPlayer = currentGame.getCurrentPlayer();
+        VirtualView firstVirtualView = virtualViewsList[0];
+        System.out.println("Sending Gods List to first player");
+        firstVirtualView.sendMessage(new GodsListRequest(gameGodList,currentGame.getNumPlayers()));
+        waitValidMessage(firstVirtualView,new int[]{Message.GODS_LIST_RESPONSE});
+        System.out.println("Gods List received from first player");
+        ArrayList<String> gameGodsNames = ((GodsListResponse) receivedMessage).getGods();
+        ArrayList<God> gameGods = new ArrayList<>();
+        for (String godName:gameGodsNames) gameGods.add(getGodByName(godName));
+        ArrayList<God> chosenGods = new ArrayList<>();
+        for(int Index = 1; Index< currentGame.getNumPlayers();++Index){
+            virtualViewsList[Index].sendMessage(new ChoseGodRequest(gameGods, chosenGods));
+            waitValidMessage(virtualViewsList[Index],new int[]{Message.CHOSE_GOD_RESPONSE});
+            System.out.println("Chosen god: "+((ChoseGodResponse)receivedMessage).getChosenGod());
+            God receivedGod = getGodByName(((ChoseGodResponse)receivedMessage).getChosenGod());
+            Player actualPlayer = currentGame.getPlayerByUsername(virtualViewsList[Index].getUsername());
+            if (actualPlayer == null) System.out.println("Wanted player doesn't exist");
+            else {
+                actualPlayer.setGod(receivedGod);
+                chosenGods.add(receivedGod);
+            }
+        }
+        God remainedGod = getRemainedGod(gameGods,chosenGods);
+        firstPlayer.setGod(remainedGod);
+        virtualViewsList[0].sendMessage(new LastGodNotification(gameGods,remainedGod));
+    }
+
+    private void lastGodNotification(){
+
+    }
+
 }

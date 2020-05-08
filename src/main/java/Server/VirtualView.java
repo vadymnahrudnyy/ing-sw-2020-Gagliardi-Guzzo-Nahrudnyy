@@ -13,24 +13,26 @@ import java.net.*;
  */
 
 public class VirtualView implements Runnable {
-    private final Socket client;
     private String username;
+    private final Socket client;
     private final Lobby serverLobby;
     private boolean connected = true;
     private boolean pingReceived;
+    private Thread associatedGameThread;
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
-    private final QueueOfEvents incomingMessages= new QueueOfEvents();
+    private final QueueOfEvents incomingMessages;
 
     /**
-     * Constructor of VirtualView class.
-     * @param client specifies the client connected to the server.
+     * Constructor of VirtualView class instance.
+     * @param clientSocket the socket of the user connected to the server.
      */
-    public VirtualView(Socket client,Lobby lobby) throws IOException {
-        this.client = client;
-        this.output = new ObjectOutputStream(client.getOutputStream());
-        this.input = new ObjectInputStream(client.getInputStream());
+    public VirtualView(Socket clientSocket,Lobby lobby) throws IOException {
         serverLobby = lobby;
+        client = clientSocket;
+        incomingMessages= new QueueOfEvents();
+        output = new ObjectOutputStream(client.getOutputStream());
+        input = new ObjectInputStream(client.getInputStream());
     }
 
 
@@ -39,7 +41,6 @@ public class VirtualView implements Runnable {
         try {
             System.out.println("User "+client.getInetAddress()+" connected");
             Message message;
-            System.out.println("Ping Thread Created");
             boolean insertedInLobby;
             try{
                 do {
@@ -57,17 +58,16 @@ public class VirtualView implements Runnable {
                 }while(!insertedInLobby);
             } catch (SocketException e){
                 connected = false;
+                client.close();
             }
-            Ping connectionChecker = new Ping(this);
-            Thread pingThread = new Thread(connectionChecker);
-            pingThread.start();
-            System.out.println("Ping Thread Created");
+            //Ping connectionChecker = new Ping(this);
+            //Thread pingThread = new Thread(connectionChecker);
+            //pingThread.start();
+            //System.out.println("Ping Thread Created");
+            //System.out.println("Ping Thread for user "+client.getInetAddress()+" created");
 
-            while (connected) try{
-                receiveMessage();
-            }catch(SocketException e){
-                connected = false;
-            }
+            while (connected) receiveMessage();
+
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
@@ -76,11 +76,18 @@ public class VirtualView implements Runnable {
     /**
      * This methods receives messages from client, adds them into the queue and notify the controller of the update.
      */
-    private void receiveMessage() {
-        try {
-            Message message= (Message) input.readObject();
-            if (message.getMessageID() == Message.PING_MESSAGE) pingReceived = true;
-            else incomingMessages.enqueueEvent(message);
+    private void receiveMessage(){
+        try{
+            try{
+                Message message= (Message) input.readObject();
+                if (message.getMessageID() == Message.PING_MESSAGE) pingReceived = true;
+                else incomingMessages.enqueueEvent(message);
+                associatedGameThread.interrupt();
+            }catch (SocketException e){
+                System.out.println("User "+client.getInetAddress()+" disconnected");
+                connected = false;
+                client.close();
+            }
         }
         catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
@@ -88,11 +95,10 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * This method allows the server to send a message.
-     *
-     * @param message indicates the output message from server.
+     * Method used to send a message to the client
+     * @param message the message to send.
      */
-    public synchronized void sendMessage(Message message) {
+    public void sendMessage(Message message) {
         synchronized (output){
             try{
                 output.writeObject(message);
@@ -103,18 +109,18 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * This method gets the username choose by the client.
-     *
+     * Method used to get the username chosen by the player associated to the virtual list
      * @return the username string.
      */
     public String getUsername() { return username; }
 
     /**
-     * This method sets the username choose by the client
-     *
-     * @param username indicates the username string
+     * Method used to set the associatedGameThread for an instance of class VirtualView.
+     * @param gameThread the Game the player is associated to.
      */
-    public void setUsername(String username) { this.username = username; }
+    public void setAssociatedGameThread(Thread gameThread){
+        associatedGameThread = gameThread;
+    }
 
     /**
      * This method close the connection if one of the players disconnect
@@ -132,13 +138,6 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * Getter that return the Id of the connection for the specific client
-     * @return return the ID of the connection for the specific client
-     */
-    public SocketAddress getConnectionID() { return this.client.getRemoteSocketAddress(); }
-
-
-    /**
      * Getter of the queue of the incoming messages.
      * @return the queue of the incoming messages.
      */
@@ -146,9 +145,14 @@ public class VirtualView implements Runnable {
         return incomingMessages;
     }
 
-    public Message dequeueFirstMessage(){
+    /**
+     * Method used to read the first message in the queue.
+     * @return the first message of the queue.
+     */
+    public  Message dequeueFirstMessage(){
         return getIncomingMessages().dequeueEvent();
     }
+
 
     /**
      * Inner class Ping implements the separate thread for each virtual view. It sends a ping message to the client and waits at least 10 seconds.

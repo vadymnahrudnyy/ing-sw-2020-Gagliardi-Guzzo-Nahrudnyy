@@ -7,9 +7,9 @@ import java.net.*;
 import java.util.ArrayList;
 
 /**
- * Implements the main class of the Server part.
+ * Implements the main class of the Server.
  * Creates list of gods and powers by reading configuration files, creates the Socket and finally accepts the connections from players.
- * @version 1.3
+ * @version 2.0
  */
 public class Server {
     private static ServerSocket server;
@@ -27,18 +27,19 @@ public class Server {
         } catch (IOException e) {
             System.out.println("Server initialization failed: Server will shutdown");
         }
-        try{
             //noinspection InfiniteLoopStatement
-            while (true) {
+        while (true) {
+            try{
                 Socket newClient = server.accept();
+                System.out.println("new connection accepted from IP: " + newClient.getInetAddress());
                 VirtualView newVirtualView = new VirtualView(newClient, serverLobby);
                 Thread newVirtualViewThread = new Thread(newVirtualView);
                 newVirtualViewThread.start();
                 System.out.println("Virtual View for user "+newClient.getInetAddress()+" created");
-            }
-        } catch (IOException e){
+            }catch (IOException e){
                 System.out.println("Connection to the client failed");
             }
+        }
     }
 
     /**

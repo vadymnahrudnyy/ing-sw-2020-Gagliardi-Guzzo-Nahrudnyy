@@ -16,6 +16,9 @@ public class God implements Serializable {
     private final String description;
     private final int[] powers;
     private final int numPowers;
+
+    public static final int ONLY_THREE_PLAYERS_ALLOWED = 2;
+    public static final int THREE_AND_FOUR_PLAYERS_ALLOWED = 3;
     
     /**
      * @param name is the God's name

@@ -12,21 +12,12 @@ import java.util.ArrayList;
  */
 
 public class Lobby {
-    private static Server server;
-    private static boolean twoPlayersLobbyReady;
-    private static boolean threePlayersLobbyReady;
+    private static boolean twoPlayersLobbyReady = false;
+    private static boolean threePlayersLobbyReady = false;
     private static final ArrayList<String> twoPlayersLobby = new ArrayList<>();
     private static final ArrayList<String> threePlayersLobby = new ArrayList<>();
     private static final ArrayList<VirtualView> twoPlayersLobbyVirtualViews = new ArrayList<VirtualView>();
     private static final ArrayList<VirtualView> threePlayersLobbyVirtualViews = new ArrayList<VirtualView>();
-
-    /**
-     * Constructor of the server lobby.
-     */
-    public Lobby() {
-        twoPlayersLobbyReady = false;
-        threePlayersLobbyReady = false;
-    }
 
     /**
      * Method getTwoPlayersLobby
@@ -186,12 +177,14 @@ public class Lobby {
             if (getTwoPlayersLobbyReady()) {
                 newGame = new GameController(getTwoPlayersLobbyVirtualViews(), 2);
                 newGameThread = new Thread(newGame);
+                for (VirtualView view:getTwoPlayersLobbyVirtualViews()) view.setAssociatedGameThread(newGameThread);
                 newGameThread.start();
                 resetTwoPlayersLobby();
             }
             if (getThreePlayersLobbyReady()) {
                 newGame = new GameController(getThreePlayersLobbyVirtualViews(), 3);
                 newGameThread = new Thread(newGame);
+                for (VirtualView view:getThreePlayersLobbyVirtualViews()) view.setAssociatedGameThread(newGameThread);
                 newGameThread.start();
                 resetThreePlayersLobby();
             }

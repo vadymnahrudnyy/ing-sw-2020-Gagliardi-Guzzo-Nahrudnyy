@@ -109,6 +109,7 @@ public class Client {
                         break;
                     case Message.USERNAME_TAKEN_ERROR:
                         usernameError();
+                        break;
                     case Message.WINNER_NOTIFICATION:
                         winnerNotification(receivedMessage);
                         break;

@@ -11,7 +11,7 @@ public class CLI implements UI {
     int i;
     int j;
     Scanner input;
-    String circle= "\uD83D\uDD35";
+    String circle= "_\uD83D\uDD35";
 
     public CLI() {
     }
