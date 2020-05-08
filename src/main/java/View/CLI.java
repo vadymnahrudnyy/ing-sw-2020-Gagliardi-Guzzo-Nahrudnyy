@@ -11,7 +11,7 @@ public class CLI implements UI {
     int i;
     int j;
     Scanner input;
-    String circle= "_\uD83D\uDD35";
+    String circle= "\uD83D\uDD35";
 
     public CLI() {
     }
@@ -50,6 +50,7 @@ public class CLI implements UI {
     @Override
     public void startNotification() {
         System.out.println("Lobby piena: il gioco può cominciare, buona partita!");
+        System.out.println("");
     }
 
     @Override
@@ -61,10 +62,11 @@ public class CLI implements UI {
     }
 
     @Override
-    public void printAllPlayers(Player[] players) {
-        System.out.println("Scegli tra questi giocatori quale dovrà iniziare: ");
+    public void printAllPlayers(Player[] players, String username) {
+        System.out.print("Scegli tra questi giocatori quale dovrà iniziare: ");
         for (Player player : players) {
-            System.out.print(player.getUsername() + ", ");
+            if(!(username.equals(player.getUsername())))
+                System.out.print(player.getUsername() + " ");
         }
     }
 
@@ -93,11 +95,6 @@ public class CLI implements UI {
         System.out.println("I giocatori hanno scelto le loro divinità. La tua divinità è " + lastGod.getName());
     }
 
-    @Override
-    public void askWorkerPosition() {
-        System.out.println("Scegli dove mettere il tuo worker: ");
-
-    }
 
     @Override
     public void chooseWorker() {
@@ -111,7 +108,7 @@ public class CLI implements UI {
         input = new Scanner(System.in);
         String choice = input.nextLine();
         if ("y".equals(choice)) {
-            System.out.print("Inserisci le coordinate del worker che vuoi scegliere.");
+            System.out.print("Inserisci le coordinate del worker che vuoi scegliere: ");
             return true;
         } else
             return false;
@@ -135,7 +132,7 @@ public class CLI implements UI {
         for (i = 0; i < 5; i++) {
             for (j = 0; j < 5; j++) {
                 if (allowed[i][j])
-                    System.out.println("(" + i + 1 + "," + j + 1 + "), ");
+                    System.out.println("(" + (i + 1) + "," + (j + 1) + "), ");
             }
         }
     }
@@ -174,25 +171,25 @@ public class CLI implements UI {
     @Override
     public void printCurrentBoard(Game updatedGame) {
         System.out.println(" ______________________________");
-        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++){
-            for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++) {
+        for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++){
+            for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++) {
                 Worker checkedWorker = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getWorkerInPlace();
                 int checkedHeight = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getHeight();
 
                 if (checkedWorker != null && checkedHeight != 0) {
                     int workerColor = checkedWorker.getColor();
                     if (workerColor == 1) {
-                        if (j == 4)
+                        if (i == 4)
                             System.out.print("|" + checkedHeight + "__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "|");
                         else
                             System.out.print("|" + checkedHeight + "__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
                     } else if (workerColor == 2) {
-                        if (j == 4)
+                        if (i == 4)
                             System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET + "|");
                         else
                             System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET);
                     } else if (workerColor == 3) {
-                        if (j == 4)
+                        if (i == 4)
                             System.out.print("|" + checkedHeight + "__" + Color.ANSI_BLUE + circle + Color.RESET + "|");
                         else
                             System.out.print("|" + checkedHeight + "__" + Color.ANSI_BLUE + circle + Color.RESET);
@@ -200,7 +197,7 @@ public class CLI implements UI {
                 }
 
                 if (checkedHeight != 0) {
-                    if (j == 4)
+                    if (i == 4)
                         System.out.print("|__" + checkedHeight + "__|");
                     else
                         System.out.print("|__" + checkedHeight + "__");
@@ -209,25 +206,25 @@ public class CLI implements UI {
                 if (checkedWorker != null) {
                     int workerColor = checkedWorker.getColor();
                     if (workerColor == 1) {
-                        if (j == 4)
-                            System.out.print("|__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "|");
+                        if (i == 4)
+                            System.out.print("|__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "_|");
                         else
                             System.out.print("|__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
                     } else if (workerColor == 2) {
-                        if (j == 4)
-                            System.out.print("|__" + Color.ANSI_WHITE + circle + Color.RESET + "|");
+                        if (i == 4)
+                            System.out.print("|__" + Color.ANSI_WHITE + circle + Color.RESET + "_|");
                         else
                             System.out.print("|__" + Color.ANSI_WHITE + circle + Color.RESET);
                     } else if (workerColor == 3) {
-                        if (j == 4)
-                            System.out.print("|__" + Color.ANSI_BLUE + circle + Color.RESET + "|");
+                        if (i == 4)
+                            System.out.print("|__" + Color.ANSI_BLUE + circle + Color.RESET + "_|");
                         else
-                            System.out.print("|__" + Color.ANSI_BLUE + circle + Color.RESET);
+                            System.out.print("|__" + Color.ANSI_BLUE + circle + Color.RESET + "_");
                     }
                 }
 
                 else {
-                    if (j == 4)
+                    if (i == 4)
                         System.out.print("|_____|");
                     else
                         System.out.print("|_____");

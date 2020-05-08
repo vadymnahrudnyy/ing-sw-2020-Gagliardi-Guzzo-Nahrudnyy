@@ -59,7 +59,7 @@ public interface UI {
      * This method shows all the players of the lobby
      * @param players array of Players
      */
-    void printAllPlayers(Player[] players);
+    void printAllPlayers(Player[] players, String username);
 
     /**
      * This method shows the God cards used in the game and those already chosen
@@ -74,11 +74,6 @@ public interface UI {
      * @param lastGod last God available
      */
     void printLastGod(ArrayList<God> godList, God lastGod);
-
-    /**
-     * This method manages the choice of the worker the player wants to move
-     */
-    void askWorkerPosition();
 
     /**
      * This method asks the player of the position in which wants to move the selected worker

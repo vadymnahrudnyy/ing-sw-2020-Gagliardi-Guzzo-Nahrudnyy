@@ -25,6 +25,7 @@ public class Client {
     private static boolean[][] allowedPosition, allowedMoves, allowedBuild, allowedToRemove;
     private static int numWorker=0;
     private static int i,j;
+    private static String username;
 
     /**
      *This method creates a new network handler and creates a new thread
@@ -70,6 +71,9 @@ public class Client {
                         break;
                     case Message.LAST_GOD_NOTIFICATION:
                         remainingGod(receivedMessage);
+                        break;
+                    case Message.INVALID_GOD_ERROR:
+                        godError();
                         break;
                     case Message.LOBBY_STATUS_NOTIFICATION:
                         lobbyStatusNotification(receivedMessage);
@@ -129,7 +133,7 @@ public class Client {
     public static void askUsername()  {
         cli.chooseUsername();
         input=new Scanner(System.in);
-        String username= input.nextLine();
+        username= input.nextLine();
         networkHandler.sendMessage(new UsernameResponse(username));
     }
 
@@ -200,7 +204,7 @@ public class Client {
      * @throws IOException
      */
     public static void selectFirstPlayer(Message message) throws IOException {
-        cli.printAllPlayers(((StartPlayerRequest)message).getPlayers());
+        cli.printAllPlayers(((StartPlayerRequest)message).getPlayers(),username);
         input=new Scanner(System.in);
         String firstPlayer=input.nextLine();
         networkHandler.sendMessage(new StartPlayerResponse(firstPlayer));
@@ -228,11 +232,17 @@ public class Client {
 
 
     /**
+     * This method manages not valid god error
+     */
+    public static void godError(){
+        System.out.println("Attenzione! Non hai scritto il nome del dio in modo corretto (la prima lettera deve essere maiuscola).");
+    }
+
+    /**
      * This method shows where the player can put the selected worker and then he inserts the chosen coordinate
      * @throws IOException
      */
     public static void placeWorker(Message message) throws IOException {
-        cli.askWorkerPosition();
 
         System.out.println("Scegli posizione del worker " + ((WorkerPositionRequest) message).getCurrentWorker());
         allowedPosition=((WorkerPositionRequest) message).getAllowedPositions();
@@ -312,7 +322,7 @@ public class Client {
      */
     public static void chooseMove(Message message) throws IOException {
         cli.printPossibleAction(((MoveRequest) message).getAllowedMoves());
-        cli.confirmChoice();
+
 
         if(cli.confirmChoice()) {
             input = new Scanner(System.in);
