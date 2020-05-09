@@ -107,7 +107,7 @@ public class CLI implements UI {
         System.out.println("Confermi di voler muovere il worker scelto? Rispondi y o n. ");
         input = new Scanner(System.in);
         String choice = input.nextLine();
-        if ("y".equals(choice)) {
+        if ("n".equals(choice)) {
             System.out.print("Inserisci le coordinate del worker che vuoi scegliere: ");
             return true;
         } else
@@ -185,41 +185,41 @@ public class CLI implements UI {
                             System.out.print("|" + checkedHeight + "__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
                     } else if (workerColor == 2) {
                         if (i == 4)
-                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET + "|");
-                        else
-                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET);
-                    } else if (workerColor == 3) {
-                        if (i == 4)
                             System.out.print("|" + checkedHeight + "__" + Color.ANSI_BLUE + circle + Color.RESET + "|");
                         else
                             System.out.print("|" + checkedHeight + "__" + Color.ANSI_BLUE + circle + Color.RESET);
+                    } else if (workerColor == 3) {
+                        if (i == 4)
+                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET + "|");
+                        else
+                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET);
                     }
                 }
 
-                if (checkedHeight != 0) {
+                else if (checkedHeight != 0) {
                     if (i == 4)
                         System.out.print("|__" + checkedHeight + "__|");
                     else
                         System.out.print("|__" + checkedHeight + "__");
                 }
 
-                if (checkedWorker != null) {
+                else if (checkedWorker != null) {
                     int workerColor = checkedWorker.getColor();
                     if (workerColor == 1) {
                         if (i == 4)
                             System.out.print("|__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "_|");
                         else
-                            System.out.print("|__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
+                            System.out.print("|___" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
                     } else if (workerColor == 2) {
                         if (i == 4)
                             System.out.print("|__" + Color.ANSI_WHITE + circle + Color.RESET + "_|");
                         else
-                            System.out.print("|__" + Color.ANSI_WHITE + circle + Color.RESET);
+                            System.out.print("|___" + Color.ANSI_WHITE + circle + Color.RESET);
                     } else if (workerColor == 3) {
                         if (i == 4)
                             System.out.print("|__" + Color.ANSI_BLUE + circle + Color.RESET + "_|");
                         else
-                            System.out.print("|__" + Color.ANSI_BLUE + circle + Color.RESET + "_");
+                            System.out.print("|___" + Color.ANSI_BLUE + circle + Color.RESET + "_");
                     }
                 }
 

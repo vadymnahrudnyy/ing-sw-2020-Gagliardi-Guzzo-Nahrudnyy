@@ -28,7 +28,7 @@ public class GameController implements Runnable {
         virtualViewsList = new VirtualView[numPlayers];
         Player[] playersArray = new Player[numPlayers];
         for(int i=0;i<numPlayers;++i) virtualViewsList[i] = virtualViews.get(i);
-        for (int i=0;i<numPlayers;++i) {playersArray[i] = new Player(virtualViewsList[i].getUsername(),i,null,null);}
+        for (int i=0;i<numPlayers;++i) {playersArray[i] = new Player(virtualViewsList[i].getUsername(),i+1,null,null);}
         currentGame = new Game(numPlayers,playersArray[0],playersArray);
         if(numPlayers == 3) {
             gameGodList = new ArrayList<>();
@@ -87,21 +87,28 @@ public class GameController implements Runnable {
         boolean moveMade = false;
         boolean[][] allowedMoves = new boolean[][]{};
         int selectedWorkerX = 0, selectedWorkerY = 0;
-        Worker selectedWorker = null;// = getWorkerByCoordinates(selectedWorkerX,selectedWorkerY);
+        Worker selectedWorker = null;
         client.sendMessage(new SelectWorkerRequest());
         do{
+            notifyGameStatusToAll(currentGame);
             waitValidMessage(client,new int[]{Message.SELECT_WORKER_RESPONSE,Message.MOVE_RESPONSE});
             if (receivedMessage.getMessageID() == Message.SELECT_WORKER_RESPONSE){
                 selectedWorkerX = ((SelectWorkerResponse)receivedMessage).getCoordinateX();
                 selectedWorkerY = ((SelectWorkerResponse)receivedMessage).getCoordinateY();
                 selectedWorker = getWorkerByCoordinates(selectedWorkerX,selectedWorkerY);
                 allowedMoves = checkPossibleMoves(selectedWorkerX,selectedWorkerY);
-                if (workerCanMakeMove(allowedMoves)) client.sendMessage(new MoveRequest(allowedMoves,true));
+                if (workerCanMakeMove(allowedMoves)) {
+                    client.sendMessage(new MoveRequest(allowedMoves,true));
+                    movedWorker = selectedWorker;
+                }
 
                 else {
                     Worker otherWorker = getPlayersOtherWorker(player,selectedWorker);
                     allowedMoves = checkPossibleMoves(otherWorker.getWorkerPosition().getCoordinateX(),otherWorker.getWorkerPosition().getCoordinateY());
-                        if (workerCanMakeMove(allowedMoves)) client.sendMessage(new OtherWorkerMoveRequest(allowedMoves));
+                        if (workerCanMakeMove(allowedMoves)) {
+                            client.sendMessage(new OtherWorkerMoveRequest(allowedMoves));
+                            movedWorker = selectedWorker;
+                        }
                         else {
                             client.sendMessage(new NoPossibleMoveError());
                             if (currentGame.getNumPlayers()==2){
@@ -162,13 +169,13 @@ public class GameController implements Runnable {
                                                 client.sendMessage(new MoveRequest(allowedMoves,false));
                                         }
                                     } while(!moveMade);
-                                    movedWorker = selectedWorker;
                                 }
                         }
-                    }
+                    }movedWorker = selectedWorker;
                 } else client.sendMessage(new InvalidMoveError());
             }
         }while(!moveMade);
+        notifyGameStatusToAll(currentGame);
     }
 
 
@@ -267,6 +274,7 @@ public class GameController implements Runnable {
         waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});
         Space toBuildSpace = currentGame.getGameBoard().getSpace(((BuildResponse) receivedMessage).getBuildCoordinateX(),((BuildResponse) receivedMessage).getBuildCoordinateY());
         buildInSpace(client,toBuildSpace,actualPower);
+        notifyGameStatusToAll(currentGame);
 
         if (actualPower.getTurnPhase()==TurnPhase.BUILD && actualPower.getActive()&&actualPower.getPowerID()!=Power.BUILD_DOME_EVERYWHERE_POWER){
             switch (actualPower.getPowerID()){
@@ -472,7 +480,7 @@ public class GameController implements Runnable {
         char gender = 'm';
         if (numWorker == 1) gender = 'f';
         Space workerPosition = currentGame.getGameBoard().getSpace(coordinateX,coordinateY);
-        workerPosition.setWorkerInPlace(workers[numWorker-1] = new Worker(owner.getUsername(),gender,workerPosition,1));
+        workerPosition.setWorkerInPlace(workers[numWorker-1] = new Worker(owner.getUsername(),gender,workerPosition,owner.getUserID()));
     }
 
     /**
@@ -503,7 +511,7 @@ public class GameController implements Runnable {
         for (int X = workerCoordinateX - 2; X < workerCoordinateX + 1;++ X){
             for (int Y = workerCoordinateY - 2; Y < workerCoordinateY + 1;++Y){
                 Space currentSpace;
-                if ((X >= 0 && Y >= 0)&&((!(currentSpace = currentGame.getGameBoard().getSpace(X + 1, Y + 2)).getHasDome()&&currentSpace.getWorkerInPlace()==null))) allowedBuilds[X][Y] = true;
+                if ((X >= 0 && Y >= 0)&&((!(currentSpace = currentGame.getGameBoard().getSpace(X + 1, Y + 1)).getHasDome()&&currentSpace.getWorkerInPlace()==null))) allowedBuilds[X][Y] = true;
             }
         }
         if (currentGame.getCurrentPlayer().getGod().getSinglePower(0)== Power.WORKER_POSITION_BUILD && currentGame.getGameBoard().getSpace(workerCoordinateX,workerCoordinateY).getHeight() < (Space.DOME_LEVEL-1)) allowedBuilds[workerCoordinateX-1][workerCoordinateY-1] = true;
@@ -527,24 +535,10 @@ public class GameController implements Runnable {
         return((currentGame.getPlayerByUsername(playersUsername)).getGod());
     }
 
-    /**
-     * Method used to check if any of opponents of current Player has a given power
-     * @param powerID The power to be checked.
-     * @return true if an opponent has the indicated power, false otherwise.
-     */
-    private boolean opponentHasPower(int powerID){
-        Player[] gamePlayers = currentGame.getPlayers();
-        for (Player current:gamePlayers)
-            if (current.getGod().getSinglePower(0)==powerID && currentGame.getCurrentPlayer() != current) return true;
-        return false;
-    }
 
-    /**
-     * Method used to send a Game Status Notification to all players of the game.
-     */
-    private void notifyGameStatusToAll(){
-        for (VirtualView player:virtualViewsList) player.sendMessage(new GameStatusNotification(currentGame));
-    }
+
+
+
     //DOUBLE CHECKED
     //SETUP PHASE
     /**
@@ -619,6 +613,8 @@ public class GameController implements Runnable {
         currentGame.setCurrentPlayer(currentGame.getStarterPlayer());
         boolean [][] allowedPositions = initializeMatrix(true);
         boolean validPosition;
+        //sendMessageToAllPlayers(new GameStatusNotification(currentGame));
+        notifyGameStatusToAll(currentGame);
         do {
             VirtualView currentClient = getVirtualViewByUsername(currentGame.getCurrentPlayer().getUsername());
             assert currentClient != null;
@@ -629,7 +625,7 @@ public class GameController implements Runnable {
             }while(!validPosition);
             allowedPositions[((WorkerPositionResponse) receivedMessage).getCoordinateX()-1][((WorkerPositionResponse) receivedMessage).getCoordinateY()-1] = false;
             createWorker(1,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
-            currentClient.sendMessage(new GameStatusNotification(currentGame));
+            notifyGameStatusToAll(currentGame);
             do{
                 currentClient.sendMessage(new WorkerPositionRequest(2,allowedPositions));
                 waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});
@@ -637,9 +633,32 @@ public class GameController implements Runnable {
             }while(!validPosition);
             allowedPositions[((WorkerPositionResponse) receivedMessage).getCoordinateX()-1][((WorkerPositionResponse) receivedMessage).getCoordinateY()-1] = false;
             createWorker(2,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
+            notifyGameStatusToAll(currentGame);
             currentGame.nextPlayer();
         }while(currentGame.getCurrentPlayer() != currentGame.getStarterPlayer());
 
+    }
+
+
+    //AUXILIARY METHODS
+    /**
+     * Method used to send a Game Status Notification to all players of the game.
+     */
+    private void notifyGameStatusToAll(Game game){
+        for (VirtualView virtualView : virtualViewsList) {
+            virtualView.sendMessage(new GameStatusNotification(game));
+        }
+    }
+    /**
+     * Method used to check if any of opponents of current Player has a given power
+     * @param powerID The power to be checked.
+     * @return true if an opponent has the indicated power, false otherwise.
+     */
+    private boolean opponentHasPower(int powerID){
+        Player[] gamePlayers = currentGame.getPlayers();
+        for (Player current:gamePlayers)
+            if (current.getGod().getSinglePower(0)==powerID && currentGame.getCurrentPlayer() != current) return true;
+        return false;
     }
 
 }

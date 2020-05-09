@@ -16,11 +16,11 @@ public class Worker implements Serializable {
      */
 
     private final String owner;
-    private boolean wasMoved;
-    private boolean movedUp;
-    private final char gender;
     private Space workerPosition;
-    private int color;
+    private final int color;
+    private final char gender;
+    private boolean movedUp;
+    private boolean wasMoved;
     public final static int COLOR_YELLOW=1;
     public final static int COLOR_WHITE=2;
     public final static int COLOR_BLUE=3;

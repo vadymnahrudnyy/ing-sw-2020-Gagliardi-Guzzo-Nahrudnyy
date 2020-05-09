@@ -339,7 +339,7 @@ public class Client {
 
         allowedMoves=((MoveRequest) message).getAllowedMoves();
 
-        while(!allowedMoves[x - 1][y - 1]) {
+        while((x<0||y<0)||(x>IslandBoard.TABLE_DIMENSION||y>IslandBoard.TABLE_DIMENSION)||(!allowedMoves[x - 1][y - 1])) {
             System.out.println("Spazio già occupato! Scegli altre coordinate!");
             input = new Scanner(System.in);
             x = input.nextInt();

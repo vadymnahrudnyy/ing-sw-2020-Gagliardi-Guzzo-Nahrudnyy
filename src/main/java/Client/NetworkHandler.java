@@ -36,6 +36,8 @@ public class NetworkHandler implements Runnable {
     public void sendMessage(Message message) {
         synchronized (output){
             try {
+                output.flush();
+                output.reset();
                 output.writeObject(message);
             } catch (IOException e) {
                 e.printStackTrace();

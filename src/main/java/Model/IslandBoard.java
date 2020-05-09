@@ -23,7 +23,7 @@ public class IslandBoard implements Serializable {
         int coordinateX,coordinateY;
         for (coordinateX = 0;coordinateX < TABLE_DIMENSION;++coordinateX){
             for (coordinateY = 0; coordinateY < TABLE_DIMENSION; ++coordinateY){
-                matrix [coordinateX][coordinateY] = new Space(coordinateX,coordinateY);
+                matrix [coordinateX][coordinateY] = new Space(coordinateX+1,coordinateY+1);
             }
         }
     }

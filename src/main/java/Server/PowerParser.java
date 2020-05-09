@@ -28,8 +28,8 @@ public class PowerParser {
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder pBuilder = factory.newDocumentBuilder();
-            //return pBuilder.parse(PowerParser.class.getClassLoader().getResourceAsStream("configurationfilepower.xml")); //(InputSource containing the content to be parsed) - returns a new DOM Document object.
-            return pBuilder.parse("./resources/configurationfilepower.xml");
+            //(InputSource containing the content to be parsed) - returns a new DOM Document object.
+            return pBuilder.parse("./src/main/resources/configurationfilepower.xml");
 
         } catch(Exception e) {
             e.printStackTrace();

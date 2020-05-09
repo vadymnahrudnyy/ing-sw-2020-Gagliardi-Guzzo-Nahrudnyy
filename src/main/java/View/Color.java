@@ -4,7 +4,7 @@ public enum Color {
 
     ANSI_BRIGHT_YELLOW("\u001b[93m"),
     ANSI_WHITE("\u001b[37m"),
-    ANSI_BLUE("\u001b[44m");
+    ANSI_BLUE("\u001b[34m");
 
 
     static final String CLEAR_CONSOLE = "\033[H\033[2J";
