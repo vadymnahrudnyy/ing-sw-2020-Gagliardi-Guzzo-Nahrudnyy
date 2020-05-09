@@ -27,7 +27,7 @@ public class Lobby extends Application {
         BorderPane root = (BorderPane) loader.load();
         Scene scene = new Scene(root);
         primaryStage.setScene(scene);
-        primaryStage.setResizable(false);
+        primaryStage.setResizable(true);
         primaryStage.show();
 
     }

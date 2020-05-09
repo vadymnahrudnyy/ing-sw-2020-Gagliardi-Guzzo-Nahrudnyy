@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane prefHeight="478.0" prefWidth="705.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+    <stylesheets>
+        <URL value="@../Style.css" />
+    </stylesheets>
+
+    <left>
+    <VBox alignment="TOP_LEFT">
+    <ImageView id="bgLeft" fx:id="bgLeft" fitHeight="478.0" fitWidth="300.0" >
+         <image><Image url="@../Images/Backgrounds/LobbyLeft.png" /></image></ImageView>
+    </VBox>
+    </left>
+
+    <right>
+    <VBox alignment="TOP_RIGHT">
+        <ImageView id="bgRight" fx:id="bgRight" fitHeight="478.0" fitWidth="410.0">
+            <image><Image url="@../Images/Backgrounds/bg1.png" /></image></ImageView>
+    </VBox>
+    </right>
+</BorderPane>

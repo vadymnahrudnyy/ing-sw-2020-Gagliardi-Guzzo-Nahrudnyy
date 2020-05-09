@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.TilePane?>
+<?import javafx.scene.layout.VBox?>
+
+
+<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="485.0" prefWidth="726.0">
+      
+         <stylesheets>
+            <URL value="@../Style.css" />
+         </stylesheets>
+      
+            
+               <ImageView fitHeight="508.0" fitWidth="786.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-60.0" AnchorPane.topAnchor="0.0">
+            <image>
+               <Image url="@../Images/Backgrounds/Water.png" />
+            </image>
+         </ImageView>
+         <ImageView fitHeight="277.0" fitWidth="760.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0">
+            <image>
+               <Image url="@../Images/Backgrounds/Grass.png" />
+            </image>
+         </ImageView>
+      
+         <Pane layoutX="223.0" layoutY="7.0" prefHeight="325.0" prefWidth="286.0">
+            <ImageView fitHeight="312.0" fitWidth="286.0" layoutX="-1.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
+               <Image url="@../Images/Backgrounds/Island.png" />
+            </ImageView>
+      
+      
+            <TilePane alignment="CENTER" layoutX="-7.0" layoutY="175.0" prefHeight="96.0" prefWidth="297.0">
+               <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
+                  <Image url="@../Images/Backgrounds/logo.png" />
+               </ImageView>
+            </TilePane>
+         </Pane>
+      
+            <BorderPane layoutY="4.0" prefHeight="508.0" prefWidth="727.0" AnchorPane.bottomAnchor="-4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="4.0">
+      
+               <bottom>
+                  <VBox alignment="CENTER" prefHeight="149.0" prefWidth="727.0">
+                     <Region prefHeight="10.0" prefWidth="80.0">
+                     <VBox.margin>
+                        <Insets left="260.0" right="260.0" />
+                     </VBox.margin>
+                  </Region>
+                     <TextField prefHeight="23.0" prefWidth="601.0" style="-fx-background-color: nsparent; -fx-border-color: #1338be #1338be; -fx-border-width: 2PX 2PX 2PX 2PX;" styleClass="usernameBox" text="Insert IPAddress">
+                     <VBox.margin>
+                        <Insets left="260.0" right="260.0" />
+                     </VBox.margin>
+                  </TextField>
+                     <Region prefHeight="10.0" prefWidth="10.0" />
+                  <TextField style="-fx-background-color: transparent; -fx-border-color: #1338be #1338be #1338be #1338be; -fx-border-width: 2PX 2PX 2PX 2PX 2PX 2PX 2PX 2PX;" styleClass="usernameBox" text="Insert Username">
+                     <VBox.margin>
+                        <Insets left="260.0" right="260.0" />
+                     </VBox.margin>
+                  </TextField>
+                     <Region prefHeight="10.0" prefWidth="10.0" />
+                     <ImageView fitHeight="80.0" fitWidth="80.0" styleClass="button" fx:id="playButton">
+                        <Image url="@../Images/Backgrounds/playButton.png" />
+                     </ImageView>
+      
+                  </VBox>
+      
+               </bottom>
+      
+            </BorderPane>
+      
+      </AnchorPane>
+   </children>
+</StackPane>

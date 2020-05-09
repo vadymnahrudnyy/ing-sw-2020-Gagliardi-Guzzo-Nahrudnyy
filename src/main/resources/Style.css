@@ -1,9 +1,21 @@
 /*Fonts*/
 @font-face {
-    src: url("/Fonts/HippopotamusApocalypse-Gzly.ttf");
+    -fx-font: url("Fonts/Sunday-Regular.otf");
 }
 
+.slider-container{+
+    -fx-pref-width: 800px;
+    -fx-pref-height: 600px;
+    -fx-start-margin: auto;
+    -fx-end-margin: auto;
+}
 
+.image-container{
+    -fx-pref-width: 2400px;
+    -fx-pref-height: 600px;
+    -fx-position-shape: relative;
+    -fx-translate-x: 20px;
+}
 
 .button:hover {
     -fx-effect: dropshadow(gaussian,  #0000FF, 15, 0.2, 0, 0);
@@ -14,11 +26,25 @@
     -fx-scale-x: 0.95;
 }
 
-
 .button{
     -fx-max-width: 200px;
     -fx-spacing: 10;
     -fx-alignment: CENTER;
+}
+
+.select{
+    -fx-max-width: 200px;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER;
+}
+
+.select:pressed{
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.95;
+}
+
+.select:hover {
+    -fx-effect: dropshadow(gaussian,  #C0C0C0, 15, 0.2, 0, 0);
 }
 
 .usernameBox {
@@ -28,19 +54,83 @@
 }
 
 
-/* Images*/
-#playButton {
-    -fx-image: url("Images/Backgrounds/button-play-normal.png");
+
+
+
+
+
+#Apollo {
+    -fx-image: url("/Images/Gods/Apollo.png");
 }
 
-#textField{
-    -fx-image: url("Images/Backgrounds/clp_skip_btn.png");
+#Artemis {
+    -fx-image: url("/Images/Gods/Artemis.png");
 }
 
-#leftBackgroung
-{
-    -fx-image: url("Images/Backgrounds/bg_panelEdgeLeft.png");
+#Ares {
+    -fx-image: url("/Images/Gods/Ares.png");
 }
+
+#Athena {
+    -fx-image: url("/Images/Gods/Athena.png");
+}
+
+#Atlas {
+    -fx-image: url("/Images/Gods/Atlas.png");
+}
+
+#Chronus {
+    -fx-image: url("/Images/Gods/Chronus.png");
+}
+
+#Demeter {
+    -fx-image: url("/Images/Gods/Demeter.png");
+}
+
+#Hephaestus {
+    -fx-image: url("/Images/Gods/Hephaestus.png");
+}
+
+#Hera {
+    -fx-image: url("/Images/Gods/Hera.png");
+}
+
+#Hermes {
+    -fx-image: url("/Images/Gods/Hermes.png");
+}
+
+#Hestia{
+    -fx-image: url("/Images/Gods/Hestia.png");
+}
+
+#Minotaur {
+    -fx-image: url("/Images/Gods/Minotaur.png");
+}
+
+#Pan {
+    -fx-image: url("/Images/Gods/Pan.png");
+}
+
+#Prometheus {
+    -fx-image: url("/Images/Gods/Prometheus.png");
+}
+
+#Zeus {
+    -fx-image: url("/Images/Gods/Zeus.png");
+}
+
+#SelectButton {
+    -fx-image: url("/Images/Backgrounds/SelectButton.png");
+}
+
+
+
+
+
+
+
+
+
 
 
 

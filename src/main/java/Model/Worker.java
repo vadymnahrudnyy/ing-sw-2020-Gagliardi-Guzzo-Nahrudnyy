@@ -2,7 +2,7 @@ package Model;
 
 import Exception.Worker.InvalidWorkerPositionException;
 
-import java.awt.*;
+
 import java.io.Serializable;
 
 /**
