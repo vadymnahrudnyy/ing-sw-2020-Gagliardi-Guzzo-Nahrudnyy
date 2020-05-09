@@ -1,5 +1,6 @@
 package View;
 
+import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -12,6 +13,7 @@ public class CLI implements UI {
     int j;
     Scanner input;
     String circle= "\uD83D\uDD35";
+    String isDome;
 
     public CLI() {
     }
@@ -24,6 +26,7 @@ public class CLI implements UI {
         System.out.println("Dovrai scegliere una carta divinità, la quale possiede un potere particolare, che potrai utilizzare nel gioco. Inoltre disporrai di 2 worker.");
         System.out.println("Durante il tuo turno potrai muoverti: il movimento può essere solo nelle caselle direttamente adiacenti alla tua posizione.");
         System.out.println("Dopodiché potrai costruire, ci sono 4 tipo di blocchi: livello 1, livello 2, livello 3 e cupola 4.");
+        System.out.println("Può capitare che una cupola venga costruita a qualsiasi livello, in quel caso verrà indicata con una C e affiancata dal livello sottostante.");
         System.out.println("");
     }
 
@@ -175,51 +178,56 @@ public class CLI implements UI {
             for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++) {
                 Worker checkedWorker = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getWorkerInPlace();
                 int checkedHeight = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getHeight();
+                boolean checkedDome =  updatedGame.getGameBoard().getSpace(i + 1, j + 1).getHasDome();
+                if(checkedDome==true)
+                    isDome="C";
+                else
+                    isDome="_";
 
                 if (checkedWorker != null && checkedHeight != 0) {
                     int workerColor = checkedWorker.getColor();
                     if (workerColor == 1) {
                         if (i == 4)
-                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "|");
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "|");
                         else
-                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
                     } else if (workerColor == 2) {
                         if (i == 4)
-                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_BLUE + circle + Color.RESET + "|");
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_WHITE + circle + Color.RESET + "|");
                         else
-                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_BLUE + circle + Color.RESET);
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_WHITE + circle + Color.RESET);
                     } else if (workerColor == 3) {
                         if (i == 4)
-                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET + "|");
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BLUE + circle + Color.RESET + "|");
                         else
-                            System.out.print("|" + checkedHeight + "__" + Color.ANSI_WHITE + circle + Color.RESET);
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BLUE + circle + Color.RESET);
                     }
                 }
 
                 else if (checkedHeight != 0) {
                     if (i == 4)
-                        System.out.print("|__" + checkedHeight + "__|");
+                        System.out.print("|_" + checkedHeight + "_" + isDome + "_|");
                     else
-                        System.out.print("|__" + checkedHeight + "__");
+                        System.out.print("|_" + checkedHeight + "_" + isDome + "_");
                 }
 
                 else if (checkedWorker != null) {
                     int workerColor = checkedWorker.getColor();
                     if (workerColor == 1) {
                         if (i == 4)
-                            System.out.print("|__" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "_|");
+                            System.out.print("|__" + isDome + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "_|");
                         else
-                            System.out.print("|___" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
+                            System.out.print("|__" + isDome + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
                     } else if (workerColor == 2) {
                         if (i == 4)
-                            System.out.print("|__" + Color.ANSI_WHITE + circle + Color.RESET + "_|");
+                            System.out.print("|__" + isDome + Color.ANSI_WHITE + circle + Color.RESET + "_|");
                         else
-                            System.out.print("|___" + Color.ANSI_WHITE + circle + Color.RESET);
+                            System.out.print("|__" + isDome + Color.ANSI_WHITE + circle + Color.RESET);
                     } else if (workerColor == 3) {
                         if (i == 4)
-                            System.out.print("|__" + Color.ANSI_BLUE + circle + Color.RESET + "_|");
+                            System.out.print("|__" + isDome + Color.ANSI_BLUE + circle + Color.RESET + "_|");
                         else
-                            System.out.print("|___" + Color.ANSI_BLUE + circle + Color.RESET + "_");
+                            System.out.print("|__" + isDome + Color.ANSI_BLUE + circle + Color.RESET + "_");
                     }
                 }
 
