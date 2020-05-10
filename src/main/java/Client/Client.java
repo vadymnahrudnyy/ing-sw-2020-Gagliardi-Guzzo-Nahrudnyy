@@ -23,7 +23,6 @@ public class Client {
     private static CLI cli=new CLI();
     private static int x,y;
     private static boolean[][] allowedPosition, allowedMoves, allowedBuild, allowedToRemove;
-    private static int numWorker=0;
     private static int i,j;
     private static String username;
 
@@ -142,7 +141,7 @@ public class Client {
      * This method manages not valid username error
      */
     private static void usernameError() {
-        System.out.println("Username già scelto da un altro giocatore!");
+        System.out.println("Username already chosen by another player!");
         askUsername();
     }
 
@@ -155,7 +154,7 @@ public class Client {
         input = new Scanner(System.in);
         numPlayers = input.nextInt();
         while(numPlayers != 2 && numPlayers != 3) {
-            System.out.println("Numero giocatori scelto non valido. Riprova.");
+            System.out.println("Invalid number of players selected. Please try again.");
             input = new Scanner(System.in);
             numPlayers = input.nextInt();
         }
@@ -235,7 +234,7 @@ public class Client {
      * This method manages not valid god error
      */
     public static void godError(){
-        System.out.println("Attenzione! Non hai scritto il nome del dio in modo corretto (la prima lettera deve essere maiuscola).");
+        System.out.println("Attention! You did not write the name of the god correctly (the first letter must be capitalized).");
     }
 
     /**
@@ -244,19 +243,19 @@ public class Client {
      */
     public static void placeWorker(Message message) throws IOException {
 
-        System.out.println("Scegli posizione del worker " + ((WorkerPositionRequest) message).getCurrentWorker());
+        System.out.println("Choose the position of the worker " + ((WorkerPositionRequest) message).getCurrentWorker());
         allowedPosition=((WorkerPositionRequest) message).getAllowedPositions();
         input = new Scanner(System.in);
-        System.out.println("Inserisci coordinata X: ");
+        System.out.println("Insert coordinate X: ");
         x = input.nextInt();
-        System.out.println("Inserisci coordinata Y: ");
+        System.out.println("Insert coordinate Y: ");
         y = input.nextInt();
         while (((x < 0||y < 0)||(x > IslandBoard.TABLE_DIMENSION || y > IslandBoard.TABLE_DIMENSION))||(!allowedPosition[x-1][y-1])){
-            System.out.println("Posizione non valida.");
+            System.out.println("Position is not valid.");
             input = new Scanner(System.in);
-            System.out.println("Inserisci coordinata X: ");
+            System.out.println("Insert coordinate X: ");
             x = input.nextInt();
-            System.out.println("Inserisci coordinata Y: ");
+            System.out.println("Insert coordinate Y: ");
             y = input.nextInt();
             }
 
@@ -293,7 +292,7 @@ public class Client {
         allowedMoves=((OtherWorkerMoveRequest) message).getAllowedMoves();
 
         while(!allowedMoves[x - 1][y - 1]) {
-            System.out.println("Spazio già occupato! Scegli altre coordinate.");
+            System.out.println("Space already occupied! Choose other coordinates!");
             input = new Scanner(System.in);
             x = input.nextInt();
             y = input.nextInt();
@@ -307,7 +306,6 @@ public class Client {
      * @throws IOException
      */
     private static void usePower() throws IOException {
-        cli.askPowerUsage();
         networkHandler.sendMessage(new UsePowerResponse(cli.askPowerUsage()));
 
     }
@@ -340,7 +338,7 @@ public class Client {
         allowedMoves=((MoveRequest) message).getAllowedMoves();
 
         while((x<0||y<0)||(x>IslandBoard.TABLE_DIMENSION||y>IslandBoard.TABLE_DIMENSION)||(!allowedMoves[x - 1][y - 1])) {
-            System.out.println("Spazio già occupato! Scegli altre coordinate!");
+            System.out.println("Space already occupied! Choose other coordinates!");
             input = new Scanner(System.in);
             x = input.nextInt();
             y = input.nextInt();
@@ -365,7 +363,7 @@ public class Client {
         allowedBuild = ((BuildRequest) message).getAllowedMoves();
 
         while(!allowedBuild[x - 1][y - 1]) {
-            System.out.println("Spazio già occupato! Scegli altre coordinate!");
+            System.out.println("Space already occupied! Choose other coordinates!");
             input = new Scanner(System.in);
             x = input.nextInt();
             y = input.nextInt();
@@ -385,7 +383,7 @@ public class Client {
         y = input.nextInt();
         allowedToRemove=((BlockRemovalRequest) message).getAllowedMoves();
         while(!allowedToRemove[x - 1][y - 1]) {
-            System.out.println("Rimozione non consentita! Scegli altre coordinate.");
+            System.out.println("Removal not allowed! Choose other coordinates.");
             input = new Scanner(System.in);
             x = input.nextInt();
             y = input.nextInt();
@@ -415,6 +413,7 @@ public class Client {
      * @param message GameStatusNotification
      */
     private static void statusNotification(Message message) {
+        cli.printCurrentStatus(((GameStatusNotification) message).getUpdatedGame());
         cli.printCurrentBoard(((GameStatusNotification) message).getUpdatedGame());
     }
 

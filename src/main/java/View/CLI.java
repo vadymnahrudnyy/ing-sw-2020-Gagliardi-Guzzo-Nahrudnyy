@@ -14,6 +14,11 @@ public class CLI implements UI {
     Scanner input;
     String circle= "\uD83D\uDD35";
     String isDome;
+    int n=1;
+    String username;
+    int workersColor;
+    String godName;
+    String color;
 
     public CLI() {
     }
@@ -22,43 +27,43 @@ public class CLI implements UI {
 
     @Override
     public void gameInfo() {
-        System.out.println("Benvenuto in Santorini!");
-        System.out.println("Dovrai scegliere una carta divinità, la quale possiede un potere particolare, che potrai utilizzare nel gioco. Inoltre disporrai di 2 worker.");
-        System.out.println("Durante il tuo turno potrai muoverti: il movimento può essere solo nelle caselle direttamente adiacenti alla tua posizione.");
-        System.out.println("Dopodiché potrai costruire, ci sono 4 tipo di blocchi: livello 1, livello 2, livello 3 e cupola 4.");
-        System.out.println("Può capitare che una cupola venga costruita a qualsiasi livello, in quel caso verrà indicata con una C e affiancata dal livello sottostante.");
+        System.out.println("Welcome in Santorini!");
+        System.out.println("You will have to choose a deity card, which has a special power, that you can use in the game. You will also have 2 workers.");
+        System.out.println("During your turn you can move: the movement can only be in the boxes directly adjacent to your position.");
+        System.out.println("Then you can build, there are 4 types of blocks: level 1, level 2, level 3 and dome 4.");
+        System.out.println("It can happen that a dome is built at any level, in that case it will be indicated with a C and flanked by the level below.");
         System.out.println("");
     }
 
     @Override
     public void chooseServerAddress() {
-        System.out.println("Inserisci l'indirizzo del server a cui vuoi collegarti per giocare: ");
+        System.out.println("Enter the address of the server you want to connect to in order to play: ");
     }
 
     @Override
     public void chooseUsername() {
-        System.out.println("Scegli il tuo username! Deve essere un'unica parola.");
+        System.out.println("Choose your username! It must be a single word.");
     }
 
     @Override
     public void chooseNumPlayers() {
-        System.out.println("Quanti giocatori desideri che abbia la partita? Scegli digitando: 2 o 3");
+        System.out.println("How many players do you want in the game? Choose by typing: 2 or 3");
     }
 
     @Override
     public void printLobbyStatus(int selectedLobby, int slotsOccupied) {
-        System.out.println("Lobby e numero di giocatori attualmente presenti:");
+        System.out.println("Lobby and number of players currently in: ");
     }
 
     @Override
     public void startNotification() {
-        System.out.println("Lobby piena: il gioco può cominciare, buona partita!");
+        System.out.println("Full lobby: the game can begin, good luck!");
         System.out.println("");
     }
 
     @Override
     public void showGodList(ArrayList<God> gods, int numPlayers) {
-        System.out.println("Scegli " + numPlayers + " carte tra quelle disponibili.");
+        System.out.println("Choose " + numPlayers + " cards among those available.");
         for (God god : gods) {
             System.out.println(god.getName() + ", " + god.getDescription());
         }
@@ -66,52 +71,52 @@ public class CLI implements UI {
 
     @Override
     public void printAllPlayers(Player[] players, String username) {
-        System.out.print("Scegli tra questi giocatori quale dovrà iniziare: ");
+        System.out.print("Choose among these players which will start: ");
         for (Player player : players) {
             if(!(username.equals(player.getUsername())))
                 System.out.print(player.getUsername() + " ");
         }
+        System.out.println("");
     }
 
     @Override
     public void chooseGod(ArrayList<God> godList, ArrayList<God> unavailableList) {
-        System.out.println("Questi sono tutti gli dei scelti per la partita: ");
+        System.out.println("These are all the gods chosen for the match: ");
         for (God god : godList) {
             System.out.print(god.getName() + "   ");
         }
         System.out.println("");
-        System.out.println("Dei già scelti (non disponibili): ");
+        System.out.println("Already selected  gods (not available): ");
         for (God god : unavailableList) {
             System.out.print(god.getName() + ", ");
         }
 
-        System.out.println("Devi sceglierne uno evitando quelli già scelti.");
+        System.out.println("You have to choose one and avoid the ones already chosen.");
     }
 
     @Override
     public void printLastGod(ArrayList<God> godList, God lastGod) {
-        System.out.println("Questi sono tutti gli dei che hai scelto per la partita: ");
+        System.out.println("Already selected  gods (not available): ");
         for (God god : godList) {
             System.out.print(god.getName() + "   ");
         }
         System.out.println("");
-        System.out.println("I giocatori hanno scelto le loro divinità. La tua divinità è " + lastGod.getName());
+        System.out.println("Players have chosen their deities. Your deity is " + lastGod.getName());
     }
 
 
     @Override
     public void chooseWorker() {
-
-        System.out.println("Scegli le coordinate del worker che desideri muovere: ");
+        System.out.println("Choose the coordinates of the worker you want to move: ");
     }
 
     @Override
     public boolean confirmChoice() {
-        System.out.println("Confermi di voler muovere il worker scelto? Rispondi y o n. ");
+        System.out.println("Do you confirm that you want to move the chosen worker? Reply y or n.");
         input = new Scanner(System.in);
         String choice = input.nextLine();
         if ("n".equals(choice)) {
-            System.out.print("Inserisci le coordinate del worker che vuoi scegliere: ");
+            System.out.print("Enter the coordinates of the worker you want to choose: ");
             return true;
         } else
             return false;
@@ -119,19 +124,19 @@ public class CLI implements UI {
 
     @Override
     public void moveWorker() {
-        System.out.println("Scegli in quale casella vuoi spostare il tuo worker indicando le coordinate numeriche x e y.");
+        System.out.println("Choose which space you want to move your worker by stating the numerical coordinates x and y.");
     }
 
 
     @Override
     public void otherWorker() {
-        System.out.println("Il lavoratore scelto non poteva muoversi, seleziona una mossa per l'altro worker: ");
+        System.out.println("The chosen worker couldn't move, select a move for the other worker: ");
     }
 
 
     @Override
     public void printPossibleAction(boolean[][] allowed) {
-        System.out.println("Mosse possibili (in coordinate): ");
+        System.out.println("Possible moves (in coordinates):");
         for (i = 0; i < 5; i++) {
             for (j = 0; j < 5; j++) {
                 if (allowed[i][j])
@@ -142,13 +147,13 @@ public class CLI implements UI {
 
     @Override
     public void buildTower() {
-        System.out.println("Scegli in quale casella vuoi costruire, indicando le coordinate numeriche x e y:");
+        System.out.println("Choose in which space you want to build, stating the numerical coordinates x and y:");
     }
 
 
     @Override
     public boolean askPowerUsage() {
-        System.out.println("Vuoi usare il potere del tuo dio? Rispondi y o n");
+        System.out.println("Do you want to use the power of your god? Reply y o n");
         input = new Scanner(System.in);
         String choice = input.nextLine();
         return "y".equals(choice);
@@ -157,24 +162,47 @@ public class CLI implements UI {
 
     @Override
     public void noPossibleMoves() {
-        System.out.println("Non hai più possibilità di muoverti! Mi dispiace, hai perso.");
+        System.out.println("You don’t have a chance to move anymore! I’m sorry, you lost.");
     }
-
 
     @Override
     public void chooseRemoval() {
-        System.out.println("Inserisci le coordinate del blocco che vuoi rimuovere: ");
+        System.out.println("Enter the coordinates of the block you want to remove: ");
     }
 
     @Override
     public void invalidMove() {
-        System.out.println("Mossa non consentita!");
+        System.out.println("Move not allowed!");
+    }
+
+    @Override
+    public void printCurrentStatus(Game updatedGame){
+
+        for(i=0; i<updatedGame.getPlayers().length; i++) {
+            username = (updatedGame.getPlayers())[i].getUsername();
+            godName = (updatedGame.getPlayers())[i].getGod().getName();
+            workersColor = (updatedGame.getPlayers())[i].getUserID();
+            if (workersColor == 1)
+                color = "yellow";
+            else if (workersColor == 2)
+                color = "white ";
+            else if (workersColor == 3)
+                color = "blue  ";
+
+            System.out.println("username: " + username);
+            System.out.println("color of workers: " + color);
+            System.out.println("god: " + godName);
+            System.out.println("");
+        }
+        System.out.println("");
     }
 
     @Override
     public void printCurrentBoard(Game updatedGame) {
-        System.out.println(" ______________________________");
+        System.out.println("  X    1     2     3     4     5  ");
+        System.out.println("Y    ______________________________");
         for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++){
+            System.out.print(n +"   ");
             for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++) {
                 Worker checkedWorker = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getWorkerInPlace();
                 int checkedHeight = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getHeight();
@@ -238,12 +266,16 @@ public class CLI implements UI {
                         System.out.print("|_____");
                 }
             }
-        System.out.println("");}
+            n++;
+            System.out.println("");
+        }
+        n=1;
+        System.out.println("");
     }
 
     @Override
     public void isWinner(String winner) {
-        System.out.println("Fine del gioco! Ha vinto: " + winner);
+        System.out.println("Game over! The winner is: " + winner);
     }
 
 }

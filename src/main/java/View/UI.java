@@ -130,6 +130,12 @@ public interface UI {
     void invalidMove();
 
     /**
+     * This method shows the legend of the players in the game: username, color of the workers and God chosen
+     * @param updatedGame is the current instance of the Game class
+     */
+    void printCurrentStatus(Game updatedGame);
+
+    /**
      * This method shows the current status of the game board
      * @param updatedGame is the current instance of the Game class
      */
