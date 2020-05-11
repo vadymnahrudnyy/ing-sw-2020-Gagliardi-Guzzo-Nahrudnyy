@@ -322,7 +322,7 @@ public class Client {
         cli.printPossibleAction(((MoveRequest) message).getAllowedMoves());
 
 
-        if(cli.confirmChoice()) {
+        if(((MoveRequest)message).chaChangeWorker()&&cli.confirmChoice()) {
             input = new Scanner(System.in);
             int x = input.nextInt();
             int y = input.nextInt();

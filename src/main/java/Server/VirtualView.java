@@ -9,7 +9,7 @@ import java.net.*;
 
 /**
  * This class behave like the View for Controller and Model
- * @version 1.3
+ * @version 1.5
  */
 
 public class VirtualView implements Runnable {
@@ -18,10 +18,14 @@ public class VirtualView implements Runnable {
     private final Lobby serverLobby;
     private boolean connected = true;
     private boolean pingReceived;
+    private boolean isInGame = false;
+    private boolean isInLobby = false;
+    private Thread virtualViewThread;
     private Thread associatedGameThread;
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
     private final QueueOfEvents incomingMessages;
+
 
     /**
      * Constructor of VirtualView class instance.
@@ -38,10 +42,10 @@ public class VirtualView implements Runnable {
 
     @Override
     public void run() {
+        virtualViewThread = Thread.currentThread();
         try {
             System.out.println("User "+client.getInetAddress()+" connected");
             Message message;
-            boolean insertedInLobby;
             try{
                 do {
                 sendMessage(new NumPlayersRequest());
@@ -54,23 +58,25 @@ public class VirtualView implements Runnable {
                         message = (Message) input.readObject();
                     } while (message.getMessageID() != Message.USERNAME_RESPONSE);
                     username = ((UsernameResponse) message).getUsername();
-                    insertedInLobby = serverLobby.addPlayerToLobby(numPlayers,this,username);
-                }while(!insertedInLobby);
+                    serverLobby.addPlayerToLobby(numPlayers,this,username,virtualViewThread);
+                }while(!isInLobby);
             } catch (SocketException e){
                 connected = false;
-                client.close();
+                closeConnection();
             }
+
             //Ping connectionChecker = new Ping(this);
             //Thread pingThread = new Thread(connectionChecker);
             //pingThread.start();
             //System.out.println("Ping Thread Created");
             //System.out.println("Ping Thread for user "+client.getInetAddress()+" created");
 
-            while (connected) receiveMessage();
 
+            while (connected) receiveMessage();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
+
     }
 
     /**
@@ -85,8 +91,18 @@ public class VirtualView implements Runnable {
                 associatedGameThread.interrupt();
             }catch (SocketException e){
                 System.out.println("User "+client.getInetAddress()+" disconnected");
-                connected = false;
-                client.close();
+                if (isInLobby) {
+                    serverLobby.removePlayerFromLobby(this,username,virtualViewThread);
+                    closeConnection();
+                }
+                if (isInGame) {
+                    incomingMessages.enqueueEvent(new Disconnection());
+                    try {
+                        Thread.sleep(1000000000);
+                    } catch (InterruptedException interruption) {
+                        closeConnection();
+                    }
+                }
             }
         }
         catch (ClassNotFoundException | IOException e) {
@@ -129,6 +145,7 @@ public class VirtualView implements Runnable {
      */
     public synchronized void closeConnection() {
         try {
+            connected = false;
             input.close();
             output.close();
             client.close();
@@ -153,6 +170,13 @@ public class VirtualView implements Runnable {
      */
     public  Message dequeueFirstMessage(){
         return getIncomingMessages().dequeueEvent();
+    }
+
+    public void setInGame(boolean value){
+        isInGame = value;
+    }
+    public void setInLobby(boolean value){
+        isInLobby = value;
     }
 
 
