@@ -154,7 +154,7 @@ public class Lobby {
      * @param client VirtualView of the player.
      * @param username username of the player.
      */
-    public synchronized void addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username,Thread viewThread){
+     synchronized void addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username,Thread viewThread){
         System.out.println("Adding user"+ username +" to lobby");
             if (desiredNumPlayers == 2){
                 if (!(getTwoPlayersLobby().contains(username))) {

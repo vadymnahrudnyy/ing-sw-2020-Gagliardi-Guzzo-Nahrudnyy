@@ -62,7 +62,4 @@ public class IslandBoard implements Serializable {
         setNumberCompleteTowers(++CompleteTowers);
     }
 
-    public int getTableDimension(){
-        return TABLE_DIMENSION+1;
-    }
 }

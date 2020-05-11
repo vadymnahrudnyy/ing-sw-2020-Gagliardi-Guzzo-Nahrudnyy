@@ -43,6 +43,8 @@ public class Message implements Serializable {
     public static final int NO_POSSIBLE_MOVE_ERROR = 402;
     public static final int INVALID_MOVE_ERROR = 403;
     public static final int INVALID_GOD_ERROR = 404;
+    public static final int INVALID_WORKER_ERROR = 405;
+    public static final int INVALID_STARTER_PLAYER_ERROR = 406;
 
     public static final int PING_MESSAGE = 501;
     public static final int DISCONNECTION_MESSAGE = 502;
