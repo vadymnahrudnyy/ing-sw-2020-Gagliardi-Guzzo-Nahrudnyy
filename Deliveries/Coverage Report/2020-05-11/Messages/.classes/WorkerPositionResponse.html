@@ -1,0 +1,112 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: WorkerPositionResponse</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">Messages</a> ]
+</div>
+
+<h1>Coverage Summary for Class: WorkerPositionResponse (Messages)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">WorkerPositionResponse</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package Messages;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * WorkerPositionResponse implements the message used to answer to
+<i>5</i>&nbsp; * the worker position request by sending the X and Y coordinate on the board.
+<i>6</i>&nbsp; */
+<i>7</i>&nbsp;public class WorkerPositionResponse extends Message{
+<i>8</i>&nbsp;    private static final long serialVersionUID = 100012L;
+<i>9</i>&nbsp;    private int coordinateX;
+<i>10</i>&nbsp;    private int coordinateY;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    /**
+<i>13</i>&nbsp;     * Builder of a worker position response message.
+<i>14</i>&nbsp;     * @param CoordinateX coordinate X indicated by the player
+<i>15</i>&nbsp;     * @param CoordinateY coordinate Y indicated by the player
+<i>16</i>&nbsp;     */
+<b class="nc"><i>17</i>&nbsp;    public WorkerPositionResponse(int CoordinateX,int CoordinateY){</b>
+<b class="nc"><i>18</i>&nbsp;        messageID = WORKER_POSITION_RESPONSE;</b>
+<b class="nc"><i>19</i>&nbsp;        coordinateX = CoordinateX;</b>
+<b class="nc"><i>20</i>&nbsp;        coordinateY = CoordinateY;</b>
+<i>21</i>&nbsp;    }
+<i>22</i>&nbsp;    public int getCoordinateX(){
+<b class="nc"><i>23</i>&nbsp;        return coordinateX;</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    public int getCoordinateY() {
+<b class="nc"><i>27</i>&nbsp;        return coordinateY;</b>
+<i>28</i>&nbsp;    }
+<i>29</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-11 22:36</div>
+</div>
+</body>
+</html>

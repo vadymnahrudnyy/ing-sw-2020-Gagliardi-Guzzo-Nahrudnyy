@@ -1,0 +1,112 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: BlockRemovalResponse</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">Messages</a> ]
+</div>
+
+<h1>Coverage Summary for Class: BlockRemovalResponse (Messages)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BlockRemovalResponse</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;
+<i>2</i>&nbsp;package Messages;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;/**
+<i>5</i>&nbsp; * BlockRemovalResponse implements the message sending to server
+<i>6</i>&nbsp; * the coordinates of the space from which to remove a block.
+<i>7</i>&nbsp; */
+<i>8</i>&nbsp;public class BlockRemovalResponse extends Message {
+<i>9</i>&nbsp;    private static final long serialVersionUID = 100033L;
+<i>10</i>&nbsp;    private final int removeCoordinateX;
+<i>11</i>&nbsp;    private final int removeCoordinateY;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    /**
+<i>14</i>&nbsp;     * BlockRemovalResponse message builder
+<i>15</i>&nbsp;     * @param coordinateX coordinate X where to remove the block.
+<i>16</i>&nbsp;     * @param coordinateY coordinate Y where to remove the block.
+<i>17</i>&nbsp;     */
+<b class="nc"><i>18</i>&nbsp;    public BlockRemovalResponse(int coordinateX, int coordinateY){</b>
+<b class="nc"><i>19</i>&nbsp;        messageID = BLOCK_REMOVAL_RESPONSE;</b>
+<b class="nc"><i>20</i>&nbsp;        removeCoordinateX = coordinateX;</b>
+<b class="nc"><i>21</i>&nbsp;        removeCoordinateY = coordinateY;</b>
+<i>22</i>&nbsp;    }
+<i>23</i>&nbsp;    public int getRemoveCoordinateX() {
+<b class="nc"><i>24</i>&nbsp;        return removeCoordinateX;</b>
+<i>25</i>&nbsp;    }
+<i>26</i>&nbsp;    public int getRemoveCoordinateY() {
+<b class="nc"><i>27</i>&nbsp;        return removeCoordinateY;</b>
+<i>28</i>&nbsp;    }
+<i>29</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-11 22:36</div>
+</div>
+</body>
+</html>

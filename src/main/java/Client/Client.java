@@ -53,9 +53,6 @@ public class Client {
             Message receivedMessage;
             if((receivedMessage = NetworkHandler.incomingMessages.dequeueEvent())!=null){
                 switch (receivedMessage.getMessageID()){
-                    case Message.START_PLAYER_REQUEST:
-                        selectFirstPlayer(receivedMessage);
-                        break;
                     case Message.USERNAME_REQUEST:
                         askUsername();
                         break;
@@ -80,11 +77,20 @@ public class Client {
                     case Message.GAME_START_NOTIFICATION:
                         startNotification();
                         break;
+                    case Message.START_PLAYER_REQUEST:
+                        selectFirstPlayer(receivedMessage);
+                        break;
+                    case Message.INVALID_STARTER_PLAYER_ERROR:
+                        firstPlayerError();
+                        break;
                     case Message.WORKER_POSITION_REQUEST:
                         placeWorker(receivedMessage);
                         break;
                     case Message.SELECT_WORKER_REQUEST:
                         selectWorker();
+                        break;
+                    case Message.INVALID_WORKER_ERROR:
+                        workerError();
                         break;
                     case Message.USE_POWER_REQUEST:
                         usePower();
@@ -211,6 +217,14 @@ public class Client {
 
 
     /**
+     * This method manages not valid first player choice
+     */
+    public static void firstPlayerError() {
+        System.out.println("Attention! The selected player is invalid.");
+    }
+
+
+    /**
      * This method manages the request of choosing a list of gods message and send to the network handler the player's response
      * @throws IOException
      */
@@ -236,6 +250,7 @@ public class Client {
     public static void godError(){
         System.out.println("Attention! You did not write the name of the god correctly (the first letter must be capitalized).");
     }
+
 
     /**
      * This method shows where the player can put the selected worker and then he inserts the chosen coordinate
@@ -277,14 +292,23 @@ public class Client {
         networkHandler.sendMessage(new SelectWorkerResponse(x, y));
     }
 
+
+    /**
+     * This method manages not valid worker selection
+     */
+    public static void workerError() {
+        System.out.println("The chosen worker is not valid.");
+    }
+
+
     /**
      * This method is used when the worker selected can't be moved, so he is advised to use the other worker and then he chooses the move
      * @param message OtherWorkerMoveRequest
      * @throws IOException
      */
     private static void otherWorkerMove(Message message) throws IOException {
-
         cli.otherWorker();
+        cli.printPossibleAction(((MoveRequest) message).getAllowedMoves());
 
         input=new Scanner(System.in);
         int x=input.nextInt();
@@ -309,7 +333,6 @@ public class Client {
         networkHandler.sendMessage(new UsePowerResponse(cli.askPowerUsage()));
 
     }
-
 
 
     /**

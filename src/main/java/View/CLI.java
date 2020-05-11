@@ -161,9 +161,7 @@ public class CLI implements UI {
 
 
     @Override
-    public void noPossibleMoves() {
-        System.out.println("You don’t have a chance to move anymore! I’m sorry, you lost.");
-    }
+    public void noPossibleMoves() { System.out.println("You don’t have a chance to move anymore! I’m sorry, you lost."); }
 
     @Override
     public void chooseRemoval() {
@@ -243,19 +241,19 @@ public class CLI implements UI {
                     int workerColor = checkedWorker.getColor();
                     if (workerColor == 1) {
                         if (i == 4)
-                            System.out.print("|__" + isDome + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "_|");
+                            System.out.print("|__" + isDome + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "|");
                         else
                             System.out.print("|__" + isDome + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
                     } else if (workerColor == 2) {
                         if (i == 4)
-                            System.out.print("|__" + isDome + Color.ANSI_WHITE + circle + Color.RESET + "_|");
+                            System.out.print("|__" + isDome + Color.ANSI_WHITE + circle + Color.RESET + "|");
                         else
                             System.out.print("|__" + isDome + Color.ANSI_WHITE + circle + Color.RESET);
                     } else if (workerColor == 3) {
                         if (i == 4)
-                            System.out.print("|__" + isDome + Color.ANSI_BLUE + circle + Color.RESET + "_|");
+                            System.out.print("|__" + isDome + Color.ANSI_BLUE + circle + Color.RESET + "|");
                         else
-                            System.out.print("|__" + isDome + Color.ANSI_BLUE + circle + Color.RESET + "_");
+                            System.out.print("|__" + isDome + Color.ANSI_BLUE + circle + Color.RESET );
                     }
                 }
 

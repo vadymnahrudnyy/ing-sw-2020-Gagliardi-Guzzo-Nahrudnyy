@@ -1,0 +1,321 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: VirtualView</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">Server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: VirtualView (Server)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">VirtualView</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 12)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 82)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">VirtualView$Ping</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 11)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 14)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 93)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package Server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import Messages.*;
+<i>4</i>&nbsp;import Utils.QueueOfEvents;
+<i>5</i>&nbsp;
+<i>6</i>&nbsp;import java.io.*;
+<i>7</i>&nbsp;import java.net.*;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;/**
+<i>11</i>&nbsp; * This class behave like the View for Controller and Model
+<i>12</i>&nbsp; * @version 1.5
+<i>13</i>&nbsp; */
+<i>14</i>&nbsp;
+<b class="nc"><i>15</i>&nbsp;public class VirtualView implements Runnable {</b>
+<i>16</i>&nbsp;    private String username;
+<i>17</i>&nbsp;    private final Socket client;
+<i>18</i>&nbsp;    private final Lobby serverLobby;
+<b class="nc"><i>19</i>&nbsp;    private boolean connected = true;</b>
+<i>20</i>&nbsp;    private boolean pingReceived;
+<b class="nc"><i>21</i>&nbsp;    private boolean isInGame = false;</b>
+<b class="nc"><i>22</i>&nbsp;    private boolean isInLobby = false;</b>
+<i>23</i>&nbsp;    private Thread virtualViewThread;
+<i>24</i>&nbsp;    private Thread associatedGameThread;
+<i>25</i>&nbsp;    private final ObjectInputStream input;
+<i>26</i>&nbsp;    private final ObjectOutputStream output;
+<i>27</i>&nbsp;    private final QueueOfEvents incomingMessages;
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    /**
+<i>31</i>&nbsp;     * Constructor of VirtualView class instance.
+<i>32</i>&nbsp;     * @param clientSocket the socket of the user connected to the server.
+<i>33</i>&nbsp;     */
+<b class="nc"><i>34</i>&nbsp;    public VirtualView(Socket clientSocket,Lobby lobby) throws IOException {</b>
+<b class="nc"><i>35</i>&nbsp;        serverLobby = lobby;</b>
+<b class="nc"><i>36</i>&nbsp;        client = clientSocket;</b>
+<b class="nc"><i>37</i>&nbsp;        incomingMessages= new QueueOfEvents();</b>
+<b class="nc"><i>38</i>&nbsp;        output = new ObjectOutputStream(client.getOutputStream());</b>
+<b class="nc"><i>39</i>&nbsp;        input = new ObjectInputStream(client.getInputStream());</b>
+<b class="nc"><i>40</i>&nbsp;    }</b>
+<i>41</i>&nbsp;
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    @Override
+<i>44</i>&nbsp;    public void run() {
+<b class="nc"><i>45</i>&nbsp;        virtualViewThread = Thread.currentThread();</b>
+<i>46</i>&nbsp;        try {
+<b class="nc"><i>47</i>&nbsp;            System.out.println(&quot;User &quot;+client.getInetAddress()+&quot; connected&quot;);</b>
+<i>48</i>&nbsp;            Message message;
+<i>49</i>&nbsp;            try{
+<i>50</i>&nbsp;                do {
+<b class="nc"><i>51</i>&nbsp;                sendMessage(new NumPlayersRequest());</b>
+<b class="nc"><i>52</i>&nbsp;                message = (Message) input.readObject();</b>
+<b class="nc"><i>53</i>&nbsp;                } while (message.getMessageID() != Message.NUM_PLAYERS_RESPONSE);</b>
+<b class="nc"><i>54</i>&nbsp;                int numPlayers = ((NumPlayersResponse) message).getNumPlayers();</b>
+<i>55</i>&nbsp;                do {
+<i>56</i>&nbsp;                    do {
+<b class="nc"><i>57</i>&nbsp;                        sendMessage(new UsernameRequest());</b>
+<b class="nc"><i>58</i>&nbsp;                        message = (Message) input.readObject();</b>
+<b class="nc"><i>59</i>&nbsp;                    } while (message.getMessageID() != Message.USERNAME_RESPONSE);</b>
+<b class="nc"><i>60</i>&nbsp;                    username = ((UsernameResponse) message).getUsername();</b>
+<b class="nc"><i>61</i>&nbsp;                    serverLobby.addPlayerToLobby(numPlayers,this,username,virtualViewThread);</b>
+<b class="nc"><i>62</i>&nbsp;                    Thread.sleep(1000000);</b>
+<b class="nc"><i>63</i>&nbsp;                }while(!isInLobby);</b>
+<b class="nc"><i>64</i>&nbsp;            } catch (SocketException e){</b>
+<b class="nc"><i>65</i>&nbsp;                connected = false;</b>
+<b class="nc"><i>66</i>&nbsp;                closeConnection();</b>
+<b class="nc"><i>67</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>68</i>&nbsp;                boolean reset = Thread.interrupted();</b>
+<b class="nc"><i>69</i>&nbsp;            }</b>
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;            //Ping connectionChecker = new Ping(this);
+<i>72</i>&nbsp;            //Thread pingThread = new Thread(connectionChecker);
+<i>73</i>&nbsp;            //pingThread.start();
+<i>74</i>&nbsp;            //System.out.println(&quot;Ping Thread Created&quot;);
+<i>75</i>&nbsp;            //System.out.println(&quot;Ping Thread for user &quot;+client.getInetAddress()+&quot; created&quot;);
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;
+<b class="nc"><i>78</i>&nbsp;            while (connected) receiveMessage();</b>
+<b class="nc"><i>79</i>&nbsp;        } catch (ClassNotFoundException | IOException e) {</b>
+<b class="nc"><i>80</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>81</i>&nbsp;        }</b>
+<i>82</i>&nbsp;
+<b class="nc"><i>83</i>&nbsp;    }</b>
+<i>84</i>&nbsp;
+<i>85</i>&nbsp;    /**
+<i>86</i>&nbsp;     * This methods receives messages from client, adds them into the queue and notify the controller of the update.
+<i>87</i>&nbsp;     */
+<i>88</i>&nbsp;    private void receiveMessage(){
+<i>89</i>&nbsp;        try{
+<i>90</i>&nbsp;            try{
+<b class="nc"><i>91</i>&nbsp;                Message message= (Message) input.readObject();</b>
+<b class="nc"><i>92</i>&nbsp;                if (message.getMessageID() == Message.PING_MESSAGE) pingReceived = true;</b>
+<b class="nc"><i>93</i>&nbsp;                else incomingMessages.enqueueEvent(message);</b>
+<b class="nc"><i>94</i>&nbsp;                associatedGameThread.interrupt();</b>
+<b class="nc"><i>95</i>&nbsp;            }catch (SocketException e){</b>
+<b class="nc"><i>96</i>&nbsp;                System.out.println(&quot;User &quot;+client.getInetAddress()+&quot; disconnected&quot;);</b>
+<b class="nc"><i>97</i>&nbsp;                if (isInLobby) {</b>
+<b class="nc"><i>98</i>&nbsp;                    serverLobby.removePlayerFromLobby(this,username,virtualViewThread);</b>
+<b class="nc"><i>99</i>&nbsp;                    closeConnection();</b>
+<i>100</i>&nbsp;                }
+<b class="nc"><i>101</i>&nbsp;                if (isInGame) {</b>
+<b class="nc"><i>102</i>&nbsp;                    incomingMessages.enqueueEvent(new Disconnection());</b>
+<i>103</i>&nbsp;                    try {
+<b class="nc"><i>104</i>&nbsp;                        Thread.sleep(1000000000);</b>
+<b class="nc"><i>105</i>&nbsp;                    } catch (InterruptedException interruption) {</b>
+<b class="nc"><i>106</i>&nbsp;                        closeConnection();</b>
+<b class="nc"><i>107</i>&nbsp;                    }</b>
+<i>108</i>&nbsp;                }
+<b class="nc"><i>109</i>&nbsp;            }</b>
+<i>110</i>&nbsp;        }
+<b class="nc"><i>111</i>&nbsp;        catch (ClassNotFoundException | IOException e) {</b>
+<b class="nc"><i>112</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>113</i>&nbsp;        }</b>
+<b class="nc"><i>114</i>&nbsp;    }</b>
+<i>115</i>&nbsp;
+<i>116</i>&nbsp;    /**
+<i>117</i>&nbsp;     * Method used to send a message to the client
+<i>118</i>&nbsp;     * @param message the message to send.
+<i>119</i>&nbsp;     */
+<i>120</i>&nbsp;    public void sendMessage(Message message) {
+<b class="nc"><i>121</i>&nbsp;        synchronized (output){</b>
+<i>122</i>&nbsp;            try{
+<b class="nc"><i>123</i>&nbsp;                output.flush();</b>
+<b class="nc"><i>124</i>&nbsp;                output.reset();</b>
+<b class="nc"><i>125</i>&nbsp;                output.writeObject(message);</b>
+<b class="nc"><i>126</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>127</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>128</i>&nbsp;            }</b>
+<b class="nc"><i>129</i>&nbsp;        }</b>
+<b class="nc"><i>130</i>&nbsp;    }</b>
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    /**
+<i>133</i>&nbsp;     * Method used to get the username chosen by the player associated to the virtual list
+<i>134</i>&nbsp;     * @return the username string.
+<i>135</i>&nbsp;     */
+<b class="nc"><i>136</i>&nbsp;    public String getUsername() { return username; }</b>
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;    /**
+<i>139</i>&nbsp;     * Method used to set the associatedGameThread for an instance of class VirtualView.
+<i>140</i>&nbsp;     * @param gameThread the Game the player is associated to.
+<i>141</i>&nbsp;     */
+<i>142</i>&nbsp;    public void setAssociatedGameThread(Thread gameThread){
+<b class="nc"><i>143</i>&nbsp;        associatedGameThread = gameThread;</b>
+<b class="nc"><i>144</i>&nbsp;    }</b>
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;    /**
+<i>147</i>&nbsp;     * This method close the connection if one of the players disconnect
+<i>148</i>&nbsp;     */
+<i>149</i>&nbsp;    public synchronized void closeConnection() {
+<i>150</i>&nbsp;        try {
+<b class="nc"><i>151</i>&nbsp;            connected = false;</b>
+<b class="nc"><i>152</i>&nbsp;            input.close();</b>
+<b class="nc"><i>153</i>&nbsp;            output.close();</b>
+<b class="nc"><i>154</i>&nbsp;            client.close();</b>
+<i>155</i>&nbsp;
+<b class="nc"><i>156</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>157</i>&nbsp;            System.out.println(&quot;Disconnection Failed&quot;);</b>
+<b class="nc"><i>158</i>&nbsp;        }</b>
+<b class="nc"><i>159</i>&nbsp;        connected = false;</b>
+<b class="nc"><i>160</i>&nbsp;    }</b>
+<i>161</i>&nbsp;
+<i>162</i>&nbsp;    /**
+<i>163</i>&nbsp;     * Getter of the queue of the incoming messages.
+<i>164</i>&nbsp;     * @return the queue of the incoming messages.
+<i>165</i>&nbsp;     */
+<i>166</i>&nbsp;    public QueueOfEvents getIncomingMessages() {
+<b class="nc"><i>167</i>&nbsp;        return incomingMessages;</b>
+<i>168</i>&nbsp;    }
+<i>169</i>&nbsp;
+<i>170</i>&nbsp;    /**
+<i>171</i>&nbsp;     * Method used to read the first message in the queue.
+<i>172</i>&nbsp;     * @return the first message of the queue.
+<i>173</i>&nbsp;     */
+<i>174</i>&nbsp;    public  Message dequeueFirstMessage(){
+<b class="nc"><i>175</i>&nbsp;        return getIncomingMessages().dequeueEvent();</b>
+<i>176</i>&nbsp;    }
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;    public void setInGame(boolean value){
+<b class="nc"><i>179</i>&nbsp;        isInGame = value;</b>
+<b class="nc"><i>180</i>&nbsp;    }</b>
+<i>181</i>&nbsp;    public void setInLobby(boolean value){
+<b class="nc"><i>182</i>&nbsp;        isInLobby = value;</b>
+<b class="nc"><i>183</i>&nbsp;    }</b>
+<i>184</i>&nbsp;
+<i>185</i>&nbsp;
+<i>186</i>&nbsp;    /**
+<i>187</i>&nbsp;     * Inner class Ping implements the separate thread for each virtual view. It sends a ping message to the client and waits at least 10 seconds.
+<i>188</i>&nbsp;     * After the timeout the thread checks if ping was received, if not it enqueues a disconnection message which will cause the end of the game.
+<i>189</i>&nbsp;     */
+<i>190</i>&nbsp;    private static class Ping implements Runnable {
+<i>191</i>&nbsp;        private final VirtualView client;
+<i>192</i>&nbsp;        private static final int CONNECTION_TIMEOUT = 10000;//10 seconds
+<i>193</i>&nbsp;
+<b class="nc"><i>194</i>&nbsp;        public Ping(VirtualView userVirtualView){</b>
+<b class="nc"><i>195</i>&nbsp;            client = userVirtualView;</b>
+<i>196</i>&nbsp;        }
+<i>197</i>&nbsp;        @Override
+<i>198</i>&nbsp;        public void run() {
+<i>199</i>&nbsp;            do{
+<i>200</i>&nbsp;                try {
+<b class="nc"><i>201</i>&nbsp;                    client.pingReceived = false;</b>
+<b class="nc"><i>202</i>&nbsp;                    client.sendMessage(new PingMessage());</b>
+<b class="nc"><i>203</i>&nbsp;                    Thread.sleep(CONNECTION_TIMEOUT);</b>
+<b class="nc"><i>204</i>&nbsp;                    if (!client.pingReceived) client.incomingMessages.enqueueEvent(new Disconnection());</b>
+<b class="nc"><i>205</i>&nbsp;                } catch (InterruptedException e) {</b>
+<b class="nc"><i>206</i>&nbsp;                    client.incomingMessages.enqueueEvent(new Disconnection());</b>
+<b class="nc"><i>207</i>&nbsp;                    client.connected = false;</b>
+<b class="nc"><i>208</i>&nbsp;                }</b>
+<b class="nc"><i>209</i>&nbsp;            } while (client.pingReceived);</b>
+<i>210</i>&nbsp;        }
+<i>211</i>&nbsp;    }
+<i>212</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-11 22:36</div>
+</div>
+</body>
+</html>
