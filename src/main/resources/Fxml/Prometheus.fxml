@@ -1,29 +1,34 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.StackPane?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="969.0" prefWidth="1084.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="969.0" prefWidth="1083.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.SelectGod">
+    <stylesheets><URL value="@../Style.css" /></stylesheets>
     <children>
         <ImageView fitHeight="969.0" fitWidth="470.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@../Images/Backgrounds/Prometheus.png" />
-            </image>
+            <image><Image url="@../Images/Backgrounds/Prometheus.png" /></image>
             <StackPane.margin>
                 <Insets right="700.0" />
             </StackPane.margin>
         </ImageView>
         <ImageView fitHeight="971.0" fitWidth="738.0" pickOnBounds="true" preserveRatio="true">
-            <image>
-                <Image url="@../Images/Backgrounds/GodnessBg.png" />
-            </image>
+            <image><Image url="@../Images/Backgrounds/GodnessBg.png" /></image>
             <StackPane.margin>
                 <Insets left="400.0" />
             </StackPane.margin>
         </ImageView>
-        <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true">
+        <ImageView fitHeight="658.0" fitWidth="424.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../Images/Gods/Prometheus.png" />
+            </image>
+            <StackPane.margin>
+                <Insets bottom="20.0" left="400.0" />
+            </StackPane.margin>
+        </ImageView>
+        <ImageView fx:id="selectButton" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#select" pickOnBounds="true" preserveRatio="true" styleClass="select">
             <image>
                 <Image url="@../Images/Backgrounds/SelectButton.png" />
             </image>
@@ -31,21 +36,29 @@
                 <Insets left="400.0" top="750.0" />
             </StackPane.margin>
         </ImageView>
-      <ImageView fitHeight="658.0" fitWidth="424.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/Gods/Prometheus.png" />
-         </image>
-         <StackPane.margin>
-            <Insets bottom="20.0" left="400.0" />
-         </StackPane.margin>
-      </ImageView>
-      <ImageView fitHeight="703.0" fitWidth="593.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/Backgrounds/Frame.png" />
-         </image>
-         <StackPane.margin>
-            <Insets left="250.0" />
-         </StackPane.margin>
-      </ImageView>
+        <ImageView fitHeight="703.0" fitWidth="593.0" pickOnBounds="true" preserveRatio="true">
+            <image>
+                <Image url="@../Images/Backgrounds/Frame.png" />
+            </image>
+            <StackPane.margin>
+                <Insets left="250.0" />
+            </StackPane.margin>
+        </ImageView>
+        <ImageView id="previousPrometheus" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#Pan" pickOnBounds="true" preserveRatio="true" styleClass="select">
+            <StackPane.margin>
+                <Insets top="750.0" />
+            </StackPane.margin>
+            <image>
+                <Image url="@../Images/Backgrounds/Previous_Button.png" />
+            </image>
+        </ImageView>
+        <ImageView id="nextPrometheus" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#Ares" pickOnBounds="true" preserveRatio="true" styleClass="select">
+            <image>
+                <Image url="@../Images/Backgrounds/NextButton.png" />
+            </image>
+            <StackPane.margin>
+                <Insets left="800.0" top="750.0" />
+            </StackPane.margin>
+        </ImageView>
     </children>
 </StackPane>

@@ -1,83 +1,94 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.TextField?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.AnchorPane?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.TilePane?>
-<?import javafx.scene.layout.VBox?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-
-<StackPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="744.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.Controller">
+   <stylesheets><URL value="@../Style.css" /></stylesheets>
    <children>
-      <AnchorPane prefHeight="485.0" prefWidth="726.0">
-      
-         <stylesheets>
-            <URL value="@../Style.css" />
-         </stylesheets>
-      
-            
-               <ImageView fitHeight="508.0" fitWidth="786.0" pickOnBounds="true" preserveRatio="true" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="-60.0" AnchorPane.topAnchor="0.0">
-            <image>
-               <Image url="@../Images/Backgrounds/Water.png" />
-            </image>
-         </ImageView>
-         <ImageView fitHeight="277.0" fitWidth="760.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="0.0">
-            <image>
-               <Image url="@../Images/Backgrounds/Grass.png" />
-            </image>
-         </ImageView>
-      
-         <Pane layoutX="223.0" layoutY="7.0" prefHeight="325.0" prefWidth="286.0">
-            <ImageView fitHeight="312.0" fitWidth="286.0" layoutX="-1.0" layoutY="5.0" pickOnBounds="true" preserveRatio="true">
-               <Image url="@../Images/Backgrounds/Island.png" />
+      <ImageView fitHeight="520.0" fitWidth="806.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/Backgrounds/bbgg2.png" />
+         </image>
+      </ImageView>
+      <VBox layoutX="61.0" layoutY="9.0" prefHeight="503.0" prefWidth="628.0">
+         <children>
+            <Text fill="#3f4d94" layoutX="10.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="IP Address">
+               <font>
+                  <Font size="30.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="150.0" />
+               </VBox.margin>
+            </Text>
+            <TextField prefHeight="40.0" prefWidth="601.0" promptText="Insert IP Adress" style="-fx-opacity: 0.90;" styleClass="usernameBox">
+               <font>
+                  <Font size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="150.0" right="150.0" top="10.0" />
+               </VBox.margin>
+            </TextField>
+            <Text fill="#3f4d94" layoutX="160.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Username">
+               <font>
+                  <Font size="30.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="150.0" />
+               </VBox.margin>
+            </Text>
+            <TextField prefHeight="40.0" prefWidth="50.0" promptText="Insert Username" style="-fx-opacity: 0.9;" styleClass="usernameBox">
+               <font>
+                  <Font name="System Italic" size="24.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="150.0" right="150.0" top="10.0" />
+               </VBox.margin>
+            </TextField>
+            <Text fill="#3f4d94" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Number of Players">
+               <font>
+                  <Font size="30.0" />
+               </font>
+               <VBox.margin>
+                  <Insets left="150.0" />
+               </VBox.margin>
+            </Text>
+            <HBox prefHeight="96.0" prefWidth="628.0">
+               <children>
+                  <ImageView fitHeight="96.0" fitWidth="134.0" pickOnBounds="true" preserveRatio="true" styleClass="select">
+                     <image>
+                        <Image url="@../Images/Backgrounds/2players.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="110.0" />
+                     </HBox.margin>
+                  </ImageView>
+                  <ImageView fitHeight="96.0" fitWidth="163.0" pickOnBounds="true" preserveRatio="true" styleClass="select">
+                     <image>
+                        <Image url="@../Images/Backgrounds/3players.png" />
+                     </image>
+                     <HBox.margin>
+                        <Insets left="100.0" />
+                     </HBox.margin>
+                  </ImageView>
+               </children>
+               <VBox.margin>
+                  <Insets top="10.0" />
+               </VBox.margin>
+            </HBox>
+            <ImageView fitHeight="150.0" fitWidth="151.0" pickOnBounds="true" preserveRatio="true" styleClass="button">
+               <image>
+                  <Image url="@../Images/Backgrounds/playButton.png" />
+               </image>
+               <VBox.margin>
+                  <Insets left="240.0" />
+               </VBox.margin>
             </ImageView>
-      
-      
-            <TilePane alignment="CENTER" layoutX="-7.0" layoutY="175.0" prefHeight="96.0" prefWidth="297.0">
-               <ImageView fitHeight="300.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true">
-                  <Image url="@../Images/Backgrounds/logo.png" />
-               </ImageView>
-            </TilePane>
-         </Pane>
-      
-            <BorderPane layoutY="4.0" prefHeight="508.0" prefWidth="727.0" AnchorPane.bottomAnchor="-4.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="4.0">
-      
-               <bottom>
-                  <VBox alignment="CENTER" prefHeight="149.0" prefWidth="727.0">
-                     <Region prefHeight="10.0" prefWidth="80.0">
-                     <VBox.margin>
-                        <Insets left="260.0" right="260.0" />
-                     </VBox.margin>
-                  </Region>
-                     <TextField prefHeight="23.0" prefWidth="601.0" style="-fx-background-color: nsparent; -fx-border-color: #1338be #1338be; -fx-border-width: 2PX 2PX 2PX 2PX;" styleClass="usernameBox" text="Insert IPAddress">
-                     <VBox.margin>
-                        <Insets left="260.0" right="260.0" />
-                     </VBox.margin>
-                  </TextField>
-                     <Region prefHeight="10.0" prefWidth="10.0" />
-                  <TextField style="-fx-background-color: transparent; -fx-border-color: #1338be #1338be #1338be #1338be; -fx-border-width: 2PX 2PX 2PX 2PX 2PX 2PX 2PX 2PX;" styleClass="usernameBox" text="Insert Username">
-                     <VBox.margin>
-                        <Insets left="260.0" right="260.0" />
-                     </VBox.margin>
-                  </TextField>
-                     <Region prefHeight="10.0" prefWidth="10.0" />
-                     <ImageView fitHeight="80.0" fitWidth="80.0" styleClass="button" fx:id="playButton">
-                        <Image url="@../Images/Backgrounds/playButton.png" />
-                     </ImageView>
-      
-                  </VBox>
-      
-               </bottom>
-      
-            </BorderPane>
-      
-      </AnchorPane>
+         </children>
+      </VBox>
    </children>
-</StackPane>
+</AnchorPane>

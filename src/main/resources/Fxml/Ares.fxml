@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.StackPane?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="972.0" prefWidth="1081.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="972.0" prefWidth="1081.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.SelectGod">
+    <stylesheets><URL value="@../Style.css" /></stylesheets>
     <children>
         <ImageView fitHeight="969.0" fitWidth="470.0" pickOnBounds="true" preserveRatio="true">
             <image>
@@ -46,6 +47,22 @@
          <StackPane.margin>
             <Insets left="250.0" />
          </StackPane.margin>
+      </ImageView>
+      <ImageView id="nextAres" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#Chronus" pickOnBounds="true" preserveRatio="true" styleClass="select">
+         <StackPane.margin>
+            <Insets left="800.0" top="750.0" />
+         </StackPane.margin>
+         <image>
+            <Image url="@../Images/Backgrounds/NextButton.png" />
+         </image>
+      </ImageView>
+      <ImageView id="previousAres" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#Prometheus" pickOnBounds="true" preserveRatio="true" styleClass="select">
+         <StackPane.margin>
+            <Insets top="750.0" />
+         </StackPane.margin>
+         <image>
+            <Image url="@../Images/Backgrounds/Previous_Button.png" />
+         </image>
       </ImageView>
     </children>
 </StackPane>

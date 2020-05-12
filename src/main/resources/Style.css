@@ -1,6 +1,6 @@
 /*Fonts*/
 @font-face {
-    -fx-font: url("Fonts/Sunday-Regular.otf");
+    src: url("Fonts/Sunday.otf");
 }
 
 .slider-container{+
@@ -38,6 +38,10 @@
     -fx-alignment: CENTER;
 }
 
+.pane{
+    -fx-background-color: black;
+}
+
 .select:pressed{
     -fx-scale-y: 0.95;
     -fx-scale-x: 0.95;
@@ -53,7 +57,11 @@
 
 }
 
-
+.text{
+    -fx-font-family: "Sunday";
+    -fx-font-style: italic;
+    -fx-font-size: 32px;
+}
 
 
 
