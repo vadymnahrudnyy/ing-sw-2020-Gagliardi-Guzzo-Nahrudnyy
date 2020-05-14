@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.GodsController">
+    <stylesheets><URL value="@../Style.css" /></stylesheets>
+    <children>
+      <Region prefHeight="720.0" prefWidth="1280.0" styleClass="bg_gods">
+         <effect>
+            <GaussianBlur radius="11.0" />
+         </effect></Region>
+      <BorderPane fx:id="borderPane" prefHeight="720.0" prefWidth="1280.0">
+         <right>
+            <StackPane prefHeight="720.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0">
+                     <children>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fx:id="apollo" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showApollo" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Apollo.png" />
+                                 </image></ImageView>
+                              <ImageView fx:id="artemis" fitHeight="130.0" fitWidth="85.0" onMouseEntered="#showArtemis" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Artemis.png" />
+                                 </image></ImageView>
+                              <ImageView fx:id="athena" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showAthena" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Athena.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox layoutX="10.0" layoutY="10.0" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fx:id="atlas" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showAtlas" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Atlas.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="demeter" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showDemeter" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Demeter.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="heaphestus" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showHephaestus" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Hephaestus.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox layoutX="10.0" layoutY="160.0" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fx:id="hermes" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showHermes" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Hermes.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="prometheus" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showPrometheus" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Prometheus.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="pan" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showPan" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Pan.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox layoutX="10.0" layoutY="310.0" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fx:id="ares" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showAres" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Ares.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="chronus" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showChronus" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Chronus.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="hestia" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showHestia" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Hestia.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                        <HBox layoutX="10.0" layoutY="460.0" prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <ImageView fx:id="hera" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showHera" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Hera.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="minotaur" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showMinotaur" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Minotaur.png" />
+                                 </image>
+                              </ImageView>
+                              <ImageView fx:id="zeus" fitHeight="130.0" fitWidth="84.0" onMouseEntered="#showZeus" onMouseExited="#none" pickOnBounds="true" preserveRatio="true" styleClass="gods">
+                                 <image>
+                                    <Image url="@../Images/Gods/Zeus.png" />
+                                 </image>
+                              </ImageView>
+                           </children>
+                        </HBox>
+                     </children>
+                     <StackPane.margin>
+                        <Insets right="20.0" />
+                     </StackPane.margin>
+                  </VBox>
+               </children>
+            </StackPane>
+         </right>
+         <left>
+         </left>
+      </BorderPane>
+   </children>
+</StackPane>

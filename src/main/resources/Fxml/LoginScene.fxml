@@ -7,7 +7,7 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="744.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.Controller">
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="744.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.SelectGod">
    <stylesheets><URL value="@../Style.css" /></stylesheets>
    <children>
       <ImageView fitHeight="520.0" fitWidth="806.0" pickOnBounds="true" preserveRatio="true">
@@ -80,7 +80,7 @@
                   <Insets top="10.0" />
                </VBox.margin>
             </HBox>
-            <ImageView fitHeight="150.0" fitWidth="151.0" pickOnBounds="true" preserveRatio="true" styleClass="button">
+            <ImageView fitHeight="150.0" fitWidth="151.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#FirstGod">
                <image>
                   <Image url="@../Images/Backgrounds/playButton.png" />
                </image>

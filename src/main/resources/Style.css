@@ -1,6 +1,9 @@
 /*Fonts*/
 @font-face {
-    src: url("Fonts/Sunday.otf");
+    src: url("Fonts/Bangers.ttf");
+}
+@font-face {
+    src: url("Fonts/Dalek.ttf");
 }
 
 .slider-container{+
@@ -58,12 +61,38 @@
 }
 
 .text{
-    -fx-font-family: "Sunday";
-    -fx-font-style: italic;
-    -fx-font-size: 32px;
+    -fx-font-family: "Bangers";
+    -fx-font-size: 60px;
 }
 
+.bg_lobby{
+    -fx-background-image: url("/Images/Backgrounds/LobbyBackg.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
 
+.bg_gods
+{
+    -fx-background-image: url("/Images/Backgrounds/BgGods.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.gods:pressed{
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.95;
+}
+
+.gods:hover {
+    -fx-effect: dropshadow(gaussian,  #D4AF37, 30, 0.5, 0, 0);
+}
+.select{
+    -fx-max-width: 200px;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER;
+}
 
 
 

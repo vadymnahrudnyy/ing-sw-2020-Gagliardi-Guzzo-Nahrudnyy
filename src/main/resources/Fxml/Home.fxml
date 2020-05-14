@@ -4,7 +4,7 @@
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="520.0" prefWidth="733.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.Controller">
+<AnchorPane prefHeight="520.0" prefWidth="733.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.Controller" fx:id="mainPane">
    <stylesheets><URL value="@../Style.css" /></stylesheets>
    <children>
       <ImageView fitHeight="521.0" fitWidth="746.0" pickOnBounds="true" preserveRatio="true">
@@ -12,7 +12,7 @@
             <Image url="@../Images/Backgrounds/Bgg2.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="playButton" fitHeight="132.0" fitWidth="120.0" layoutX="314.0" layoutY="389.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#handleButton" >
+      <ImageView fx:id="playButton" fitHeight="132.0" fitWidth="120.0" layoutX="314.0" layoutY="389.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#handlePlayButton" >
          <image>
             <Image url="@../Images/Backgrounds/playButton.png" />
          </image>
