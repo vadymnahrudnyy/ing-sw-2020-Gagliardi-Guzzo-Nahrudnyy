@@ -62,7 +62,14 @@
 
 .text{
     -fx-font-family: "Bangers";
-    -fx-font-size: 60px;
+    -fx-font-size: 50px;
+}
+
+.bg_welcome{
+    -fx-background-image: url("/Images/Backgrounds/bbgg2.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: repeat;
+    -fx-background-position: center;
 }
 
 .bg_lobby{
@@ -71,6 +78,7 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
 }
+
 
 .bg_gods
 {
@@ -94,6 +102,14 @@
     -fx-alignment: CENTER;
 }
 
+
+.board{
+
+    -fx-background-image: url("/Images/Backgrounds/SantoriniBoard.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
 
 
 #Apollo {

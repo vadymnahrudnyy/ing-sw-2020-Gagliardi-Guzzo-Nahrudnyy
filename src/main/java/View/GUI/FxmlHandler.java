@@ -6,6 +6,10 @@ import javafx.scene.layout.Pane;
 
 import java.net.URL;
 
+
+/**
+ * This class manages the loading of new fxml files  and checks whether the file exists or not
+ */
 public class FxmlHandler {
 
     private Pane pane;

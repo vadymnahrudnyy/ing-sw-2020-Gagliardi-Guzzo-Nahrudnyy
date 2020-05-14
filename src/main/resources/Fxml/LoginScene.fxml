@@ -1,73 +1,79 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
-<?import javafx.scene.text.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
 
-<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="520.0" prefWidth="744.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.SelectGod">
-   <stylesheets><URL value="@../Style.css" /></stylesheets>
+<StackPane maxHeight="552.0" maxWidth="790.0" minHeight="-Infinity" minWidth="-Infinity" prefHeight="552.0" prefWidth="790.0" style="-fx-background-color: black;" stylesheets="@../Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.LoginController">
    <children>
-      <ImageView fitHeight="520.0" fitWidth="806.0" pickOnBounds="true" preserveRatio="true">
+      <ImageView fitWidth="790.0" pickOnBounds="true" preserveRatio="true">
          <image>
             <Image url="@../Images/Backgrounds/bbgg2.png" />
          </image>
+         <effect>
+            <GaussianBlur radius="9.22" />
+         </effect>
       </ImageView>
-      <VBox layoutX="61.0" layoutY="9.0" prefHeight="503.0" prefWidth="628.0">
+      <VBox maxHeight="500.0" maxWidth="790.0" prefHeight="500.0" prefWidth="790.0" spacing="2.5" StackPane.alignment="CENTER">
          <children>
-            <Text fill="#3f4d94" layoutX="10.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="IP Address">
+            <Text fill="#fffe00" layoutX="10.0" layoutY="76.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="IP Address">
                <font>
                   <Font size="30.0" />
                </font>
                <VBox.margin>
-                  <Insets left="150.0" />
+                  <Insets left="250.0" />
                </VBox.margin>
             </Text>
-            <TextField prefHeight="40.0" prefWidth="601.0" promptText="Insert IP Adress" style="-fx-opacity: 0.90;" styleClass="usernameBox">
+            <TextField fx:id="addressField" alignment="CENTER" maxWidth="300.0" minWidth="300.0" prefHeight="40.0" prefWidth="200.0" promptText="Insert IP Adress" style="-fx-opacity: 0.90;" styleClass="usernameBox">
                <font>
                   <Font size="24.0" />
                </font>
                <VBox.margin>
-                  <Insets left="150.0" right="150.0" top="10.0" />
+                  <Insets left="250.0" />
                </VBox.margin>
             </TextField>
-            <Text fill="#3f4d94" layoutX="160.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Username">
+            <Text fill="#fffe00" layoutX="160.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Username">
                <font>
                   <Font size="30.0" />
                </font>
                <VBox.margin>
-                  <Insets left="150.0" />
+                  <Insets left="250.0" />
                </VBox.margin>
             </Text>
-            <TextField prefHeight="40.0" prefWidth="50.0" promptText="Insert Username" style="-fx-opacity: 0.9;" styleClass="usernameBox">
+            <TextField fx:id="usernameField" maxWidth="300.0" minWidth="300.0" prefHeight="40.0" prefWidth="200.0" promptText="Insert Username" style="-fx-opacity: 0.9;" styleClass="usernameBox">
                <font>
                   <Font name="System Italic" size="24.0" />
                </font>
                <VBox.margin>
-                  <Insets left="150.0" right="150.0" top="10.0" />
+                  <Insets left="250.0" />
                </VBox.margin>
             </TextField>
-            <Text fill="#3f4d94" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Number of Players">
+            <Text fill="#fffe00" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Number of Players" wrappingWidth="338.060302734375">
                <font>
                   <Font size="30.0" />
                </font>
                <VBox.margin>
-                  <Insets left="150.0" />
+                  <Insets left="250.0" />
                </VBox.margin>
             </Text>
-            <HBox prefHeight="96.0" prefWidth="628.0">
+            <HBox alignment="CENTER" maxWidth="300.0" prefHeight="96.0" prefWidth="300.0">
                <children>
-                  <ImageView fitHeight="96.0" fitWidth="134.0" pickOnBounds="true" preserveRatio="true" styleClass="select">
+                  <ImageView fx:id="twoPlayers" fitHeight="96.0" fitWidth="134.0" pickOnBounds="true" preserveRatio="true" styleClass="select">
                      <image>
                         <Image url="@../Images/Backgrounds/2players.png" />
                      </image>
                      <HBox.margin>
-                        <Insets left="110.0" />
+                        <Insets />
                      </HBox.margin>
                   </ImageView>
-                  <ImageView fitHeight="96.0" fitWidth="163.0" pickOnBounds="true" preserveRatio="true" styleClass="select">
+                  <ImageView fx:id="threePlayers" fitHeight="96.0" fitWidth="163.0" pickOnBounds="true" preserveRatio="true" styleClass="select">
                      <image>
                         <Image url="@../Images/Backgrounds/3players.png" />
                      </image>
@@ -77,18 +83,21 @@
                   </ImageView>
                </children>
                <VBox.margin>
-                  <Insets top="10.0" />
+                  <Insets left="225.0" top="10.0" />
                </VBox.margin>
             </HBox>
-            <ImageView fitHeight="150.0" fitWidth="151.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#FirstGod">
+            <ImageView fx:id="connectButto" fitHeight="79.0" fitWidth="299.0" onMouseClicked="#connectUser" pickOnBounds="true" preserveRatio="true" styleClass="button">
                <image>
-                  <Image url="@../Images/Backgrounds/playButton.png" />
+                  <Image url="@../Images/Backgrounds/ConnectButton.png" />
                </image>
                <VBox.margin>
-                  <Insets left="240.0" />
+                  <Insets left="270.0" top="30.0" />
                </VBox.margin>
             </ImageView>
          </children>
+         <padding>
+            <Insets top="3.5" />
+         </padding>
       </VBox>
    </children>
-</AnchorPane>
+</StackPane>
