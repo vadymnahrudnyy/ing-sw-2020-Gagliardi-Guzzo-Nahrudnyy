@@ -1,0 +1,190 @@
+/*Fonts*/
+@font-face {
+    src: url("Fonts/Bangers.ttf");
+}
+@font-face {
+    src: url("Fonts/Dalek.ttf");
+}
+
+.slider-container{+
+    -fx-pref-width: 800px;
+    -fx-pref-height: 600px;
+    -fx-start-margin: auto;
+    -fx-end-margin: auto;
+}
+
+.image-container{
+    -fx-pref-width: 2400px;
+    -fx-pref-height: 600px;
+    -fx-position-shape: relative;
+    -fx-translate-x: 20px;
+}
+
+.button:hover {
+    -fx-effect: dropshadow(gaussian,  #0000FF, 15, 0.2, 0, 0);
+}
+
+.button:pressed {
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.95;
+}
+
+.button{
+    -fx-max-width: 200px;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER;
+}
+
+.select{
+    -fx-max-width: 200px;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER;
+}
+
+.pane{
+    -fx-background-color: black;
+}
+
+.select:pressed{
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.95;
+}
+
+.select:hover {
+    -fx-effect: dropshadow(gaussian,  #C0C0C0, 15, 0.2, 0, 0);
+}
+
+.usernameBox {
+    -fx-font-size: 12px;
+    -fx-font-fill: #FFFFFF;
+
+}
+
+.text{
+    -fx-font-family: "Bangers";
+    -fx-font-size: 50px;
+}
+
+.bg_welcome{
+    -fx-background-image: url("/Images/Backgrounds/bbgg2.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: repeat;
+    -fx-background-position: center;
+}
+
+.bg_lobby{
+    -fx-background-image: url("/Images/Backgrounds/LobbyBackg.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+
+.bg_gods
+{
+    -fx-background-image: url("/Images/Backgrounds/BgGods.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+.gods:pressed{
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.95;
+}
+
+.gods:hover {
+    -fx-effect: dropshadow(gaussian,  #D4AF37, 30, 0.5, 0, 0);
+}
+.select{
+    -fx-max-width: 200px;
+    -fx-spacing: 10;
+    -fx-alignment: CENTER;
+}
+
+
+.board{
+
+    -fx-background-image: url("/Images/Backgrounds/SantoriniBoard.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
+
+#Apollo {
+    -fx-image: url("/Images/Gods/Apollo.png");
+}
+
+#Artemis {
+    -fx-image: url("/Images/Gods/Artemis.png");
+}
+
+#Ares {
+    -fx-image: url("/Images/Gods/Ares.png");
+}
+
+#Athena {
+    -fx-image: url("/Images/Gods/Athena.png");
+}
+
+#Atlas {
+    -fx-image: url("/Images/Gods/Atlas.png");
+}
+
+#Chronus {
+    -fx-image: url("/Images/Gods/Chronus.png");
+}
+
+#Demeter {
+    -fx-image: url("/Images/Gods/Demeter.png");
+}
+
+#Hephaestus {
+    -fx-image: url("/Images/Gods/Hephaestus.png");
+}
+
+#Hera {
+    -fx-image: url("/Images/Gods/Hera.png");
+}
+
+#Hermes {
+    -fx-image: url("/Images/Gods/Hermes.png");
+}
+
+#Hestia{
+    -fx-image: url("/Images/Gods/Hestia.png");
+}
+
+#Minotaur {
+    -fx-image: url("/Images/Gods/Minotaur.png");
+}
+
+#Pan {
+    -fx-image: url("/Images/Gods/Pan.png");
+}
+
+#Prometheus {
+    -fx-image: url("/Images/Gods/Prometheus.png");
+}
+
+#Zeus {
+    -fx-image: url("/Images/Gods/Zeus.png");
+}
+
+#SelectButton {
+    -fx-image: url("/Images/Backgrounds/SelectButton.png");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+

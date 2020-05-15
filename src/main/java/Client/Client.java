@@ -1,11 +1,11 @@
 package Client;
 import Messages.*;
-import Model.*;
 import Utils.QueueOfEvents;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.IOException;
 import View.CLI;
+
 
 
 /**
