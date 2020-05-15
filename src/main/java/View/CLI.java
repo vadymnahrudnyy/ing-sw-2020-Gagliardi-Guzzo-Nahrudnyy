@@ -1,24 +1,27 @@
 package View;
 
-import java.sql.SQLOutput;
+
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import Client.Client;
+import Client.NetworkHandler;
+import Messages.*;
 import Model.*;
+
 
 
 public class CLI implements UI {
 
-    int i;
-    int j;
-    Scanner input;
-    String circle= "\uD83D\uDD35";
-    String isDome;
+    private static int numPlayers;
+    private static String username;
+    private Scanner input;
+    private String circle= "\uD83D\uDD35";
+    private String isDome;
     int n=1;
-    String username;
-    int workersColor;
-    String godName;
-    String color;
+    private String color;
+    boolean isUsed;
+
 
     public CLI() {
     }
@@ -43,11 +46,30 @@ public class CLI implements UI {
     @Override
     public void chooseUsername() {
         System.out.println("Choose your username! It must be a single word.");
+        input=new Scanner(System.in);
+        username= input.nextLine();
+        Client.setUsername(username);
+        NetworkHandler.sendMessage(new UsernameResponse(username));
+    }
+
+    @Override
+    public void usernameError() {
+        System.out.println("Username already chosen by another player!");
     }
 
     @Override
     public void chooseNumPlayers() {
         System.out.println("How many players do you want in the game? Choose by typing: 2 or 3");
+        input = new Scanner(System.in);
+        numPlayers = input.nextInt();
+        while(numPlayers != 2 && numPlayers != 3) {
+            System.out.println("Invalid number of players selected. Please try again.");
+            input = new Scanner(System.in);
+            numPlayers = input.nextInt();
+        }
+        Client.setNumPlayer(numPlayers);
+        NetworkHandler.sendMessage(new NumPlayersResponse(numPlayers));
+
     }
 
     @Override
@@ -62,21 +84,46 @@ public class CLI implements UI {
     }
 
     @Override
-    public void showGodList(ArrayList<God> gods, int numPlayers) {
+    public void showGodList(ArrayList<God> gods) {
         System.out.println("Choose " + numPlayers + " cards among those available.");
         for (God god : gods) {
             System.out.println(god.getName() + ", " + god.getDescription());
         }
     }
 
+
     @Override
-    public void printAllPlayers(Player[] players, String username) {
+    public void chooseGameGods() {
+        ArrayList<String> chosenGods = new ArrayList<>();
+        for (int i = 0; i < numPlayers; i++) {
+            input = new Scanner(System.in);
+            String chosen = input.nextLine();
+            chosenGods.add(chosen);
+        }
+        NetworkHandler.sendMessage(new GodsListResponse(chosenGods));
+    }
+
+    @Override
+    public void printAllPlayers(Player[] players) {
         System.out.print("Choose among these players which will start: ");
         for (Player player : players) {
             if(!(username.equals(player.getUsername())))
                 System.out.print(player.getUsername() + " ");
         }
         System.out.println("");
+    }
+
+    @Override
+    public void chooseFirstPlayer() {
+        input=new Scanner(System.in);
+        String firstPlayer=input.nextLine();
+        NetworkHandler.sendMessage(new StartPlayerResponse(firstPlayer));
+    }
+
+
+    @Override
+    public void playerError() {
+        System.out.println("Attention! The selected player is invalid.");
     }
 
     @Override
@@ -92,10 +139,19 @@ public class CLI implements UI {
         }
 
         System.out.println("You have to choose one and avoid the ones already chosen.");
+        input = new Scanner(System.in);
+        String chosen = input.nextLine();
+        NetworkHandler.sendMessage(new ChoseGodResponse(chosen));
+    }
+
+
+    @Override
+    public void godChoiceError() {
+        System.out.println("Attention! You did not write the name of the god correctly (the first letter must be capitalized).");
     }
 
     @Override
-    public void printLastGod(ArrayList<God> godList, God lastGod) {
+    public void showLastGod(ArrayList<God> godList, God lastGod) {
         System.out.println("Already selected  gods (not available): ");
         for (God god : godList) {
             System.out.print(god.getName() + "   ");
@@ -106,8 +162,39 @@ public class CLI implements UI {
 
 
     @Override
+    public void placeWorkerInSpace(int currentWorker, boolean[][] allowedPosition){
+        System.out.println("Choose the position of the worker " + currentWorker);
+        input = new Scanner(System.in);
+        System.out.println("Insert coordinate X: ");
+        int x = input.nextInt();
+        System.out.println("Insert coordinate Y: ");
+        int y = input.nextInt();
+        while (((x < 0||y < 0)||(x > IslandBoard.TABLE_DIMENSION || y > IslandBoard.TABLE_DIMENSION))||(!allowedPosition[x-1][y-1])){
+            System.out.println("Position is not valid.");
+            input = new Scanner(System.in);
+            System.out.println("Insert coordinate X: ");
+            x = input.nextInt();
+            System.out.println("Insert coordinate Y: ");
+            y = input.nextInt();
+        }
+
+        NetworkHandler.sendMessage(new WorkerPositionResponse(x, y));
+
+    }
+
+    @Override
     public void chooseWorker() {
         System.out.println("Choose the coordinates of the worker you want to move: ");
+        input=new Scanner(System.in);
+        int x=input.nextInt();
+        int y=input.nextInt();
+
+        NetworkHandler.sendMessage(new SelectWorkerResponse(x, y));
+    }
+
+    @Override
+    public void workerChosenError() {
+        System.out.println("The chosen worker is not valid.");
     }
 
     @Override
@@ -123,8 +210,19 @@ public class CLI implements UI {
     }
 
     @Override
-    public void moveWorker() {
+    public void moveWorker(boolean[][] allowedMoves) {
         System.out.println("Choose which space you want to move your worker by stating the numerical coordinates x and y.");
+        input=new Scanner(System.in);
+        int x=input.nextInt();
+        int y=input.nextInt();
+
+        while((x<0||y<0)||(x>IslandBoard.TABLE_DIMENSION||y>IslandBoard.TABLE_DIMENSION)||(!allowedMoves[x - 1][y - 1])) {
+            System.out.println("Space already occupied! Choose other coordinates!");
+            input = new Scanner(System.in);
+            x = input.nextInt();
+            y = input.nextInt();
+        }
+        NetworkHandler.sendMessage(new MoveResponse(x, y));
     }
 
 
@@ -135,28 +233,73 @@ public class CLI implements UI {
 
 
     @Override
+    public void moveOtherWorker(boolean[][] allowedMoves) {
+        input=new Scanner(System.in);
+        int x=input.nextInt();
+        int y=input.nextInt();
+
+        while(!allowedMoves[x - 1][y - 1]) {
+            System.out.println("Space already occupied! Choose other coordinates!");
+            input = new Scanner(System.in);
+            x = input.nextInt();
+            y = input.nextInt();
+        }
+        NetworkHandler.sendMessage(new MoveResponse(x,y));
+    }
+
+
+    @Override
     public void printPossibleAction(boolean[][] allowed) {
         System.out.println("Possible moves (in coordinates):");
-        for (i = 0; i < 5; i++) {
-            for (j = 0; j < 5; j++) {
+        for (int i = 0; i < 5; i++) {
+            for (int j = 0; j < 5; j++) {
                 if (allowed[i][j])
                     System.out.println("(" + (i + 1) + "," + (j + 1) + "), ");
             }
         }
     }
 
+
     @Override
-    public void buildTower() {
-        System.out.println("Choose in which space you want to build, stating the numerical coordinates x and y:");
+    public void changeWorker(boolean canChangeWorker){
+
+        if(canChangeWorker && confirmChoice()) {
+            input = new Scanner(System.in);
+            int x = input.nextInt();
+            int y = input.nextInt();
+            NetworkHandler.sendMessage(new SelectWorkerResponse(x, y));
+        }
     }
 
 
     @Override
-    public boolean askPowerUsage() {
+    public void buildTower(boolean[][] allowedBuild) {
+        System.out.println("Choose in which space you want to build, stating the numerical coordinates x and y:");
+        input = new Scanner(System.in);
+        int x = input.nextInt();
+        int y = input.nextInt();
+
+        while(!allowedBuild[x - 1][y - 1]) {
+            System.out.println("You can't build here! Choose other coordinates!");
+            input = new Scanner(System.in);
+            x = input.nextInt();
+            y = input.nextInt();
+        }
+        NetworkHandler.sendMessage(new BuildResponse(x,y));
+    }
+
+
+    @Override
+    public void askPowerUsage() {
         System.out.println("Do you want to use the power of your god? Reply y o n");
         input = new Scanner(System.in);
         String choice = input.nextLine();
-        return "y".equals(choice);
+        if("y".equals(choice))
+            isUsed=true;
+        else
+            isUsed=false;
+
+        NetworkHandler.sendMessage(new UsePowerResponse(isUsed));
     }
 
 
@@ -164,8 +307,19 @@ public class CLI implements UI {
     public void noPossibleMoves() { System.out.println("You don’t have a chance to move anymore! I’m sorry, you lost."); }
 
     @Override
-    public void chooseRemoval() {
+    public void chooseRemoval(boolean[][] allowedToRemove) {
         System.out.println("Enter the coordinates of the block you want to remove: ");
+        input = new Scanner(System.in);
+        int x = input.nextInt();
+        int y = input.nextInt();
+
+        while(!allowedToRemove[x - 1][y - 1]) {
+            System.out.println("Removal not allowed! Choose other coordinates.");
+            input = new Scanner(System.in);
+            x = input.nextInt();
+            y = input.nextInt();
+        }
+        NetworkHandler.sendMessage(new BlockRemovalResponse(x,y));
     }
 
     @Override
@@ -175,11 +329,11 @@ public class CLI implements UI {
 
     @Override
     public void printCurrentStatus(Game updatedGame){
-
-        for(i=0; i<updatedGame.getPlayers().length; i++) {
-            username = (updatedGame.getPlayers())[i].getUsername();
-            godName = (updatedGame.getPlayers())[i].getGod().getName();
-            workersColor = (updatedGame.getPlayers())[i].getUserID();
+        System.out.println("");
+        for(int i=0; i<updatedGame.getPlayers().length; i++) {
+            String playerUsername = (updatedGame.getPlayers())[i].getUsername();
+            String godName = (updatedGame.getPlayers())[i].getGod().getName();
+            int workersColor = (updatedGame.getPlayers())[i].getUserID();
             if (workersColor == 1)
                 color = "yellow";
             else if (workersColor == 2)
@@ -187,12 +341,11 @@ public class CLI implements UI {
             else if (workersColor == 3)
                 color = "blue  ";
 
-            System.out.println("username: " + username);
+            System.out.println("username: " + playerUsername);
             System.out.println("color of workers: " + color);
             System.out.println("god: " + godName);
             System.out.println("");
         }
-        System.out.println("");
     }
 
     @Override

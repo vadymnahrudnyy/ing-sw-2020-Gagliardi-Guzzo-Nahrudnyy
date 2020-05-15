@@ -20,5 +20,5 @@ public class MoveRequest extends Message {
         return allowedMoves;
     }
 
-    public boolean chaChangeWorker(){return canChangeWorker;}
+    public boolean getChangeWorker(){return canChangeWorker;}
 }

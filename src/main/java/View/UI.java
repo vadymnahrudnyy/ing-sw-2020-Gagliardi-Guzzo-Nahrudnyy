@@ -32,6 +32,11 @@ public interface UI {
 
 
     /**
+     * This method manages not valid username error
+     */
+     void usernameError();
+
+    /**
      * This method asks to choose how many players are wanted in the game
      */
     void chooseNumPlayers();
@@ -51,15 +56,32 @@ public interface UI {
     /**
      * This method shows all the God cards of the deck
      * @param gods ArrayList of Gods
-     * @param numPlayers number of the players in the lobby
      */
-    void showGodList(ArrayList<God> gods, int numPlayers);
+    void showGodList(ArrayList<God> gods);
+
+
+    /**
+     * This method manages the choice of the Gods that will be used in the game
+     */
+    void chooseGameGods();
 
     /**
      * This method shows all the players of the lobby
      * @param players array of Players
      */
-    void printAllPlayers(Player[] players, String username);
+    void printAllPlayers(Player[] players);
+
+
+    /**
+     * This method manages not valid first player choice
+     */
+    void playerError();
+
+
+    /**
+     * This method manages the choice of the first player
+     */
+    void chooseFirstPlayer();
 
     /**
      * This method shows the God cards used in the game and those already chosen
@@ -68,17 +90,37 @@ public interface UI {
      */
     void chooseGod(ArrayList<God> godList, ArrayList<God> unavailableList);
 
+
+    /**
+     * This method manages not valid god choice
+     */
+    void godChoiceError();
+
+
     /**
      * This method shows the God cards used in the game and the last God available
      * @param godList ArrayList of all the Gods chosen for the game
      * @param lastGod last God available
      */
-    void printLastGod(ArrayList<God> godList, God lastGod);
+    void showLastGod(ArrayList<God> godList, God lastGod);
+
+
+    /**
+     * This method shows where the player can put the selected worker and then he inserts the chosen coordinate
+     */
+    void placeWorkerInSpace(int currentWorker, boolean[][] allowedPositions);
+
 
     /**
      * This method asks the player of the position in which wants to move the selected worker
      */
     void chooseWorker();
+
+
+    /**
+     * This method manages not valid worker selection
+     */
+    void workerChosenError();
 
     /**
      * This method asks the player if he wants to choose another worker
@@ -89,12 +131,17 @@ public interface UI {
     /**
      * This method asks the player to choose where he wants to move the selected worker
      */
-    void moveWorker();
+    void moveWorker(boolean[][] allowedMoves);
 
     /**
-     * This method asks the player to choose where he wants to move the other worker
+     * This method warns the player that the worker chosen could't be moved, so he will move the other worker
      */
     void otherWorker();
+
+    /**
+     * This method asks the player to choose where he wants to move the other(selected) worker
+     */
+    void moveOtherWorker(boolean[][] allowedMoves);
 
     /**
      * This method shows all the possible moves of the respective worker
@@ -102,22 +149,26 @@ public interface UI {
      */
     void printPossibleAction(boolean[][] allowed);
 
+    /**
+     * This method gives to the player the chance to change the worker selected
+     * and allows the player to choose where he wants to move his worker
+     */
+    void changeWorker(boolean canChangeWorker);
 
     /**
      * This method asks the player in which position he wants to build
      */
-    void buildTower();
+    void buildTower(boolean[][] allowedBuild);
 
     /**
      * This method asks the player if wants to use the power
-     * @return 1 if yes, 0 otherwise
      */
-    boolean askPowerUsage();
+    void askPowerUsage();
 
     /**
      * This method asks the player in which position he wants to remove a building
      */
-    void chooseRemoval();
+    void chooseRemoval(boolean[][] allowedToRemove);
 
     /**
      * This method warns there aren't more possible moves for the player

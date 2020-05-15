@@ -13,7 +13,7 @@ import Utils.QueueOfEvents;
 public class NetworkHandler implements Runnable {
     private Socket socket;
     private ObjectInputStream input;
-    private ObjectOutputStream output;
+    private static ObjectOutputStream output;
     private boolean isConnected=false;
     private final String serverAddress;
     private final int serverPort;
@@ -33,7 +33,7 @@ public class NetworkHandler implements Runnable {
         setConnected(true);
     }
 
-    public void sendMessage(Message message) {
+    public static void sendMessage(Message message) {
         synchronized (output){
             try {
                 output.flush();
