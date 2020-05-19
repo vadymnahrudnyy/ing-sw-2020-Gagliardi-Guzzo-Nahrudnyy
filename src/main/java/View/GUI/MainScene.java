@@ -16,7 +16,10 @@ import java.io.IOException;
 /**
  * This class start the GUI application
  */
-public class Main extends Application {
+public class MainScene extends Application {
+
+
+    private static Stage primaryStage;
 
 
     /**
@@ -26,6 +29,12 @@ public class Main extends Application {
     public static void main(String[] args) {
         launch(args);
     }
+
+    public static Stage getStage() {
+        return primaryStage;
+    }
+
+
 
     /**
      * This method load Home.fxml file and shows it into a stage
@@ -40,10 +49,12 @@ public class Main extends Application {
         stage.setScene(scene);
         stage.setResizable(false);
         stage.show();
-
+        primaryStage = stage;
 
     }
 }
+
+
 
 
 

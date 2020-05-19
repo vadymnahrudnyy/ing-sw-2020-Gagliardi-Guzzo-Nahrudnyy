@@ -96,6 +96,7 @@
 .gods:hover {
     -fx-effect: dropshadow(gaussian,  #D4AF37, 30, 0.5, 0, 0);
 }
+
 .select{
     -fx-max-width: 200px;
     -fx-spacing: 10;
@@ -111,73 +112,31 @@
     -fx-background-position: center;
 }
 
-
-#Apollo {
-    -fx-image: url("/Images/Gods/Apollo.png");
+.twoPlayerButton{
+    -fx-background-image: url("/Images/Backgrounds/2players.png");
+    -fx-background-size: 250px 150px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center
+}
+.twoPlayerButton:pressed{
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.95;
 }
 
-#Artemis {
-    -fx-image: url("/Images/Gods/Artemis.png");
+.threePlayerButton{
+    -fx-background-image: url("/Images/Backgrounds/3players.png");
+    -fx-background-size: 250px 150px;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center
 }
-
-#Ares {
-    -fx-image: url("/Images/Gods/Ares.png");
+.threePlayerButton:pressed{
+    -fx-border-color: white;
+    -fx-border-width: 2px;
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.95;
 }
-
-#Athena {
-    -fx-image: url("/Images/Gods/Athena.png");
-}
-
-#Atlas {
-    -fx-image: url("/Images/Gods/Atlas.png");
-}
-
-#Chronus {
-    -fx-image: url("/Images/Gods/Chronus.png");
-}
-
-#Demeter {
-    -fx-image: url("/Images/Gods/Demeter.png");
-}
-
-#Hephaestus {
-    -fx-image: url("/Images/Gods/Hephaestus.png");
-}
-
-#Hera {
-    -fx-image: url("/Images/Gods/Hera.png");
-}
-
-#Hermes {
-    -fx-image: url("/Images/Gods/Hermes.png");
-}
-
-#Hestia{
-    -fx-image: url("/Images/Gods/Hestia.png");
-}
-
-#Minotaur {
-    -fx-image: url("/Images/Gods/Minotaur.png");
-}
-
-#Pan {
-    -fx-image: url("/Images/Gods/Pan.png");
-}
-
-#Prometheus {
-    -fx-image: url("/Images/Gods/Prometheus.png");
-}
-
-#Zeus {
-    -fx-image: url("/Images/Gods/Zeus.png");
-}
-
-#SelectButton {
-    -fx-image: url("/Images/Backgrounds/SelectButton.png");
-}
-
-
-
 
 
 

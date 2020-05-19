@@ -4,6 +4,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
 
 <AnchorPane fx:id="mainPane" maxHeight="450.0" prefHeight="450.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.LoginController">
    <stylesheets><URL value="@../Style.css" /></stylesheets>
@@ -13,10 +14,24 @@
             <Image url="@../Images/Backgrounds/Bgg2.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="playButton" fitHeight="132.0" fitWidth="120.0" layoutX="340.0" layoutY="400.0" onMouseClicked="#handlePlayButton" pickOnBounds="true" preserveRatio="true" styleClass="button">
-         <image>
-            <Image url="@../Images/Backgrounds/playButton.png" />
-         </image>
-      </ImageView>
+      <VBox layoutX="273.0" layoutY="329.0" prefHeight="193.0" prefWidth="245.0" AnchorPane.leftAnchor="273.0" AnchorPane.topAnchor="350.0">
+         <children>
+            <ImageView fx:id="GuiButton" fitHeight="150.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#handleButton">
+               <image>
+                  <Image url="@../Images/Buttons/GuiButton.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="CliButton" fitHeight="150.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true" styleClass="button">
+               <image>
+                  <Image url="@../Images/Buttons/CliButton.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="InfoButton" fitHeight="150.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true" styleClass="button">
+               <image>
+                  <Image url="@../Images/Buttons/InfoButton.png" />
+               </image>
+            </ImageView>
+         </children>
+      </VBox>
    </children>
 </AnchorPane>

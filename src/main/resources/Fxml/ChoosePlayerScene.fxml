@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="540.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.LoginController">
+   <stylesheets><URL value="@../Style.css" /></stylesheets>
+   <children>
+      <ImageView fitWidth="790.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/Backgrounds/Bgg2.png" />
+         </image>
+         <effect>
+            <GaussianBlur radius="36.0" />
+         </effect>
+      </ImageView>
+      <Region opacity="0.3" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" />
+      <ImageView fx:id="twoPlayers" fitHeight="170.0" fitWidth="250.0"  pickOnBounds="true" preserveRatio="true" styleClass="twoPlayerButton" StackPane.alignment="CENTER" onMouseClicked="#handleButton">
+         <StackPane.margin>
+            <Insets right="400.0" top="50.0" />
+         </StackPane.margin>
+         <image>
+            <Image url="@../Images/Backgrounds/2players.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="threePlayers" fitHeight="200.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" styleClass="threePlayerButton" StackPane.alignment="CENTER" onMouseClicked="#handleButton">
+         <StackPane.margin>
+            <Insets left="400.0" top="50.0" />
+         </StackPane.margin>
+         <image>
+            <Image url="@../Images/Backgrounds/3players.png" />
+         </image>
+      </ImageView>
+      <Text fill="#fae2befa" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="choose number of players" StackPane.alignment="CENTER">
+         <font>
+            <Font size="30.0" />
+         </font>
+         <StackPane.margin>
+            <Insets bottom="300.0" />
+         </StackPane.margin>
+      </Text>
+   </children>
+</StackPane>

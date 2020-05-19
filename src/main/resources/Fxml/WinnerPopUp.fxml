@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane prefHeight="720.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+    <children>
+        <Region opacity="0.3" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" />
+        <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0">
+            <center>
+                <StackPane prefHeight="720.0" prefWidth="1280.0" BorderPane.alignment="CENTER">
+                    <children>
+                        <ImageView fitHeight="500.0" fitWidth="820.0" pickOnBounds="true" preserveRatio="true">
+                            <image>
+                                <Image url="@../Images/Backgrounds/WinnerScene.png" />
+                            </image>
+                        </ImageView>
+                  <ImageView fx:id="quitButton" fitHeight="150.0" fitWidth="150.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="BOTTOM_CENTER">
+                     <image>
+                        <Image url="@../Images/Backgrounds/QuitButton.png" />
+                     </image>
+                     <StackPane.margin>
+                        <Insets bottom="30.0" />
+                     </StackPane.margin>
+                  </ImageView>
+                    </children>
+                </StackPane>
+            </center>
+        </BorderPane>
+    </children>
+</StackPane>

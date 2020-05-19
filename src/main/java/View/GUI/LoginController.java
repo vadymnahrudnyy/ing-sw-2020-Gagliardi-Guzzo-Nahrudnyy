@@ -1,14 +1,20 @@
 package View.GUI;
 
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import Messages.*;
 import Client.NetworkHandler;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
+import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -18,9 +24,10 @@ import java.util.ResourceBundle;
  */
 public class LoginController implements Initializable {
 
-    @FXML private AnchorPane mainPane;
-    @FXML private ImageView twoPlayers, threePlayers;
-    @FXML public TextField usernameField, addressField;
+
+    Stage stage=new Stage();
+    @FXML
+    private ImageView usernameNext, nextAddress;
     private static final int SOCKET_PORT = 50000;
     private static NetworkHandler networkHandler;
 
@@ -28,57 +35,43 @@ public class LoginController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
     }
 
+
     /**
-     * This methos is called when the playButton in Home.fxml is clicked. It switch scene to LoginScene.fxml
+     * This methos is called when the playButton in Home.fxml is clicked
      * @param event indicates the event when mouse clicked on the button
      */
     @FXML
-    private void handlePlayButton(MouseEvent event) {
-        FxmlHandler object=new FxmlHandler();
-        Pane view=object.getHomePage("LoginScene");
-        mainPane.getChildren().setAll(view);
+    private void handleButton(MouseEvent event) throws IOException {
+        Stage stageMain =MainScene.getStage();
+        stageMain.close();
+        Parent addressScene = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/AddressScene.fxml"));
+        Scene scene1 = new Scene(addressScene);
+        stage.setScene(scene1);
+        stage.show();
     }
 
-    /**
-     * This method is called when the user click on the ConnectButton in LoginScene.fxml. It
-     * starts a connection with the server (through the NetworkHandler) and communicates the player's username and the number
-     * of player chosen.
-     * @param event indicates the event when mouse clicked on the button
-     * @throws Exception throws an exception for methods sendMessage and startConnection
-     */
     @FXML
-    public void connectUser(MouseEvent event) throws Exception {
-        String username= usernameField.getText();
-        networkHandler.sendMessage(new UsernameResponse(username));
-        twoPlayers.addEventHandler(MouseEvent.MOUSE_CLICKED, event1 -> {
-            try {
-                networkHandler.sendMessage(new NumPlayersResponse(2));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } });
-        threePlayers.addEventHandler(MouseEvent.MOUSE_CLICKED, event1 -> {
-            try {
-                networkHandler.sendMessage(new NumPlayersResponse(3));
-            } catch (IOException e) {
-                e.printStackTrace();
-            } });
-        String address= addressField.getText();
-        startConnection(address);
+    public void handleAddress(MouseEvent event) throws IOException {
+        stage.close();
+        Parent usernameScene = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/UsernameScene.fxml"));
+        Scene scene2 = new Scene(usernameScene);
+        stage.setScene(scene2);
+        stage.show();
     }
 
-    /**
-     * This method helps the connectUser method to establish a connection with the server
-     * by creating a new thread and establishing a new connection.
-     * @param serverAddress indicates the address.
-     */
-    public static void startConnection(String serverAddress) {
-        networkHandler=new NetworkHandler(serverAddress, SOCKET_PORT);
-        Thread network= new Thread(networkHandler);
-        network.start();
+    @FXML
+    public void handleUsername(MouseEvent event) throws IOException {
+        stage.close();
+        Parent playerScene = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/ChoosePlayerScene.fxml"));
+        Scene scene3 = new Scene(playerScene);
+        stage.setScene(scene3);
+        stage.show();
+
     }
-
-
-
-
 
 }
+
+
+
+
+

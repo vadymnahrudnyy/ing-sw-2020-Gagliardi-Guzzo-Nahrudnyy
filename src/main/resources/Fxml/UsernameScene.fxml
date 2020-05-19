@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+
+<AnchorPane prefHeight="540.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.LoginController">
+   <children>
+      <StackPane>
+         <stylesheets>
+            <URL value="@../Style.css" />
+         </stylesheets>
+         <children>
+            <ImageView fitWidth="790.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@../Images/Backgrounds/Bgg2.png" />
+               </image>
+               <effect>
+                  <GaussianBlur radius="36.0" />
+               </effect>
+            </ImageView>
+            <Region opacity="0.3" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" />
+            <VBox alignment="BOTTOM_CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="165.0" prefWidth="308.0" spacing="2.5">
+               <children>
+                  <Text fill="#fae2bee0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="username">
+                     <font>
+                        <Font size="30.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </Text>
+                  <TextField fx:id="usernameField" alignment="CENTER" maxWidth="300.0" minWidth="300.0" prefHeight="40.0" prefWidth="200.0" promptText="Insert Username" style="-fx-opacity: 0.90;" styleClass="usernameBox">
+                     <font>
+                        <Font size="24.0" />
+                     </font>
+                     <VBox.margin>
+                        <Insets />
+                     </VBox.margin>
+                  </TextField>
+                  <ImageView fx:id="usernameNext" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#handleUsername">
+                     <image>
+                        <Image url="@../Images/Backgrounds/NextBtn.png" />
+                     </image>
+                  </ImageView>
+               </children>
+               <padding>
+                  <Insets top="3.5" />
+               </padding>
+               <StackPane.margin>
+                  <Insets top="300.0" />
+               </StackPane.margin>
+            </VBox>
+         </children>
+      </StackPane>
+   </children>
+</AnchorPane>
