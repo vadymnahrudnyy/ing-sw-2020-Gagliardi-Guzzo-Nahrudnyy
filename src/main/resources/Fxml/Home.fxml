@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="mainPane" maxHeight="450.0" prefHeight="450.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI.LoginController">
+<AnchorPane fx:id="mainPane" maxHeight="450.0" prefHeight="450.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.GUI">
    <stylesheets><URL value="@../Style.css" /></stylesheets>
    <children>
       <ImageView fx:id="homeBackground" fitWidth="790.0" pickOnBounds="true" preserveRatio="true">
@@ -16,12 +16,12 @@
       </ImageView>
       <VBox layoutX="273.0" layoutY="329.0" prefHeight="193.0" prefWidth="245.0" AnchorPane.leftAnchor="273.0" AnchorPane.topAnchor="350.0">
          <children>
-            <ImageView fx:id="GuiButton" fitHeight="150.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#handleButton">
+            <ImageView fx:id="GuiButton" fitHeight="150.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#createGUI">
                <image>
                   <Image url="@../Images/Buttons/GuiButton.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="CliButton" fitHeight="150.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true" styleClass="button">
+            <ImageView fx:id="CliButton" fitHeight="150.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#createCLI">
                <image>
                   <Image url="@../Images/Buttons/CliButton.png" />
                </image>

@@ -268,9 +268,9 @@ public class GameController implements Runnable {
                     allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());
                     int tempX = 0, tempY;
                     for (tempY = 0; tempY < IslandBoard.TABLE_DIMENSION; ++tempY) allowedBuild[tempX][tempY] = false;
-                    for (tempX = 0; tempX < IslandBoard.TABLE_DIMENSION; ++tempX) allowedBuild[tempX][tempY] = false;
-                    for (tempY = IslandBoard.TABLE_DIMENSION - 1; tempY > 0; --tempY) allowedBuild[tempX][tempY] = false;
-                    for (tempX = IslandBoard.TABLE_DIMENSION - 1; tempX > 0; --tempX) allowedBuild[tempX][tempY] = false;
+                    for (tempX = 0, tempY = IslandBoard.TABLE_DIMENSION - 1; tempX < IslandBoard.TABLE_DIMENSION; ++tempX) allowedBuild[tempX][tempY] = false;
+                    for (tempX = tempY = IslandBoard.TABLE_DIMENSION - 1; tempY > 0; --tempY) allowedBuild[tempX][tempY] = false;
+                    for (tempX = IslandBoard.TABLE_DIMENSION - 1,tempY = 0; tempX > 0; --tempX) allowedBuild[tempX][tempY] = false;
                     if(workerCanMakeMove(allowedBuild))secondBuildMake(allowedBuild,client);
                     break;
             }
@@ -671,8 +671,7 @@ public class GameController implements Runnable {
                 System.out.println("New message received, checking validity");
                 receivedValidMessage = checkMessageValidity(receivedMessage,messageIDs);
             } catch (InterruptedException e) {
-                //boolean banana = Thread.interrupted();
-                System.out.println("HRU");
+                System.out.println("");
             }
         } while (!receivedValidMessage);
     }

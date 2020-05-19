@@ -1,14 +1,10 @@
-package View.GUI;
+package View.Gui;
 
-import javafx.animation.TranslateTransition;
+import View.GUI;
 import javafx.application.*;
 import javafx.fxml.*;
 import javafx.scene.*;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.StackPane;
 import javafx.stage.*;
-import javafx.util.Duration;
 
 
 import java.io.IOException;
@@ -16,23 +12,24 @@ import java.io.IOException;
 /**
  * This class start the GUI application
  */
-public class MainScene extends Application {
+public class StartScene extends Application {
 
-
-    private static Stage primaryStage;
 
 
     /**
      * This method launches the application
-     * @param args
+   //  * @param args
      */
-    public static void main(String[] args) {
+/*    public static void main(String[] args) {
         launch(args);
     }
 
-    public static Stage getStage() {
-        return primaryStage;
+ */
+    public static void main() {
+        launch();
     }
+
+
 
 
 
@@ -48,9 +45,8 @@ public class MainScene extends Application {
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setResizable(false);
+        GUI.setPrimaryStage(stage);
         stage.show();
-        primaryStage = stage;
-
     }
 }
 

@@ -1,10 +1,7 @@
-package View.GUI;
+package View.Gui;
 
 import javafx.fxml.FXMLLoader;
-import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
-
-import java.net.URL;
 
 
 /**
