@@ -24,6 +24,11 @@ public interface UI {
      */
     void chooseServerAddress();
 
+    /**
+     * This method  manages not valid username error
+     */
+    void errorServerAddress();
+
 
     /**
      * This method asks to choose the username

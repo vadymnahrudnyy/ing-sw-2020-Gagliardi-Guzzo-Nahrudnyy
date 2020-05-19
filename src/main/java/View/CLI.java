@@ -17,14 +17,14 @@ public class CLI implements UI {
     private static String username;
     private Scanner input;
     private String circle= "\uD83D\uDD35";
-    private String isDome;
     int n=1;
     private String color;
     boolean isUsed;
 
 
-    public CLI() {
+    public CLI(){
     }
+
 
 
 
@@ -34,13 +34,25 @@ public class CLI implements UI {
         System.out.println("You will have to choose a deity card, which has a special power, that you can use in the game. You will also have 2 workers.");
         System.out.println("During your turn you can move: the movement can only be in the boxes directly adjacent to your position.");
         System.out.println("Then you can build, there are 4 types of blocks: level 1, level 2, level 3 and dome 4.");
-        System.out.println("It can happen that a dome is built at any level, in that case it will be indicated with a C and flanked by the level below.");
+        System.out.println("It can happen that a dome is built at any level, in that case it will be indicated with a D and flanked by the level below.");
         System.out.println("");
     }
 
     @Override
     public void chooseServerAddress() {
-        System.out.println("Enter the address of the server you want to connect to in order to play: ");
+        String serverAddress;
+        do{
+            System.out.println("Enter the address of the server you want to connect to in order to play: ");
+            input=new Scanner(System.in);
+            serverAddress= input.nextLine();
+        } while(serverAddress==null);
+        Client.setServerAddress(serverAddress);
+    }
+
+    @Override
+    public void errorServerAddress(){
+        System.out.println("Server Address is not valid!");
+        chooseServerAddress();
     }
 
     @Override
@@ -294,10 +306,7 @@ public class CLI implements UI {
         System.out.println("Do you want to use the power of your god? Reply y o n");
         input = new Scanner(System.in);
         String choice = input.nextLine();
-        if("y".equals(choice))
-            isUsed=true;
-        else
-            isUsed=false;
+        isUsed= "y".equals(choice);
 
         NetworkHandler.sendMessage(new UsePowerResponse(isUsed));
     }
@@ -358,10 +367,11 @@ public class CLI implements UI {
                 Worker checkedWorker = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getWorkerInPlace();
                 int checkedHeight = updatedGame.getGameBoard().getSpace(i + 1, j + 1).getHeight();
                 boolean checkedDome =  updatedGame.getGameBoard().getSpace(i + 1, j + 1).getHasDome();
-                if(checkedDome==true)
-                    isDome="C";
+                String isDome;
+                if(checkedDome)
+                    isDome ="D";
                 else
-                    isDome="_";
+                    isDome ="_";
 
                 if (checkedWorker != null && checkedHeight != 0) {
                     int workerColor = checkedWorker.getColor();

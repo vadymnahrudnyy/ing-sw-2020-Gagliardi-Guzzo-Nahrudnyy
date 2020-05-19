@@ -63,6 +63,11 @@ public class GUI implements UI{
     }
 
     @Override
+    public void errorServerAddress() {
+
+    }
+
+    @Override
     public void chooseUsername() {
 
     }

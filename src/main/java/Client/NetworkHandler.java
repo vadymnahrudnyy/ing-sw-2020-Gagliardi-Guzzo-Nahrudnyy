@@ -60,9 +60,9 @@ public class NetworkHandler implements Runnable {
         try {
             connect();
         } catch (Exception e) {
-            e.printStackTrace();
+            setConnected(false);
+            Client.addressError();
         }
-
         while (isConnected){
             try {
                 Message message= (Message) input.readObject();
@@ -77,6 +77,8 @@ public class NetworkHandler implements Runnable {
             }
         }
     }
+
+
     /**
      * Setter of parameter connected.
      * @return true if the client is connected to the server or false if it is not connected.
@@ -84,11 +86,13 @@ public class NetworkHandler implements Runnable {
     public boolean isConnected() {
         return isConnected;
     }
+
     /**
      * Getter of parameter connected.
      * @param connected is the boolean that indicates if the client is connected to the server or not.
      */
     public void setConnected(boolean connected) {
+        Client.setDisconnected(!connected);
         isConnected = connected;
     }
     /**
