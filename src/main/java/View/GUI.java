@@ -4,6 +4,8 @@ import Client.Client;
 import Model.Game;
 import Model.God;
 import Model.Player;
+import View.Gui.StartScene;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -12,7 +14,7 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class GUI implements UI{
+public class GUI implements UI,Runnable{
     private static Stage primaryStage;
     private static Stage gameStage;
 
@@ -33,16 +35,16 @@ public class GUI implements UI{
         primaryStage = newPrimaryStage;
     }
 
-    public void createCLI() throws InterruptedException {
+    public void createCLI() {
         primaryStage.close();
         UI newInterface = new CLI();
         Client.setUI(newInterface);
-        //Client.getClientThread().interrupt();
-    }
+        Client.interruptClientThread();
+        }
     public void createGUI() {
         UI newInterface = new GUI();
         Client.setUI(newInterface);
-        Client.getClientThread().interrupt();
+        Client.interruptClientThread();
     }
 
     @Override
@@ -52,13 +54,24 @@ public class GUI implements UI{
 
     @Override
     public void chooseServerAddress() {
+        Platform.runLater(this::showServerAddress);
+        try {
+            Client.getClientThread().sleep(12312312);
+        } catch (InterruptedException e) {
+            System.out.println("Server address inserted" );
+        }
+        System.out.println("BANANA2");
+    }
+
+    public void showServerAddress(){
         try{
+            System.out.println("Banana");
             Parent addressScene = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/AddressScene.fxml"));
             Scene scene1 = new Scene(addressScene);
             primaryStage.setScene(scene1);
             primaryStage.show();
         }catch (IOException e){
-            System.out.println("");
+            System.out.println();
         }
     }
 
@@ -69,7 +82,18 @@ public class GUI implements UI{
 
     @Override
     public void chooseUsername() {
-
+        Platform.runLater(this::showUsername);
+    }
+    public void showUsername(){
+        Parent usernameScene = null;
+        try {
+            usernameScene = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/UsernameScene.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene2 = new Scene(usernameScene);
+        primaryStage.setScene(scene2);
+        primaryStage.show();
     }
 
     @Override
@@ -79,7 +103,18 @@ public class GUI implements UI{
 
     @Override
     public void chooseNumPlayers() {
-
+        Platform.runLater(this::showChooseNumPlayers);
+    }
+    public void showChooseNumPlayers() {
+        Parent numPlayerScene = null;
+        try {
+            numPlayerScene = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/ChoosePlayerScene.fxml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        Scene scene2 = new Scene(numPlayerScene);
+        primaryStage.setScene(scene2);
+        primaryStage.show();
     }
 
     @Override
@@ -215,5 +250,10 @@ public class GUI implements UI{
     @Override
     public void isWinner(String winner) {
 
+    }
+
+    @Override
+    public void run() {
+        StartScene.main();
     }
 }

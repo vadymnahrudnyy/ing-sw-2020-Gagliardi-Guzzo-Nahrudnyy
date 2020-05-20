@@ -2,9 +2,6 @@
 @font-face {
     src: url("Fonts/Bangers.ttf");
 }
-@font-face {
-    src: url("Fonts/Dalek.ttf");
-}
 
 .slider-container{+
     -fx-pref-width: 800px;

@@ -12,7 +12,7 @@ import java.io.IOException;
 /**
  * This class start the GUI application
  */
-public class StartScene extends Application {
+public class StartScene extends Application implements Runnable {
 
 
 
@@ -47,6 +47,11 @@ public class StartScene extends Application {
         stage.setResizable(false);
         GUI.setPrimaryStage(stage);
         stage.show();
+    }
+
+    @Override
+    public void run() {
+
     }
 }
 

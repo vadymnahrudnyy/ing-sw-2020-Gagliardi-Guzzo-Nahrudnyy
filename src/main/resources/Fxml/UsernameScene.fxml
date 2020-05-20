@@ -48,7 +48,7 @@
                         <Insets />
                      </VBox.margin>
                   </TextField>
-                  <ImageView fx:id="usernameNext" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#handleUsername">
+                  <ImageView fx:id="usernameNext" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#handleUsernameButton">
                      <image>
                         <Image url="@../Images/Backgrounds/NextBtn.png" />
                      </image>

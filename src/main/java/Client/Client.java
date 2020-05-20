@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 import java.io.IOException;
 import View.CLI;
+import View.GUI;
 import View.Gui.StartScene;
 import View.UI;
 
@@ -15,7 +16,7 @@ import View.UI;
  */
 
 public class Client {
-    private static String serverAddress;
+    private static String serverAddress=null;
     private static QueueOfEvents incomingMessages= new QueueOfEvents();
     public static NetworkHandler networkHandler;
     private static final int SOCKET_PORT = 50000;
@@ -70,18 +71,22 @@ public class Client {
      *This is the main of the class: it starts the connection and manages all the messages received from the network handler
      */
     public static void main(String[] args) throws Exception {
-
         clientThread = Thread.currentThread();
-        StartScene.main();
-        //try{
+        GUI banana = new GUI();
+        Thread ThreadGUI = new Thread(banana);
+        ThreadGUI.start();
+        try{
+            Thread.sleep(1000000000);
+        } catch (InterruptedException e){
+            System.out.println("Buongiornissimo, KAFFèèè!!!");
+        }
+
         do {
             ui.chooseServerAddress();
-            //   Thread.sleep(60000);
+            System.out.println("BANANA3");
             startConnection(serverAddress);
         }while(disconnected);
-        //} catch (InterruptedException exception){
-        // System.out.println("Interrupt");
-// }
+
 
 
         while (!disconnected){
@@ -376,7 +381,9 @@ public class Client {
      */
     private static void winnerNotification(Message message) {
         ui.isWinner(((WinnerNotification) message).getWinnerUsername());
-
     }
 
+     public static void sendMessageToServer(Message message){
+        NetworkHandler.sendMessage(message);
+    }
 }

@@ -10,7 +10,7 @@ import java.util.ArrayList;
  * @author Vadym Nahrudnyy
  * @version 1.0
  */
-public class GameController implements Runnable {
+class GameController implements Runnable {
 
     private Worker moveWorker;
     private final Game currentGame;
@@ -278,9 +278,6 @@ public class GameController implements Runnable {
     }
 
 
-
-
-
     //DOUBLE CHECKED
     //SETUP PHASE
     /**
@@ -293,6 +290,7 @@ public class GameController implements Runnable {
      * Method used to choose the gods before start playing.It asks the first player the list of gods to use, then the others chose their god card
      * and the first player automatically receives the remained god card.
      */
+
     private void chooseGods() {
         System.out.println("Choosing gods");
         Player firstPlayer = currentGame.getCurrentPlayer();
@@ -406,7 +404,7 @@ public class GameController implements Runnable {
      * @return a boolean matrix with "true" value in the position where the worker can move.
      */
     private boolean[][] checkPossibleMoves(int workerCoordinateX,int workerCoordinateY){
-        IslandBoard currentBoard = currentGame.getGameBoard();
+        IslandBoard currentBoard = getCurrentBoard();
         God currentGod = currentGame.getCurrentPlayer().getGod();
         Space checkedSpace;
         Worker workerInCheckedSpace;
@@ -683,7 +681,7 @@ public class GameController implements Runnable {
     private Worker getSelectedWorker(SelectWorkerResponse message){
         int X = message.getCoordinateX(),Y=message.getCoordinateY();
         Worker selectedWorker;
-        if ((X<0||X>IslandBoard.TABLE_DIMENSION-1)||(Y<0||Y>IslandBoard.TABLE_DIMENSION-1)||(((selectedWorker = getWorkerByCoordinates(X,Y))==null))||!selectedWorker.getOwner().equals(currentPlayer.getUsername())){
+        if ((X<1||X>IslandBoard.TABLE_DIMENSION)||(Y<1||Y>IslandBoard.TABLE_DIMENSION)||(((selectedWorker = getWorkerByCoordinates(X,Y))==null))||!selectedWorker.getOwner().equals(currentPlayer.getUsername())){
             currentClient.sendMessage(new InvalidWorkerError());
             currentClient.sendMessage(new SelectWorkerRequest());
         }
@@ -698,8 +696,7 @@ public class GameController implements Runnable {
     private void ArtemisPower(Space previousPosition){
         boolean moveMade = false;
         Space fromSpace = moveWorker.getWorkerPosition();
-        boolean [][] allowedMoves = checkPossibleMoves(fromSpace.getCoordinateX(),fromSpace.getCoordinateY());
-        allowedMoves[previousPosition.getCoordinateX()-1][previousPosition.getCoordinateY()-1] = false;
+        boolean[][] allowedMoves = possibleArtemisSecondMoveDestinations(previousPosition,fromSpace);
         if (workerCanMakeMove(allowedMoves)){
             currentClient.sendMessage(new UsePowerRequest());
             waitValidMessage(currentClient,new int[]{Message.USE_POWER_RESPONSE});
@@ -717,5 +714,25 @@ public class GameController implements Runnable {
                 }
             }while(!moveMade);
         }
+    }
+
+    /**
+     * Method used to create the boolean matrix of possible moves for the second move of the player having Artemis god card.
+     * @param previousSpace the position of the worker before the first move
+     * @param currentSpace the current position of the worker
+     * @return boolean matrix indicating with true the position where the selected worker can move, false otherwise.
+     */
+    protected boolean[][] possibleArtemisSecondMoveDestinations(Space previousSpace,Space currentSpace){
+        boolean[][] allowedMoves = checkPossibleMoves(currentSpace.getCoordinateX(),currentSpace.getCoordinateY());
+        allowedMoves[previousSpace.getCoordinateX()-1][previousSpace.getCoordinateY()-1] = false;
+        return allowedMoves;
+    }
+
+    /**
+     * Method used to get the current game Board
+     * @return the current game board.
+     */
+    protected IslandBoard getCurrentBoard(){
+        return currentGame.getGameBoard();
     }
 }
