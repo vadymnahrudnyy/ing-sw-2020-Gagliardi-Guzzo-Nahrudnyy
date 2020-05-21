@@ -21,8 +21,8 @@ public class Worker implements Serializable {
     private final char gender;
     private boolean movedUp;
     private boolean wasMoved;
-    public final static int COLOR_YELLOW=1;
-    public final static int COLOR_WHITE=2;
+    public final static int COLOR_RED=1;
+    public final static int COLOR_BLACK=2;
     public final static int COLOR_BLUE=3;
 
 

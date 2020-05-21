@@ -16,7 +16,9 @@ public class CLI implements UI {
     private static int numPlayers;
     private static String username;
     private Scanner input;
-    private String circle= "\uD83D\uDD35";
+    private String redCircle= "\uD83D\uDD34";
+    private String blackCircle= "\u2B24";
+    private String bluCircle= "\uD83D\uDD35";
     int n=1;
     private String color;
     boolean isUsed;
@@ -344,11 +346,11 @@ public class CLI implements UI {
             String godName = (updatedGame.getPlayers())[i].getGod().getName();
             int workersColor = (updatedGame.getPlayers())[i].getUserID();
             if (workersColor == 1)
-                color = "yellow";
+                color = "red";
             else if (workersColor == 2)
-                color = "white ";
+                color = "black";
             else if (workersColor == 3)
-                color = "blue  ";
+                color = "blue";
 
             System.out.println("username: " + playerUsername);
             System.out.println("color of workers: " + color);
@@ -377,19 +379,19 @@ public class CLI implements UI {
                     int workerColor = checkedWorker.getColor();
                     if (workerColor == 1) {
                         if (i == 4)
-                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "|");
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_RED + redCircle + Color.RESET + "|");
                         else
-                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_RED + redCircle + Color.RESET);
                     } else if (workerColor == 2) {
                         if (i == 4)
-                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_WHITE + circle + Color.RESET + "|");
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BLACK + blackCircle + Color.RESET + "|");
                         else
-                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_WHITE + circle + Color.RESET);
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BLACK + blackCircle + Color.RESET);
                     } else if (workerColor == 3) {
                         if (i == 4)
-                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BLUE + circle + Color.RESET + "|");
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BLUE + bluCircle + Color.RESET + "|");
                         else
-                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BLUE + circle + Color.RESET);
+                            System.out.print("|" + checkedHeight + isDome + "_" + Color.ANSI_BLUE + bluCircle + Color.RESET);
                     }
                 }
 
@@ -404,19 +406,19 @@ public class CLI implements UI {
                     int workerColor = checkedWorker.getColor();
                     if (workerColor == 1) {
                         if (i == 4)
-                            System.out.print("|__" + isDome + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET + "|");
+                            System.out.print("|__" + isDome + Color.ANSI_RED + redCircle + Color.RESET + "|");
                         else
-                            System.out.print("|__" + isDome + Color.ANSI_BRIGHT_YELLOW + circle + Color.RESET);
+                            System.out.print("|__" + isDome + Color.ANSI_RED + redCircle + Color.RESET);
                     } else if (workerColor == 2) {
                         if (i == 4)
-                            System.out.print("|__" + isDome + Color.ANSI_WHITE + circle + Color.RESET + "|");
+                            System.out.print("|__" + isDome + Color.ANSI_BLACK + blackCircle + Color.RESET + "|");
                         else
-                            System.out.print("|__" + isDome + Color.ANSI_WHITE + circle + Color.RESET);
+                            System.out.print("|__" + isDome + Color.ANSI_BLACK + blackCircle + Color.RESET);
                     } else if (workerColor == 3) {
                         if (i == 4)
-                            System.out.print("|__" + isDome + Color.ANSI_BLUE + circle + Color.RESET + "|");
+                            System.out.print("|__" + isDome + Color.ANSI_BLUE + bluCircle + Color.RESET + "|");
                         else
-                            System.out.print("|__" + isDome + Color.ANSI_BLUE + circle + Color.RESET );
+                            System.out.print("|__" + isDome + Color.ANSI_BLUE + bluCircle + Color.RESET );
                     }
                 }
 

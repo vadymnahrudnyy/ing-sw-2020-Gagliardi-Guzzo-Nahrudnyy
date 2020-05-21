@@ -2,8 +2,8 @@ package View;
 
 public enum Color {
 
-    ANSI_BRIGHT_YELLOW("\u001b[93m"),
-    ANSI_WHITE("\u001b[37m"),
+    ANSI_RED("\u001b[31m"),
+    ANSI_BLACK("\u001b[30m"),
     ANSI_BLUE("\u001b[34m");
 
 
