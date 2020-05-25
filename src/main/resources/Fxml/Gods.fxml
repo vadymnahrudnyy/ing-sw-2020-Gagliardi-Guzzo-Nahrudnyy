@@ -1,15 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.*?>
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.effect.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Gui.GodsController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.GodsController">
    <stylesheets><URL value="@../GodsButton.css" /></stylesheets>
    <children>
-      <Region prefHeight="720.0" prefWidth="1280.0" styleClass="bg_gods">
+      <Region opacity="0.2" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: black;" styleClass="bg_gods">
          <effect>
             <GaussianBlur radius="11.0" />
          </effect></Region>
@@ -21,15 +25,15 @@
                      <children>
                         <HBox prefHeight="125.0" prefWidth="200.0" style="-fx-border-color: transparent; -fx-border-width: 2px;">
                            <children>
-                              <ToggleButton fx:id="apollo" onMouseEntered="#showApollo" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="apolloButton">
+                              <ToggleButton fx:id="apollo" onMouseClicked="#selectedGod" onMouseEntered="#showApollo" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="apolloButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="artemis" onMouseEntered="#showArtemis" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="artemisButton">
+                              <ToggleButton fx:id="artemis" onMouseClicked="#selectedGod" onMouseEntered="#showArtemis" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="artemisButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="athena" onMouseEntered="#showAthena" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="athenaButton">
+                              <ToggleButton fx:id="athena" onMouseClicked="#selectedGod" onMouseEntered="#showAthena" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="athenaButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
@@ -37,15 +41,15 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="10.0" prefHeight="125.0" prefWidth="200.0" style="-fx-border-color: transparent; -fx-border-width: 2px;">
                            <children>
-                              <ToggleButton fx:id="atlas" onMouseEntered="#showAtlas" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="atlasButton">
+                              <ToggleButton fx:id="atlas" onMouseClicked="#selectedGod" onMouseEntered="#showAtlas" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="atlasButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="demeter" onMouseEntered="#showDemeter" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="demeterButton">
+                              <ToggleButton fx:id="demeter" onMouseClicked="#selectedGod" onMouseEntered="#showDemeter" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="demeterButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="hephaestus" onMouseEntered="#showHephaestus" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="hephaestusButton">
+                              <ToggleButton fx:id="hephaestus" onMouseClicked="#selectedGod" onMouseEntered="#showHephaestus" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="hephaestusButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
@@ -53,15 +57,15 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="160.0" prefHeight="125.0" prefWidth="200.0" style="-fx-border-color: transparent; -fx-border-width: 2px;">
                            <children>
-                              <ToggleButton fx:id="hermes" onMouseEntered="#showHermes" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="hermesButton">
+                              <ToggleButton fx:id="hermes" onMouseClicked="#selectedGod" onMouseEntered="#showHermes" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="hermesButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="prometheus" onMouseEntered="#showPrometheus" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="prometheusButton">
+                              <ToggleButton fx:id="prometheus" onMouseClicked="#selectedGod" onMouseEntered="#showPrometheus" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="prometheusButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="pan" onMouseEntered="#showPan" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="panButton">
+                              <ToggleButton fx:id="pan" onMouseClicked="#selectedGod" onMouseEntered="#showPan" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="panButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
@@ -69,15 +73,15 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="310.0" prefHeight="125.0" prefWidth="200.0" style="-fx-border-color: transparent; -fx-border-width: 2px;">
                            <children>
-                              <ToggleButton fx:id="ares" onMouseEntered="#showAres" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="aresButton">
+                              <ToggleButton fx:id="ares" onMouseClicked="#selectedGod" onMouseEntered="#showAres" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="aresButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="chronus" onMouseEntered="#showChronus" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="chronusButton">
+                              <ToggleButton fx:id="chronus" onMouseClicked="#selectedGod" onMouseEntered="#showChronus" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="chronusButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="hestia" onMouseEntered="#showHestia" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="hestiaButton">
+                              <ToggleButton fx:id="hestia" onMouseClicked="#selectedGod" onMouseEntered="#showHestia" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="hestiaButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
@@ -85,15 +89,15 @@
                         </HBox>
                         <HBox layoutX="10.0" layoutY="460.0" prefHeight="125.0" prefWidth="200.0" style="-fx-border-width: 2px; -fx-border-color: transparent;">
                            <children>
-                              <ToggleButton fx:id="hera" onMouseEntered="#showHera" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="heraButton">
+                              <ToggleButton fx:id="hera" onMouseClicked="#selectedGod" onMouseEntered="#showHera" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="heraButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="minotaur" onMouseEntered="#showMinotaur" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="minotaurButton">
+                              <ToggleButton fx:id="minotaur" onMouseClicked="#selectedGod" onMouseEntered="#showMinotaur" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="minotaurButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>
-                              <ToggleButton fx:id="zeus" onMouseEntered="#showZeus" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="zeusButton">
+                              <ToggleButton fx:id="zeus" onMouseClicked="#selectedGod" onMouseEntered="#showZeus" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="zeusButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
                                  </HBox.margin></ToggleButton>

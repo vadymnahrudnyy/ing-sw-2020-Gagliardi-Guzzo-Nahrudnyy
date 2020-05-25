@@ -1,5 +1,9 @@
 package Model;
 
+import it.polimi.ingsw.PSP30.Model.Game;
+import it.polimi.ingsw.PSP30.Model.IslandBoard;
+import it.polimi.ingsw.PSP30.Model.Player;
+import it.polimi.ingsw.PSP30.Model.TurnPhase;
 import org.junit.Before;
 import org.junit.Test;
 

@@ -1,9 +1,10 @@
 package Model;
 
-import Exceptions.Space.*;
+
+import it.polimi.ingsw.PSP30.Exception.Space.*;
+import it.polimi.ingsw.PSP30.Model.Space;
+import it.polimi.ingsw.PSP30.Model.Worker;
 import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Rule;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
@@ -29,7 +30,7 @@ public class SpaceTest {
         testedSpace.setHeight(4);
         assertEquals(4,testedSpace.getHeight());
     }
-    @Test (expected = Exceptions.Space.InvalidHeightException.class)
+    @Test (expected = InvalidHeightException.class)
     public void setHeightTest2(){
         testedSpace.setHeight(5);
         assertEquals(5,testedSpace.getHeight());

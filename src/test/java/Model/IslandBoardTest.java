@@ -1,5 +1,7 @@
 package Model;
 
+import it.polimi.ingsw.PSP30.Model.IslandBoard;
+import it.polimi.ingsw.PSP30.Model.Space;
 import org.junit.Before;
 import org.junit.Test;
 

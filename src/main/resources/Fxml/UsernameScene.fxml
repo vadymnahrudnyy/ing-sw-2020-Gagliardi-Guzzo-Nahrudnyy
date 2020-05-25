@@ -14,7 +14,7 @@
 <?import javafx.scene.text.Text?>
 
 
-<AnchorPane prefHeight="540.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="View.Gui.LoginController">
+<AnchorPane prefHeight="540.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.LoginController">
    <children>
       <StackPane>
          <stylesheets>

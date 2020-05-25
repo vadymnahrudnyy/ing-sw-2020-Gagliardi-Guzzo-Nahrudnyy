@@ -1,5 +1,9 @@
 package Model;
 
+import it.polimi.ingsw.PSP30.Model.God;
+import it.polimi.ingsw.PSP30.Model.Player;
+import it.polimi.ingsw.PSP30.Model.Space;
+import it.polimi.ingsw.PSP30.Model.Worker;
 import org.junit.Test;
 import org.junit.Before;
 import static org.junit.Assert.*;

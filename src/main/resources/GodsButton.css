@@ -214,6 +214,14 @@
 }
 
 
+.bg_gods
+{
+    -fx-background-image: url("/Images/Backgrounds/SantoriniBoard.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+
 #SelectButton {
     -fx-image: url("/Images/Backgrounds/SelectButton.png");
 }

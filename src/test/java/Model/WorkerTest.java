@@ -1,6 +1,9 @@
 package Model;
 
-import Exception.Worker.*;
+
+import it.polimi.ingsw.PSP30.Model.Space;
+import it.polimi.ingsw.PSP30.Model.Worker;
+import it.polimi.ingsw.PSP30.Exception.Worker.InvalidWorkerPositionException;
 import org.junit.Test;
 
 import static org.junit.Assert.*;
