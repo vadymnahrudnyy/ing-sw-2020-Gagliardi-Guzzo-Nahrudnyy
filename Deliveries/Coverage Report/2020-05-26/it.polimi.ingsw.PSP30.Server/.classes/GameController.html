@@ -1,0 +1,827 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GameController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.Server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GameController (it.polimi.ingsw.PSP30.Server)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GameController</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    27,5%
+  </span>
+  <span class="absValue">
+    (11/ 40)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    11,3%
+  </span>
+  <span class="absValue">
+    (43/ 379)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.Server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.*;
+<i>5</i>&nbsp;import it.polimi.ingsw.PSP30.Model.*;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import java.util.ArrayList;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;/**
+<i>10</i>&nbsp; * GameController class implement the Logic level of the game.
+<i>11</i>&nbsp; * @author Vadym Nahrudnyy
+<i>12</i>&nbsp; * @version 1.0
+<i>13</i>&nbsp; */
+<b class="fc"><i>14</i>&nbsp;class GameController implements Runnable {</b>
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    private Worker moveWorker;
+<i>17</i>&nbsp;    private final Game currentGame;
+<i>18</i>&nbsp;    private Message receivedMessage;
+<i>19</i>&nbsp;    private boolean MoveAllowed,BuildAllowed;
+<i>20</i>&nbsp;    private final ArrayList&lt;God&gt; gameGodList;
+<i>21</i>&nbsp;    private final ArrayList&lt;Power&gt; powerList;
+<b class="fc"><i>22</i>&nbsp;    private boolean running = true;</b>
+<i>23</i>&nbsp;    private final VirtualView[] virtualViewsList;
+<i>24</i>&nbsp;    private static final int RESPONSE_MESSAGE_WAIT_TIMEOUT = 20000;
+<i>25</i>&nbsp;    private Player currentPlayer;
+<i>26</i>&nbsp;    private VirtualView currentClient;
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;
+<b class="fc"><i>29</i>&nbsp;    public GameController(ArrayList&lt;VirtualView&gt; virtualViews, int numPlayers) {</b>
+<i>30</i>&nbsp;
+<b class="fc"><i>31</i>&nbsp;        powerList = Server.getPowerList();</b>
+<b class="fc"><i>32</i>&nbsp;        virtualViewsList = new VirtualView[numPlayers];</b>
+<b class="fc"><i>33</i>&nbsp;        Player[] playersArray = new Player[numPlayers];</b>
+<b class="fc"><i>34</i>&nbsp;        for(int i=0;i&lt;numPlayers;++i) virtualViewsList[i] = virtualViews.get(i);</b>
+<b class="fc"><i>35</i>&nbsp;        for (int i=0;i&lt;numPlayers;++i) {playersArray[i] = new Player(virtualViewsList[i].getUsername(),i+1,null,null);}</b>
+<b class="fc"><i>36</i>&nbsp;        currentGame = new Game(numPlayers,playersArray[0],playersArray);</b>
+<b class="fc"><i>37</i>&nbsp;        if(numPlayers == 3) {</b>
+<b class="fc"><i>38</i>&nbsp;            gameGodList = new ArrayList&lt;&gt;();</b>
+<b class="fc"><i>39</i>&nbsp;            for (God threePlayersGods:Server.getGodsList()) if (threePlayersGods.getPlayersAllowed() &gt;= God.ONLY_THREE_PLAYERS_ALLOWED ) gameGodList.add(threePlayersGods);</b>
+<i>40</i>&nbsp;        }
+<b class="fc"><i>41</i>&nbsp;        else gameGodList = Server.getGodsList();</b>
+<b class="fc"><i>42</i>&nbsp;    }</b>
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    @Override
+<i>45</i>&nbsp;    public void run() {
+<b class="fc"><i>46</i>&nbsp;        setupPhase();</b>
+<b class="nc"><i>47</i>&nbsp;        while(running){</b>
+<b class="nc"><i>48</i>&nbsp;            TurnHandle();</b>
+<i>49</i>&nbsp;        }
+<b class="nc"><i>50</i>&nbsp;    }</b>
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    private void setupPhase() {
+<b class="fc"><i>53</i>&nbsp;        sendStartGameMessage();</b>
+<b class="fc"><i>54</i>&nbsp;        chooseGods();</b>
+<b class="nc"><i>55</i>&nbsp;        chooseStartPlayer();</b>
+<b class="nc"><i>56</i>&nbsp;        chooseWorkerPositions();</b>
+<b class="nc"><i>57</i>&nbsp;        startGame();</b>
+<b class="nc"><i>58</i>&nbsp;    }</b>
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    private void turnInitializer(){
+<b class="nc"><i>61</i>&nbsp;        currentGame.setCurrentPhase(TurnPhase.START);</b>
+<b class="nc"><i>62</i>&nbsp;        MoveAllowed = BuildAllowed = true;</b>
+<b class="nc"><i>63</i>&nbsp;        currentPlayer = currentGame.getCurrentPlayer();</b>
+<b class="nc"><i>64</i>&nbsp;        currentClient = getVirtualViewByUsername(currentPlayer.getUsername());</b>
+<b class="nc"><i>65</i>&nbsp;        currentPlayer.getWorkers()[0].setMovedUp(false);</b>
+<b class="nc"><i>66</i>&nbsp;        currentPlayer.getWorkers()[1].setMovedUp(false);</b>
+<b class="nc"><i>67</i>&nbsp;        currentPlayer.getWorkers()[0].setWasMoved(false);</b>
+<b class="nc"><i>68</i>&nbsp;        currentPlayer.getWorkers()[1].setWasMoved(false);</b>
+<b class="nc"><i>69</i>&nbsp;        if (currentPlayer.getGod().getSinglePower(0) == Power.OPPONENTS_NOT_MOVE_UP_POWER) currentGame.setAthenaMovedUp(false);</b>
+<b class="nc"><i>70</i>&nbsp;    }</b>
+<i>71</i>&nbsp;
+<i>72</i>&nbsp;    private void turnStart(VirtualView client, IslandBoard gameBoard){
+<b class="nc"><i>73</i>&nbsp;        turnInitializer();</b>
+<i>74</i>&nbsp;
+<b class="nc"><i>75</i>&nbsp;        if (currentPlayer.getGod().getSinglePower(0) == Power.NOT_MOVE_UP_DOUBLE_BUILD_POWER){</b>
+<b class="nc"><i>76</i>&nbsp;                currentClient.sendMessage(new UsePowerRequest());</b>
+<b class="nc"><i>77</i>&nbsp;                notifyGameStatusToAll();</b>
+<b class="nc"><i>78</i>&nbsp;                waitValidMessage(currentClient,new int[]{Message.USE_POWER_RESPONSE});</b>
+<b class="nc"><i>79</i>&nbsp;                if(((UsePowerResponse)receivedMessage).wantUsePower()){</b>
+<b class="nc"><i>80</i>&nbsp;                    client.sendMessage(new SelectWorkerRequest());</b>
+<b class="nc"><i>81</i>&nbsp;                    waitValidMessage(client,new int[]{Message.SELECT_WORKER_RESPONSE});</b>
+<b class="nc"><i>82</i>&nbsp;                    moveWorker = getWorkerByCoordinates(((SelectWorkerResponse)receivedMessage).getCoordinateX(),((SelectWorkerResponse)receivedMessage).getCoordinateY());</b>
+<b class="nc"><i>83</i>&nbsp;                    boolean[][] allowedBuild = checkPossibleBuilds(moveWorker.getWorkerPosition().getCoordinateX(),moveWorker.getWorkerPosition().getCoordinateY());</b>
+<b class="nc"><i>84</i>&nbsp;                    client.sendMessage(new BuildRequest(allowedBuild));</b>
+<b class="nc"><i>85</i>&nbsp;                    waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});</b>
+<b class="nc"><i>86</i>&nbsp;                    Space buildSpace = gameBoard.getSpace(((BuildResponse)receivedMessage).getBuildCoordinateX(),((BuildResponse)receivedMessage).getBuildCoordinateY());</b>
+<b class="nc"><i>87</i>&nbsp;                    blockAddInSpace(buildSpace);</b>
+<b class="nc"><i>88</i>&nbsp;                    notifyGameStatusToAll();</b>
+<b class="nc"><i>89</i>&nbsp;                    boolean[][] allowedMoves = checkPossibleMoves(moveWorker.getWorkerPosition().getCoordinateX(),moveWorker.getWorkerPosition().getCoordinateY());</b>
+<b class="nc"><i>90</i>&nbsp;                    for (int X = 0; X &lt; IslandBoard.TABLE_DIMENSION;++X){</b>
+<b class="nc"><i>91</i>&nbsp;                        for(int Y = 0; Y &lt; IslandBoard.TABLE_DIMENSION; ++Y){</b>
+<b class="nc"><i>92</i>&nbsp;                            if (gameBoard.getSpace(X+1,Y+1).getHeight()&gt;moveWorker.getWorkerPosition().getHeight()) allowedMoves[X][Y] = false;}}</b>
+<b class="nc"><i>93</i>&nbsp;                    if (workerCanMakeMove(allowedMoves)){</b>
+<b class="nc"><i>94</i>&nbsp;                        client.sendMessage(new MoveRequest(allowedMoves,false));</b>
+<b class="nc"><i>95</i>&nbsp;                        waitValidMessage(client,new int[]{Message.MOVE_RESPONSE});</b>
+<b class="nc"><i>96</i>&nbsp;                        moveWorker.changePosition(gameBoard.getSpace(((MoveResponse)receivedMessage).getDestCoordinateX(),((MoveResponse)receivedMessage).getDestCoordinateY()));</b>
+<b class="nc"><i>97</i>&nbsp;                        MoveAllowed = false;</b>
+<b class="nc"><i>98</i>&nbsp;                        notifyGameStatusToAll();</b>
+<i>99</i>&nbsp;                    }
+<i>100</i>&nbsp;                }
+<i>101</i>&nbsp;        }
+<b class="nc"><i>102</i>&nbsp;    }</b>
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    private void Move(){
+<b class="nc"><i>107</i>&nbsp;        boolean moveMade = false;</b>
+<b class="nc"><i>108</i>&nbsp;        boolean[][] allowedMoves = new boolean[][]{};</b>
+<b class="nc"><i>109</i>&nbsp;        IslandBoard gameBoard = currentGame.getGameBoard();</b>
+<b class="nc"><i>110</i>&nbsp;        Power actualGodPower = getPowerByID(currentPlayer.getGod().getSinglePower(0));</b>
+<b class="nc"><i>111</i>&nbsp;        Space fromSpace = null, destSpace;</b>
+<b class="nc"><i>112</i>&nbsp;        notifyGameStatusToAll();</b>
+<b class="nc"><i>113</i>&nbsp;        currentClient.sendMessage(new SelectWorkerRequest());</b>
+<i>114</i>&nbsp;        do{
+<b class="nc"><i>115</i>&nbsp;            waitValidMessage(currentClient,new int[]{Message.SELECT_WORKER_RESPONSE,Message.MOVE_RESPONSE});</b>
+<b class="nc"><i>116</i>&nbsp;            if ((receivedMessage.getMessageID() == Message.SELECT_WORKER_RESPONSE)&amp;&amp;((moveWorker = getSelectedWorker((SelectWorkerResponse) receivedMessage))!=null)){</b>
+<b class="nc"><i>117</i>&nbsp;                fromSpace = moveWorker.getWorkerPosition();</b>
+<b class="nc"><i>118</i>&nbsp;                allowedMoves = checkPossibleMoves(fromSpace.getCoordinateX(),fromSpace.getCoordinateY());</b>
+<b class="nc"><i>119</i>&nbsp;                if (workerCanMakeMove(allowedMoves))currentClient.sendMessage(new MoveRequest(allowedMoves,true));</b>
+<i>120</i>&nbsp;                else {
+<b class="nc"><i>121</i>&nbsp;                    moveWorker = getPlayersOtherWorker(currentPlayer,moveWorker);</b>
+<b class="nc"><i>122</i>&nbsp;                    fromSpace = moveWorker.getWorkerPosition();</b>
+<b class="nc"><i>123</i>&nbsp;                    if (workerCanMakeMove(allowedMoves = checkPossibleMoves(fromSpace.getCoordinateX(),fromSpace.getCoordinateY()))) currentClient.sendMessage(new OtherWorkerMoveRequest(allowedMoves));</b>
+<i>124</i>&nbsp;                    else {
+<b class="nc"><i>125</i>&nbsp;                        currentClient.sendMessage(new NoPossibleMoveError());</b>
+<b class="nc"><i>126</i>&nbsp;                        removePlayerFromGame(currentPlayer);</b>
+<b class="nc"><i>127</i>&nbsp;                        BuildAllowed = false;</b>
+<b class="nc"><i>128</i>&nbsp;                        break;</b>
+<i>129</i>&nbsp;                    }
+<i>130</i>&nbsp;                }
+<i>131</i>&nbsp;            }
+<b class="nc"><i>132</i>&nbsp;            if(receivedMessage.getMessageID() == Message.MOVE_RESPONSE){</b>
+<b class="nc"><i>133</i>&nbsp;                int destX = ((MoveResponse)receivedMessage).getDestCoordinateX(), destY = ((MoveResponse)receivedMessage).getDestCoordinateY();</b>
+<b class="nc"><i>134</i>&nbsp;                if (allowedMoves[destX-1][destY-1]) {</b>
+<b class="nc"><i>135</i>&nbsp;                    destSpace = currentGame.getGameBoard().getSpace(destX,destY);</b>
+<b class="nc"><i>136</i>&nbsp;                    Worker tempWorker = destSpace.getWorkerInPlace();</b>
+<b class="nc"><i>137</i>&nbsp;                    if (tempWorker == null) moveWorker.changePosition(destSpace);</b>
+<i>138</i>&nbsp;                    else{
+<b class="nc"><i>139</i>&nbsp;                        assert actualGodPower != null;</b>
+<b class="nc"><i>140</i>&nbsp;                        if (actualGodPower.getPowerID() == Power.WORKER_POSITION_EXCHANGE_POWER){</b>
+<b class="nc"><i>141</i>&nbsp;                            destSpace.removeWorkerInPlace();</b>
+<b class="nc"><i>142</i>&nbsp;                            moveWorker.changePosition(destSpace);</b>
+<b class="nc"><i>143</i>&nbsp;                            tempWorker.setWorkerPosition(fromSpace);</b>
+<b class="nc"><i>144</i>&nbsp;                            fromSpace.setWorkerInPlace(tempWorker);</b>
+<i>145</i>&nbsp;                        }
+<i>146</i>&nbsp;                        else{
+<b class="nc"><i>147</i>&nbsp;                            Space pushIntoSpace = gameBoard.getSpace(destX+(destX-moveWorker.getWorkerPosition().getCoordinateX()),destY+(destY-moveWorker.getWorkerPosition().getCoordinateY()));</b>
+<b class="nc"><i>148</i>&nbsp;                            tempWorker.changePosition(pushIntoSpace);</b>
+<b class="nc"><i>149</i>&nbsp;                            moveWorker.changePosition(destSpace);</b>
+<i>150</i>&nbsp;                        }
+<i>151</i>&nbsp;                    }
+<b class="nc"><i>152</i>&nbsp;                    moveMade = true;</b>
+<b class="nc"><i>153</i>&nbsp;                    moveWorker.setWasMoved(true);</b>
+<b class="nc"><i>154</i>&nbsp;                    notifyGameStatusToAll();</b>
+<b class="nc"><i>155</i>&nbsp;                    if(destSpace.getHeight()&gt;fromSpace.getHeight()){</b>
+<b class="nc"><i>156</i>&nbsp;                        moveWorker.setMovedUp(true);</b>
+<b class="nc"><i>157</i>&nbsp;                        if (currentPlayer.getGod().getSinglePower(0)==Power.OPPONENTS_NOT_MOVE_UP_POWER) currentGame.setAthenaMovedUp(true);</b>
+<i>158</i>&nbsp;                    }
+<b class="nc"><i>159</i>&nbsp;                    if((((destSpace.getHeight()==Space.DOME_LEVEL-1)&amp;&amp;(moveWorker.isMovedUp()))||((currentPlayer.getGod().getSinglePower(0)==Power.TWO_BLOCK_FALL_VICTORY_POWER)&amp;&amp;(fromSpace.getHeight()-destSpace.getHeight() &gt;= 2)))&amp;&amp;((!opponentHasPower(Power.PERIMETER_VICTORY_DENY_POWER))||(!destSpace.isPerimeter()))) victory(currentPlayer.getUsername());</b>
+<i>160</i>&nbsp;
+<b class="nc"><i>161</i>&nbsp;                    if (actualGodPower.getPowerID() == Power.DOUBLE_MOVE_POWER) ArtemisPower(fromSpace);</b>
+<b class="nc"><i>162</i>&nbsp;                }</b>
+<b class="nc"><i>163</i>&nbsp;                else currentClient.sendMessage(new InvalidMoveError());</b>
+<i>164</i>&nbsp;            }
+<b class="nc"><i>165</i>&nbsp;        }while(!moveMade);</b>
+<b class="nc"><i>166</i>&nbsp;    }</b>
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;
+<i>169</i>&nbsp;    /**
+<i>170</i>&nbsp;     * Method used for handling a player&#39;s turn and eventually Ares power.
+<i>171</i>&nbsp;     */
+<i>172</i>&nbsp;    private void TurnHandle(){
+<b class="nc"><i>173</i>&nbsp;        Player currentPlayer = currentGame.getCurrentPlayer();</b>
+<b class="nc"><i>174</i>&nbsp;        VirtualView currentClient = getVirtualViewByUsername(currentPlayer.getUsername());</b>
+<b class="nc"><i>175</i>&nbsp;        IslandBoard currentBoard = currentGame.getGameBoard();</b>
+<b class="nc"><i>176</i>&nbsp;        Power currentGodPower = getPowerByID(currentPlayer.getGod().getSinglePower(0));</b>
+<i>177</i>&nbsp;
+<b class="nc"><i>178</i>&nbsp;        turnStart(currentClient,currentBoard);</b>
+<i>179</i>&nbsp;
+<b class="nc"><i>180</i>&nbsp;        currentGame.nextTurnPhase();</b>
+<b class="nc"><i>181</i>&nbsp;        if (MoveAllowed){</b>
+<b class="nc"><i>182</i>&nbsp;            Move();</b>
+<i>183</i>&nbsp;        }
+<i>184</i>&nbsp;        //BUILD PHASE
+<b class="nc"><i>185</i>&nbsp;        currentGame.setCurrentPhase(TurnPhase.BUILD);</b>
+<b class="nc"><i>186</i>&nbsp;        if (BuildAllowed) Build(currentClient,currentGodPower,moveWorker);</b>
+<b class="nc"><i>187</i>&nbsp;        if ((opponentHasPower(Power.FIVE_TOWER_VICTORY_POWER)||currentGodPower.getPowerID()==Power.FIVE_TOWER_VICTORY_POWER)&amp;&amp;(currentBoard.getNumberCompleteTowers()&gt;=5)){</b>
+<b class="nc"><i>188</i>&nbsp;            for (Player player:currentGame.getPlayers())</b>
+<b class="nc"><i>189</i>&nbsp;                if (player.getGod().getSinglePower(0)==Power.FIVE_TOWER_VICTORY_POWER) victory(player.getUsername());</b>
+<i>190</i>&nbsp;        }
+<i>191</i>&nbsp;        //End of turn
+<b class="nc"><i>192</i>&nbsp;        currentGame.nextTurnPhase();</b>
+<b class="nc"><i>193</i>&nbsp;        if (currentGodPower.getPowerID() == Power.BLOCK_REMOVE_POWER){</b>
+<b class="nc"><i>194</i>&nbsp;                Worker otherWorker = getPlayersOtherWorker(currentPlayer,moveWorker);</b>
+<b class="nc"><i>195</i>&nbsp;                boolean [][] allowedRemovals = checkPossibleBuilds(otherWorker.getWorkerPosition().getCoordinateX(),otherWorker.getWorkerPosition().getCoordinateY());</b>
+<b class="nc"><i>196</i>&nbsp;                if (workerCanMakeMove(allowedRemovals)) {</b>
+<b class="nc"><i>197</i>&nbsp;                    currentClient.sendMessage(new UsePowerRequest());</b>
+<b class="nc"><i>198</i>&nbsp;                    waitValidMessage(currentClient,new int[]{Message.USE_POWER_RESPONSE});</b>
+<b class="nc"><i>199</i>&nbsp;                    if (((UsePowerResponse)receivedMessage).wantUsePower()){</b>
+<b class="nc"><i>200</i>&nbsp;                        currentClient.sendMessage(new BlockRemovalRequest(allowedRemovals));</b>
+<b class="nc"><i>201</i>&nbsp;                        waitValidMessage(currentClient,new int[]{Message.BLOCK_REMOVAL_RESPONSE});</b>
+<b class="nc"><i>202</i>&nbsp;                        currentBoard.getSpace(((BlockRemovalResponse) receivedMessage).getRemoveCoordinateX(),((BlockRemovalResponse) receivedMessage).getRemoveCoordinateY()).decrementHeight();</b>
+<i>203</i>&nbsp;                    }
+<i>204</i>&nbsp;                }
+<i>205</i>&nbsp;        }
+<b class="nc"><i>206</i>&nbsp;        currentGame.nextPlayer();</b>
+<b class="nc"><i>207</i>&nbsp;    }</b>
+<i>208</i>&nbsp;
+<i>209</i>&nbsp;    /**
+<i>210</i>&nbsp;     * Method used to build in the space indicated by the player.
+<i>211</i>&nbsp;     * @param client virtual view of the current player.
+<i>212</i>&nbsp;     * @param toBuild the space to build into.
+<i>213</i>&nbsp;     * @param godPower the power current player&#39;s god.
+<i>214</i>&nbsp;     */
+<i>215</i>&nbsp;    private void buildInSpace(VirtualView client,Space toBuild,Power godPower){
+<b class="nc"><i>216</i>&nbsp;        if (toBuild.getHeight() &lt; (Space.DOME_LEVEL - 1) &amp;&amp; godPower.getPowerID() == Power.BUILD_DOME_EVERYWHERE_POWER){</b>
+<b class="nc"><i>217</i>&nbsp;            client.sendMessage(new UsePowerRequest());</b>
+<b class="nc"><i>218</i>&nbsp;            waitValidMessage(client,new int[]{Message.USE_POWER_RESPONSE});</b>
+<b class="nc"><i>219</i>&nbsp;            if (((UsePowerResponse)receivedMessage).wantUsePower()){</b>
+<b class="nc"><i>220</i>&nbsp;                toBuild.setHasDome(true);</b>
+<b class="nc"><i>221</i>&nbsp;                toBuild.incrementHeight();</b>
+<b class="nc"><i>222</i>&nbsp;                return;</b>
+<i>223</i>&nbsp;            }
+<i>224</i>&nbsp;        }
+<b class="nc"><i>225</i>&nbsp;        blockAddInSpace(toBuild);</b>
+<b class="nc"><i>226</i>&nbsp;    }</b>
+<i>227</i>&nbsp;
+<i>228</i>&nbsp;
+<i>229</i>&nbsp;    /**
+<i>230</i>&nbsp;     * Method used to handle the double build powers. Receives a matrix with allowed moves
+<i>231</i>&nbsp;     * and asks the player if he want to use the power. If affirmative answer has been receives, the normal build process is made.
+<i>232</i>&nbsp;     * @param allowedBuild matrix with allowed build positions.
+<i>233</i>&nbsp;     * @param client virtual view of the player
+<i>234</i>&nbsp;     */
+<i>235</i>&nbsp;    private void secondBuildMake(boolean[][] allowedBuild,VirtualView client){
+<b class="nc"><i>236</i>&nbsp;        if (workerCanMakeMove(allowedBuild)){</b>
+<b class="nc"><i>237</i>&nbsp;            client.sendMessage(new UsePowerRequest());</b>
+<b class="nc"><i>238</i>&nbsp;            waitValidMessage(client,new int[]{Message.USE_POWER_RESPONSE});</b>
+<b class="nc"><i>239</i>&nbsp;            if (((UsePowerResponse)receivedMessage).wantUsePower()){</b>
+<b class="nc"><i>240</i>&nbsp;                client.sendMessage(new BuildRequest(allowedBuild));</b>
+<b class="nc"><i>241</i>&nbsp;                waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});</b>
+<b class="nc"><i>242</i>&nbsp;                Space toBuildSpace = currentGame.getGameBoard().getSpace(((BuildResponse) receivedMessage).getBuildCoordinateX(),((BuildResponse) receivedMessage).getBuildCoordinateY());</b>
+<b class="nc"><i>243</i>&nbsp;                blockAddInSpace(toBuildSpace);</b>
+<i>244</i>&nbsp;            }
+<i>245</i>&nbsp;        }
+<b class="nc"><i>246</i>&nbsp;    }</b>
+<i>247</i>&nbsp;
+<i>248</i>&nbsp;    private void Build(VirtualView client,Power actualPower,Worker selectedWorker){
+<b class="nc"><i>249</i>&nbsp;        Space workerPosition = selectedWorker.getWorkerPosition();</b>
+<b class="nc"><i>250</i>&nbsp;        boolean[][] allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());</b>
+<b class="nc"><i>251</i>&nbsp;        client.sendMessage(new BuildRequest(allowedBuild));</b>
+<b class="nc"><i>252</i>&nbsp;        waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});</b>
+<b class="nc"><i>253</i>&nbsp;        Space toBuildSpace = currentGame.getGameBoard().getSpace(((BuildResponse) receivedMessage).getBuildCoordinateX(),((BuildResponse) receivedMessage).getBuildCoordinateY());</b>
+<b class="nc"><i>254</i>&nbsp;        buildInSpace(client,toBuildSpace,actualPower);</b>
+<b class="nc"><i>255</i>&nbsp;        notifyGameStatusToAll();</b>
+<i>256</i>&nbsp;
+<b class="nc"><i>257</i>&nbsp;        if (actualPower.getTurnPhase()==TurnPhase.BUILD &amp;&amp; actualPower.getActive()&amp;&amp;actualPower.getPowerID()!=Power.BUILD_DOME_EVERYWHERE_POWER){</b>
+<b class="nc"><i>258</i>&nbsp;            switch (actualPower.getPowerID()){</b>
+<i>259</i>&nbsp;                case Power.DIFFERENT_SPACE_DOUBLE_BUILD_POWER:
+<b class="nc"><i>260</i>&nbsp;                    allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());</b>
+<b class="nc"><i>261</i>&nbsp;                    allowedBuild[toBuildSpace.getCoordinateX()-1][toBuildSpace.getCoordinateY()-1] = false;</b>
+<b class="nc"><i>262</i>&nbsp;                    if(workerCanMakeMove(allowedBuild))secondBuildMake(allowedBuild,client);</b>
+<i>263</i>&nbsp;                    break;
+<i>264</i>&nbsp;                case Power.SAME_SPACE_DOUBLE_BUILD_POWER:
+<b class="nc"><i>265</i>&nbsp;                    if(toBuildSpace.getHeight()&lt;3){</b>
+<b class="nc"><i>266</i>&nbsp;                            client.sendMessage(new UsePowerRequest());</b>
+<b class="nc"><i>267</i>&nbsp;                            waitValidMessage(client,new int[]{Message.USE_POWER_RESPONSE});</b>
+<b class="nc"><i>268</i>&nbsp;                            if(((UsePowerResponse) receivedMessage).wantUsePower()){</b>
+<b class="nc"><i>269</i>&nbsp;                                toBuildSpace.incrementHeight();</b>
+<i>270</i>&nbsp;                            }
+<i>271</i>&nbsp;                    }
+<i>272</i>&nbsp;                    break;
+<i>273</i>&nbsp;                case Power.NON_PERIMETER_DOUBLE_BUILD:
+<b class="nc"><i>274</i>&nbsp;                    allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());</b>
+<b class="nc"><i>275</i>&nbsp;                    int tempX = 0, tempY;</b>
+<b class="nc"><i>276</i>&nbsp;                    for (tempY = 0; tempY &lt; IslandBoard.TABLE_DIMENSION; ++tempY) allowedBuild[tempX][tempY] = false;</b>
+<b class="nc"><i>277</i>&nbsp;                    for (tempX = 0, tempY = IslandBoard.TABLE_DIMENSION - 1; tempX &lt; IslandBoard.TABLE_DIMENSION; ++tempX) allowedBuild[tempX][tempY] = false;</b>
+<b class="nc"><i>278</i>&nbsp;                    for (tempX = tempY = IslandBoard.TABLE_DIMENSION - 1; tempY &gt; 0; --tempY) allowedBuild[tempX][tempY] = false;</b>
+<b class="nc"><i>279</i>&nbsp;                    for (tempX = IslandBoard.TABLE_DIMENSION - 1,tempY = 0; tempX &gt; 0; --tempX) allowedBuild[tempX][tempY] = false;</b>
+<b class="nc"><i>280</i>&nbsp;                    if(workerCanMakeMove(allowedBuild))secondBuildMake(allowedBuild,client);</b>
+<i>281</i>&nbsp;                    break;
+<i>282</i>&nbsp;            }
+<i>283</i>&nbsp;        }
+<b class="nc"><i>284</i>&nbsp;    }</b>
+<i>285</i>&nbsp;
+<i>286</i>&nbsp;
+<i>287</i>&nbsp;    //DOUBLE CHECKED
+<i>288</i>&nbsp;    //SETUP PHASE
+<i>289</i>&nbsp;    /**
+<i>290</i>&nbsp;     * Method used to notify all player about the game being start
+<i>291</i>&nbsp;     */
+<i>292</i>&nbsp;    private void sendStartGameMessage() {
+<b class="fc"><i>293</i>&nbsp;        for (VirtualView view : virtualViewsList) view.sendMessage(new GameStartNotification());</b>
+<b class="fc"><i>294</i>&nbsp;    }</b>
+<i>295</i>&nbsp;    /**
+<i>296</i>&nbsp;     * Method used to choose the gods before start playing.It asks the first player the list of gods to use, then the others chose their god card
+<i>297</i>&nbsp;     * and the first player automatically receives the remained god card.
+<i>298</i>&nbsp;     */
+<i>299</i>&nbsp;
+<i>300</i>&nbsp;    private void chooseGods() {
+<b class="fc"><i>301</i>&nbsp;        System.out.println(&quot;Choosing gods&quot;);</b>
+<b class="fc"><i>302</i>&nbsp;        Player firstPlayer = currentGame.getCurrentPlayer();</b>
+<b class="fc"><i>303</i>&nbsp;        VirtualView firstVirtualView = virtualViewsList[0];</b>
+<b class="fc"><i>304</i>&nbsp;        System.out.println(&quot;Sending Gods List to first player&quot;);</b>
+<i>305</i>&nbsp;        boolean validGodsReceived;
+<b class="fc"><i>306</i>&nbsp;        ArrayList&lt;God&gt; gameGods=new ArrayList&lt;&gt;(),chosenGods = new ArrayList&lt;&gt;();</b>
+<i>307</i>&nbsp;        do {
+<b class="fc"><i>308</i>&nbsp;            if(!(validGodsReceived = correctGodChose(firstVirtualView,gameGods))) firstVirtualView.sendMessage(new InvalidGodError());</b>
+<b class="nc"><i>309</i>&nbsp;        }while(!validGodsReceived);</b>
+<b class="nc"><i>310</i>&nbsp;        for(int Index = 1; Index&lt; currentGame.getNumPlayers();++Index){</b>
+<b class="nc"><i>311</i>&nbsp;            virtualViewsList[Index].sendMessage(new ChoseGodRequest(gameGods, chosenGods));</b>
+<b class="nc"><i>312</i>&nbsp;            waitValidMessage(virtualViewsList[Index],new int[]{Message.CHOSE_GOD_RESPONSE});</b>
+<b class="nc"><i>313</i>&nbsp;            System.out.println(&quot;Chosen god: &quot;+((ChoseGodResponse)receivedMessage).getChosenGod());</b>
+<b class="nc"><i>314</i>&nbsp;            God receivedGod = getGodByName(((ChoseGodResponse)receivedMessage).getChosenGod());</b>
+<b class="nc"><i>315</i>&nbsp;            Player actualPlayer = currentGame.getPlayerByUsername(virtualViewsList[Index].getUsername());</b>
+<b class="nc"><i>316</i>&nbsp;            if (actualPlayer == null) System.out.println(&quot;Wanted player doesn&#39;t exist&quot;);</b>
+<i>317</i>&nbsp;            else {
+<b class="nc"><i>318</i>&nbsp;                actualPlayer.setGod(receivedGod);</b>
+<b class="nc"><i>319</i>&nbsp;                chosenGods.add(receivedGod);</b>
+<i>320</i>&nbsp;            }
+<i>321</i>&nbsp;        }
+<b class="nc"><i>322</i>&nbsp;        God remainedGod = getRemainedGod(gameGods,chosenGods);</b>
+<b class="nc"><i>323</i>&nbsp;        firstPlayer.setGod(remainedGod);</b>
+<b class="nc"><i>324</i>&nbsp;        virtualViewsList[0].sendMessage(new LastGodNotification(gameGods,remainedGod));</b>
+<b class="nc"><i>325</i>&nbsp;    }</b>
+<i>326</i>&nbsp;
+<i>327</i>&nbsp;    /**
+<i>328</i>&nbsp;     * Method asking the first player the list of gods and checks the validity of the answer.
+<i>329</i>&nbsp;     * @param firstVirtualView virtual view of the first player.
+<i>330</i>&nbsp;     * @param gameGods empty List where the gods will be inserted.
+<i>331</i>&nbsp;     * @return a boolean value. True if the player has chosen the gods correctly.
+<i>332</i>&nbsp;     */
+<i>333</i>&nbsp;    private boolean correctGodChose(VirtualView firstVirtualView,ArrayList&lt;God&gt; gameGods){
+<b class="fc"><i>334</i>&nbsp;        gameGods.clear();</b>
+<b class="fc"><i>335</i>&nbsp;        firstVirtualView.sendMessage(new GodsListRequest(gameGodList,currentGame.getNumPlayers()));</b>
+<b class="fc"><i>336</i>&nbsp;        waitValidMessage(firstVirtualView,new int[]{Message.GODS_LIST_RESPONSE});</b>
+<b class="nc"><i>337</i>&nbsp;        System.out.println(&quot;Gods List received from first player&quot;);</b>
+<b class="nc"><i>338</i>&nbsp;        ArrayList&lt;String&gt; gameGodsNames = ((GodsListResponse) receivedMessage).getGods();</b>
+<b class="nc"><i>339</i>&nbsp;        for (String receivedGodName:gameGodsNames){</b>
+<b class="nc"><i>340</i>&nbsp;            God currentGod = getGodByName(receivedGodName);</b>
+<b class="nc"><i>341</i>&nbsp;            if (currentGod == null) return false;</b>
+<b class="nc"><i>342</i>&nbsp;            else gameGods.add(currentGod);</b>
+<b class="nc"><i>343</i>&nbsp;        }</b>
+<b class="nc"><i>344</i>&nbsp;        return true;</b>
+<i>345</i>&nbsp;    }
+<i>346</i>&nbsp;    /**
+<i>347</i>&nbsp;     * Private method of the controller used to identify the god of the first player.
+<i>348</i>&nbsp;     * @param gameGods gods chosen to be used in game.
+<i>349</i>&nbsp;     * @param chosenGods gods chosen by other players.
+<i>350</i>&nbsp;     * @return the god which will be used by the first player.
+<i>351</i>&nbsp;     */
+<i>352</i>&nbsp;    private God getRemainedGod(ArrayList&lt;God&gt; gameGods,ArrayList&lt;God&gt; chosenGods){
+<b class="nc"><i>353</i>&nbsp;        int index=0;</b>
+<b class="nc"><i>354</i>&nbsp;        for (; index&lt;gameGods.size()-1;++index) if (!chosenGods.contains(gameGods.get(index))) return gameGods.get(index);</b>
+<b class="nc"><i>355</i>&nbsp;        return gameGods.get(index);</b>
+<i>356</i>&nbsp;    }
+<i>357</i>&nbsp;    /**
+<i>358</i>&nbsp;     * Method used to ask the Challenger the username of the start player.
+<i>359</i>&nbsp;     * If unvalid input is detected it sends an error to the client.
+<i>360</i>&nbsp;     */
+<i>361</i>&nbsp;    private void chooseStartPlayer(){
+<b class="nc"><i>362</i>&nbsp;        boolean validUsernameReceived = false;</b>
+<i>363</i>&nbsp;        Player starterPlayer;
+<i>364</i>&nbsp;        do {
+<b class="nc"><i>365</i>&nbsp;            virtualViewsList[0].sendMessage(new StartPlayerRequest(currentGame.getPlayers()));</b>
+<b class="nc"><i>366</i>&nbsp;            waitValidMessage(virtualViewsList[0], new int[]{Message.START_PLAYER_RESPONSE});</b>
+<b class="nc"><i>367</i>&nbsp;            starterPlayer = currentGame.getPlayerByUsername(((StartPlayerResponse)receivedMessage).getStartPlayerUsername());</b>
+<b class="nc"><i>368</i>&nbsp;            if(starterPlayer!=null) {</b>
+<b class="nc"><i>369</i>&nbsp;                currentGame.setStarterPlayer(((StartPlayerResponse) receivedMessage).getStartPlayerUsername());</b>
+<b class="nc"><i>370</i>&nbsp;                validUsernameReceived=true;</b>
+<i>371</i>&nbsp;            }
+<b class="nc"><i>372</i>&nbsp;            else virtualViewsList[0].sendMessage(new InvalidStarterPlayerError());</b>
+<b class="nc"><i>373</i>&nbsp;        }while(!validUsernameReceived);</b>
+<b class="nc"><i>374</i>&nbsp;    }</b>
+<i>375</i>&nbsp;    /**
+<i>376</i>&nbsp;     * Used for asking the players the starter position of their workers.
+<i>377</i>&nbsp;     */
+<i>378</i>&nbsp;    private void chooseWorkerPositions(){
+<b class="nc"><i>379</i>&nbsp;        currentGame.setCurrentPlayer(currentGame.getStarterPlayer());</b>
+<b class="nc"><i>380</i>&nbsp;        boolean [][] allowedPositions = initializeMatrix(true);</b>
+<i>381</i>&nbsp;        boolean validPosition;
+<b class="nc"><i>382</i>&nbsp;        notifyGameStatusToAll();</b>
+<i>383</i>&nbsp;        do {
+<b class="nc"><i>384</i>&nbsp;            VirtualView currentClient = getVirtualViewByUsername(currentGame.getCurrentPlayer().getUsername());</b>
+<b class="nc"><i>385</i>&nbsp;            assert currentClient != null;</b>
+<i>386</i>&nbsp;            do{
+<b class="nc"><i>387</i>&nbsp;                currentClient.sendMessage(new WorkerPositionRequest(1,allowedPositions));</b>
+<b class="nc"><i>388</i>&nbsp;                waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});</b>
+<b class="nc"><i>389</i>&nbsp;                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);</b>
+<b class="nc"><i>390</i>&nbsp;            }while(!validPosition);</b>
+<b class="nc"><i>391</i>&nbsp;            allowedPositions[((WorkerPositionResponse) receivedMessage).getCoordinateX()-1][((WorkerPositionResponse) receivedMessage).getCoordinateY()-1] = false;</b>
+<b class="nc"><i>392</i>&nbsp;            createWorker(1,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());</b>
+<b class="nc"><i>393</i>&nbsp;            notifyGameStatusToAll();</b>
+<i>394</i>&nbsp;            do{
+<b class="nc"><i>395</i>&nbsp;                currentClient.sendMessage(new WorkerPositionRequest(2,allowedPositions));</b>
+<b class="nc"><i>396</i>&nbsp;                waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});</b>
+<b class="nc"><i>397</i>&nbsp;                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);</b>
+<b class="nc"><i>398</i>&nbsp;            }while(!validPosition);</b>
+<b class="nc"><i>399</i>&nbsp;            allowedPositions[((WorkerPositionResponse) receivedMessage).getCoordinateX()-1][((WorkerPositionResponse) receivedMessage).getCoordinateY()-1] = false;</b>
+<b class="nc"><i>400</i>&nbsp;            createWorker(2,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());</b>
+<b class="nc"><i>401</i>&nbsp;            notifyGameStatusToAll();</b>
+<b class="nc"><i>402</i>&nbsp;            currentGame.nextPlayer();</b>
+<b class="nc"><i>403</i>&nbsp;        }while(currentGame.getCurrentPlayer() != currentGame.getStarterPlayer());</b>
+<b class="nc"><i>404</i>&nbsp;    }</b>
+<i>405</i>&nbsp;    //MOVE
+<i>406</i>&nbsp;    /**
+<i>407</i>&nbsp;     * Check all the possible moves the worker can make.
+<i>408</i>&nbsp;     * @param workerCoordinateX coordinate X of the selected worker.
+<i>409</i>&nbsp;     * @param workerCoordinateY coordinate Y of the selected worker.
+<i>410</i>&nbsp;     * @return a boolean matrix with &quot;true&quot; value in the position where the worker can move.
+<i>411</i>&nbsp;     */
+<i>412</i>&nbsp;    private boolean[][] checkPossibleMoves(int workerCoordinateX,int workerCoordinateY){
+<b class="nc"><i>413</i>&nbsp;        IslandBoard currentBoard = getCurrentBoard();</b>
+<b class="nc"><i>414</i>&nbsp;        God currentGod = currentGame.getCurrentPlayer().getGod();</b>
+<i>415</i>&nbsp;        Space checkedSpace;
+<i>416</i>&nbsp;        Worker workerInCheckedSpace;
+<b class="nc"><i>417</i>&nbsp;        int currentHeight = currentBoard.getSpace(workerCoordinateX,workerCoordinateY).getHeight();</b>
+<b class="nc"><i>418</i>&nbsp;        boolean [][] allowedMoves = initializeMatrix(false);</b>
+<i>419</i>&nbsp;
+<b class="nc"><i>420</i>&nbsp;        for (int X = workerCoordinateX-2; X &lt; workerCoordinateX+1; ++X){</b>
+<b class="nc"><i>421</i>&nbsp;            for (int Y = workerCoordinateY-2; Y &lt; workerCoordinateY +1; ++Y){</b>
+<b class="nc"><i>422</i>&nbsp;                if ((X &gt;= 0 &amp;&amp; X &lt; IslandBoard.TABLE_DIMENSION) &amp;&amp; (Y &gt;= 0 &amp;&amp; Y &lt; IslandBoard.TABLE_DIMENSION)) {</b>
+<b class="nc"><i>423</i>&nbsp;                    checkedSpace = currentBoard.getSpace(X + 1, Y + 1);</b>
+<b class="nc"><i>424</i>&nbsp;                    if ((currentHeight &gt;= checkedSpace.getHeight() - 1)&amp;&amp;!checkedSpace.getHasDome()) {</b>
+<b class="nc"><i>425</i>&nbsp;                        if (((workerInCheckedSpace = checkedSpace.getWorkerInPlace()) != null)) {</b>
+<b class="nc"><i>426</i>&nbsp;                            if (!workerInCheckedSpace.getOwner().equals(currentGame.getCurrentPlayer().getUsername())) {</b>
+<b class="nc"><i>427</i>&nbsp;                                switch (currentGod.getSinglePower(0)) {</b>
+<i>428</i>&nbsp;                                    case Power.WORKER_POSITION_EXCHANGE_POWER:
+<b class="nc"><i>429</i>&nbsp;                                        allowedMoves[X][Y] = true;</b>
+<b class="nc"><i>430</i>&nbsp;                                        break;</b>
+<i>431</i>&nbsp;                                    case Power.PUSH_WORKER_POWER:
+<i>432</i>&nbsp;                                        int tempX, tempY;
+<b class="nc"><i>433</i>&nbsp;                                        tempX = X + (X - (workerCoordinateX - 1));</b>
+<b class="nc"><i>434</i>&nbsp;                                        tempY = Y + (Y - (workerCoordinateY - 1));</b>
+<b class="nc"><i>435</i>&nbsp;                                        if (tempX &gt;= 0 &amp;&amp; tempY &gt;= 0 &amp;&amp; tempX &lt; IslandBoard.TABLE_DIMENSION &amp;&amp; tempY &lt; IslandBoard.TABLE_DIMENSION) {</b>
+<b class="nc"><i>436</i>&nbsp;                                            Space tempSpace = currentBoard.getSpace(tempX, tempY);</b>
+<b class="nc"><i>437</i>&nbsp;                                            if ((tempSpace.getWorkerInPlace() == null) &amp;&amp; (!tempSpace.getHasDome())) allowedMoves[X][Y] = true;</b>
+<i>438</i>&nbsp;                                        }
+<b class="nc"><i>439</i>&nbsp;                                        break;</b>
+<i>440</i>&nbsp;                                }
+<i>441</i>&nbsp;                            }
+<b class="nc"><i>442</i>&nbsp;                        } else allowedMoves[X][Y] = true;</b>
+<i>443</i>&nbsp;                    }//line below is ATHENA POWER
+<b class="nc"><i>444</i>&nbsp;                    if (allowedMoves[X][Y]&amp;&amp;currentGame.hasAthenaMovedUpDuringLastRound()&amp;&amp;(checkedSpace.getHeight() &gt; currentHeight)) allowedMoves[X][Y] = false;</b>
+<i>445</i>&nbsp;                }
+<i>446</i>&nbsp;            }
+<i>447</i>&nbsp;        }
+<b class="nc"><i>448</i>&nbsp;        return allowedMoves;</b>
+<i>449</i>&nbsp;    }
+<i>450</i>&nbsp;    //BUILD
+<i>451</i>&nbsp;    /**
+<i>452</i>&nbsp;     * Method used to identify the spaces a given worker can build
+<i>453</i>&nbsp;     * @param workerCoordinateX coordinate x of the moved worker.
+<i>454</i>&nbsp;     * @param workerCoordinateY coordinate y of the moved worker.
+<i>455</i>&nbsp;     * @return Boolean matrix with true value in the cells the worker can build.
+<i>456</i>&nbsp;     */
+<i>457</i>&nbsp;    private boolean[][] checkPossibleBuilds(int workerCoordinateX,int workerCoordinateY){
+<b class="nc"><i>458</i>&nbsp;        boolean[][] allowedBuilds = initializeMatrix(false);</b>
+<b class="nc"><i>459</i>&nbsp;        for (int X = workerCoordinateX - 2; X &lt; workerCoordinateX + 1;++ X){</b>
+<b class="nc"><i>460</i>&nbsp;            for (int Y = workerCoordinateY - 2; Y &lt; workerCoordinateY + 1;++Y){</b>
+<i>461</i>&nbsp;                Space currentSpace;
+<b class="nc"><i>462</i>&nbsp;                if(((X &gt;= 0 &amp;&amp; X &lt; IslandBoard.TABLE_DIMENSION) &amp;&amp; (Y &gt;= 0 &amp;&amp; Y &lt; IslandBoard.TABLE_DIMENSION))&amp;&amp;((!(currentSpace = currentGame.getGameBoard().getSpace(X + 1, Y + 1)).getHasDome()&amp;&amp;currentSpace.getWorkerInPlace()==null))) allowedBuilds[X][Y] = true;</b>
+<i>463</i>&nbsp;            }
+<i>464</i>&nbsp;        }
+<b class="nc"><i>465</i>&nbsp;        if (currentGame.getCurrentPlayer().getGod().getSinglePower(0)== Power.WORKER_POSITION_BUILD &amp;&amp; currentGame.getGameBoard().getSpace(workerCoordinateX,workerCoordinateY).getHeight() &lt; (Space.DOME_LEVEL-1)) allowedBuilds[workerCoordinateX-1][workerCoordinateY-1] = true;</b>
+<b class="nc"><i>466</i>&nbsp;        return allowedBuilds;</b>
+<i>467</i>&nbsp;    }
+<i>468</i>&nbsp;    /**
+<i>469</i>&nbsp;     * Method used to add a block in a given space checking also if a dome must be built.
+<i>470</i>&nbsp;     * @param toBuild the space where to build a block.
+<i>471</i>&nbsp;     */
+<i>472</i>&nbsp;    private void blockAddInSpace(Space toBuild){
+<b class="nc"><i>473</i>&nbsp;        toBuild.incrementHeight();</b>
+<b class="nc"><i>474</i>&nbsp;        if (toBuild.getHeight() == Space.DOME_LEVEL){</b>
+<b class="nc"><i>475</i>&nbsp;            toBuild.setHasDome(true);</b>
+<b class="nc"><i>476</i>&nbsp;            currentGame.setTowerWasCompleted(true);</b>
+<b class="nc"><i>477</i>&nbsp;            currentGame.getGameBoard().incrementNumberCompleteTowers();</b>
+<i>478</i>&nbsp;        }
+<b class="nc"><i>479</i>&nbsp;    }</b>
+<i>480</i>&nbsp;
+<i>481</i>&nbsp;    //AUXILIARY METHODS
+<i>482</i>&nbsp;    /**
+<i>483</i>&nbsp;     * Starts the game after that worker positions have been chosen.
+<i>484</i>&nbsp;     */
+<i>485</i>&nbsp;    private void startGame(){
+<b class="nc"><i>486</i>&nbsp;        currentGame.setCurrentRound(1);</b>
+<b class="nc"><i>487</i>&nbsp;    }</b>
+<i>488</i>&nbsp;    /**
+<i>489</i>&nbsp;     * Method used to send a Game Status Notification to all players of the game.
+<i>490</i>&nbsp;     */
+<i>491</i>&nbsp;    private void notifyGameStatusToAll(){
+<b class="nc"><i>492</i>&nbsp;        for (VirtualView virtualView : virtualViewsList) {</b>
+<b class="nc"><i>493</i>&nbsp;            virtualView.sendMessage(new GameStatusNotification(currentGame));</b>
+<i>494</i>&nbsp;        }
+<b class="nc"><i>495</i>&nbsp;    }</b>
+<i>496</i>&nbsp;    /**
+<i>497</i>&nbsp;     * Creates a new matrix of TABLE_DIMENSION x TABLE_DIMENSION dimension.
+<i>498</i>&nbsp;     * @param value initial value of each item in the matrix.
+<i>499</i>&nbsp;     * @return the created matrix.
+<i>500</i>&nbsp;     */
+<i>501</i>&nbsp;    protected boolean[][] initializeMatrix(boolean value){
+<b class="fc"><i>502</i>&nbsp;        boolean[][] allowedPositions = new boolean[IslandBoard.TABLE_DIMENSION][IslandBoard.TABLE_DIMENSION];</b>
+<b class="fc"><i>503</i>&nbsp;        for (int coordinateX = 0; coordinateX &lt; IslandBoard.TABLE_DIMENSION; ++coordinateX)</b>
+<b class="fc"><i>504</i>&nbsp;            for (int coordinateY = 0; coordinateY &lt; IslandBoard.TABLE_DIMENSION; ++coordinateY)</b>
+<b class="fc"><i>505</i>&nbsp;                allowedPositions[coordinateX][coordinateY] = value;</b>
+<b class="fc"><i>506</i>&nbsp;        return allowedPositions;</b>
+<i>507</i>&nbsp;    }
+<i>508</i>&nbsp;    /**
+<i>509</i>&nbsp;     * checkMessageValidity is a private method used to control if the received message is among
+<i>510</i>&nbsp;     * the messages can be used by the game controller at the moment in order to continue the game.
+<i>511</i>&nbsp;     * @param messageToCheck is the received message.
+<i>512</i>&nbsp;     * @param allowedMessages the list of allowed messages
+<i>513</i>&nbsp;     * @return a boolean value. True if the message is allowed, false otherwise.
+<i>514</i>&nbsp;     */
+<i>515</i>&nbsp;    private boolean checkMessageValidity(Message messageToCheck,int[] allowedMessages){
+<b class="nc"><i>516</i>&nbsp;        int receivedMessageID = messageToCheck.getMessageID();</b>
+<b class="nc"><i>517</i>&nbsp;        for (int allowedMessage : allowedMessages) {</b>
+<b class="nc"><i>518</i>&nbsp;            if (receivedMessageID == allowedMessage) return true;</b>
+<i>519</i>&nbsp;        }
+<b class="nc"><i>520</i>&nbsp;        return false;</b>
+<i>521</i>&nbsp;    }
+<i>522</i>&nbsp;    /**
+<i>523</i>&nbsp;     * Checks if the the client has chosen a valid position. This is first checked in the client in order to ensure
+<i>524</i>&nbsp;     * better performance and reduce socket load and double checked on the server for ensuring security.
+<i>525</i>&nbsp;     * @param allowedPositions matrix of allowed positions.
+<i>526</i>&nbsp;     * @param response Message received from the client
+<i>527</i>&nbsp;     * @return boolean value indicating with &quot;true&quot; that a valid move has been chosen by the client. false otherwise.
+<i>528</i>&nbsp;     */
+<i>529</i>&nbsp;    protected boolean verifyValidPosition(boolean[][] allowedPositions,WorkerPositionResponse response){
+<b class="fc"><i>530</i>&nbsp;        int coordinateX = response.getCoordinateX();</b>
+<b class="fc"><i>531</i>&nbsp;        int coordinateY = response.getCoordinateY();</b>
+<b class="fc"><i>532</i>&nbsp;        return allowedPositions[coordinateX - 1][coordinateY - 1];</b>
+<i>533</i>&nbsp;    }
+<i>534</i>&nbsp;    /**
+<i>535</i>&nbsp;     * Method used during the setup of the game. Create a worker instance in the position indicated by the player
+<i>536</i>&nbsp;     * @param numWorker used to distinguish between first and second player&#39;s worker.
+<i>537</i>&nbsp;     * @param owner indicates the player who owns the created worker.
+<i>538</i>&nbsp;     * @param coordinateX X coordinate of the worker Position.
+<i>539</i>&nbsp;     * @param coordinateY Y coordinate of the worker Position.
+<i>540</i>&nbsp;     */
+<i>541</i>&nbsp;    private void createWorker(int numWorker,Player owner,int coordinateX, int coordinateY){
+<b class="nc"><i>542</i>&nbsp;        Worker[] workers = owner.getWorkers();</b>
+<b class="nc"><i>543</i>&nbsp;        if(workers == null) owner.setWorkers(workers = new Worker[Game.WORKERS_PER_PLAYER]);</b>
+<b class="nc"><i>544</i>&nbsp;        char gender = &#39;m&#39;;</b>
+<b class="nc"><i>545</i>&nbsp;        if (numWorker == 1) gender = &#39;f&#39;;</b>
+<b class="nc"><i>546</i>&nbsp;        Space workerPosition = currentGame.getGameBoard().getSpace(coordinateX,coordinateY);</b>
+<b class="nc"><i>547</i>&nbsp;        workerPosition.setWorkerInPlace(workers[numWorker-1] = new Worker(owner.getUsername(),gender,workerPosition,owner.getUserID()));</b>
+<b class="nc"><i>548</i>&nbsp;    }</b>
+<i>549</i>&nbsp;    /**
+<i>550</i>&nbsp;     * Method used to check if any of opponents of current Player has a given power
+<i>551</i>&nbsp;     * @param powerID The power to be checked.
+<i>552</i>&nbsp;     * @return true if an opponent has the indicated power, false otherwise.
+<i>553</i>&nbsp;     */
+<i>554</i>&nbsp;    private boolean opponentHasPower(int powerID){
+<b class="nc"><i>555</i>&nbsp;        Player[] gamePlayers = currentGame.getPlayers();</b>
+<b class="nc"><i>556</i>&nbsp;        for (Player current:gamePlayers)</b>
+<b class="nc"><i>557</i>&nbsp;            if (current.getGod().getSinglePower(0)==powerID &amp;&amp; currentGame.getCurrentPlayer() != current) return true;</b>
+<b class="nc"><i>558</i>&nbsp;        return false;</b>
+<i>559</i>&nbsp;    }
+<i>560</i>&nbsp;    /**
+<i>561</i>&nbsp;     * getVirtualViewByUsername method is used to get the network interface of one player using his username;
+<i>562</i>&nbsp;     * @param username username of the player.
+<i>563</i>&nbsp;     * @return the corresponding network interface
+<i>564</i>&nbsp;     */
+<i>565</i>&nbsp;    private VirtualView getVirtualViewByUsername(String username){
+<b class="nc"><i>566</i>&nbsp;        for (VirtualView networkInterface:virtualViewsList) {</b>
+<b class="nc"><i>567</i>&nbsp;            if(networkInterface.getUsername().equals(username)) return networkInterface;</b>
+<i>568</i>&nbsp;        }
+<b class="nc"><i>569</i>&nbsp;        return null;</b>
+<i>570</i>&nbsp;    }
+<i>571</i>&nbsp;    /**
+<i>572</i>&nbsp;     * Method getGodByName is used to get a god by using the name
+<i>573</i>&nbsp;     * @param name Name of the God.
+<i>574</i>&nbsp;     * @return object of class God taken from the list of gods of the game.
+<i>575</i>&nbsp;     */
+<i>576</i>&nbsp;    private God getGodByName(String name){
+<b class="nc"><i>577</i>&nbsp;        for (God god:gameGodList) if (god.getName().equals(name)) return god;</b>
+<b class="nc"><i>578</i>&nbsp;        return null;</b>
+<i>579</i>&nbsp;    }
+<i>580</i>&nbsp;    /**
+<i>581</i>&nbsp;     * is used to get the Power object using the ID of the power
+<i>582</i>&nbsp;     * @param ID is the ID of the power.
+<i>583</i>&nbsp;     * @return the desired power.
+<i>584</i>&nbsp;     */
+<i>585</i>&nbsp;    private Power getPowerByID(int ID){
+<b class="nc"><i>586</i>&nbsp;        for (Power power:powerList) {</b>
+<b class="nc"><i>587</i>&nbsp;            if (power.getPowerID() == ID) return power;</b>
+<b class="nc"><i>588</i>&nbsp;        }</b>
+<b class="nc"><i>589</i>&nbsp;        return null;</b>
+<i>590</i>&nbsp;    }
+<i>591</i>&nbsp;    /**
+<i>592</i>&nbsp;     * getWorkerByCoordinate is a private method used to get the worker in the selected Space
+<i>593</i>&nbsp;     * @param coordinateX is the X coordinate of the selected Space.
+<i>594</i>&nbsp;     * @param coordinateY is the Y coordinate of the selected Space.
+<i>595</i>&nbsp;     * @return the worker in desired place. The value is null in case no worker have been found in the space.
+<i>596</i>&nbsp;     */
+<i>597</i>&nbsp;    private Worker getWorkerByCoordinates(int coordinateX,int coordinateY){
+<b class="nc"><i>598</i>&nbsp;        return currentGame.getGameBoard().getSpace(coordinateX,coordinateY).getWorkerInPlace();</b>
+<i>599</i>&nbsp;    }
+<i>600</i>&nbsp;    /**
+<i>601</i>&nbsp;     * used to get the other worker of the player
+<i>602</i>&nbsp;     * @param player in the player considered
+<i>603</i>&nbsp;     * @param oneWorker is the worker we are considering
+<i>604</i>&nbsp;     * @return the other worker of the player
+<i>605</i>&nbsp;     */
+<i>606</i>&nbsp;    private Worker getPlayersOtherWorker(Player player,Worker oneWorker){
+<b class="nc"><i>607</i>&nbsp;        if (player.getWorkers()[0] == oneWorker ) return player.getWorkers()[1];</b>
+<b class="nc"><i>608</i>&nbsp;        else return player.getWorkers()[0];</b>
+<i>609</i>&nbsp;    }
+<i>610</i>&nbsp;
+<i>611</i>&nbsp;    /**
+<i>612</i>&nbsp;     * Method used to notify to all players the winner of the game and close connections
+<i>613</i>&nbsp;     * @param winnerUsername Username of the winner.
+<i>614</i>&nbsp;     */
+<i>615</i>&nbsp;    private void victory(String winnerUsername){
+<b class="nc"><i>616</i>&nbsp;        for (VirtualView player:virtualViewsList) {</b>
+<b class="nc"><i>617</i>&nbsp;            player.sendMessage(new WinnerNotification(winnerUsername));</b>
+<i>618</i>&nbsp;            //player.disconnect();
+<i>619</i>&nbsp;        }
+<b class="nc"><i>620</i>&nbsp;    }</b>
+<i>621</i>&nbsp;    /**
+<i>622</i>&nbsp;     * Checks in the matrix indicating allowed moves if an action can be performed by the worker
+<i>623</i>&nbsp;     * @param allowedMoves is previously created matrix indicating where the worker can move or build;
+<i>624</i>&nbsp;     * @return a boolean value. True when an action can be performed, false otherwise.
+<i>625</i>&nbsp;     */
+<i>626</i>&nbsp;    protected boolean workerCanMakeMove (boolean[][] allowedMoves){
+<b class="fc"><i>627</i>&nbsp;        for (int X = 0; X &lt; IslandBoard.TABLE_DIMENSION; ++X)</b>
+<b class="fc"><i>628</i>&nbsp;            for(int Y = 0; Y &lt; IslandBoard.TABLE_DIMENSION; ++Y)</b>
+<b class="fc"><i>629</i>&nbsp;                if (allowedMoves[X][Y]) return true;</b>
+<b class="fc"><i>630</i>&nbsp;        return false;</b>
+<i>631</i>&nbsp;    }
+<i>632</i>&nbsp;
+<i>633</i>&nbsp;    /**
+<i>634</i>&nbsp;     * Method used to delete a player from the game. In case of two players game, the remained players wins the game,
+<i>635</i>&nbsp;     * so the victory method is called in order to notify the winner.
+<i>636</i>&nbsp;     * @param playerToRemove player to remove from the game
+<i>637</i>&nbsp;     */
+<i>638</i>&nbsp;    private void removePlayerFromGame(Player playerToRemove) {
+<b class="nc"><i>639</i>&nbsp;        Player[] currentPlayers = currentGame.getPlayers();</b>
+<b class="nc"><i>640</i>&nbsp;        if (currentGame.getNumPlayers() == 2) {</b>
+<b class="nc"><i>641</i>&nbsp;            if ((currentPlayers = currentGame.getPlayers())[0]==playerToRemove) victory(currentPlayers[1].getUsername());</b>
+<b class="nc"><i>642</i>&nbsp;            else victory(currentPlayers[0].getUsername());</b>
+<i>643</i>&nbsp;        }
+<i>644</i>&nbsp;        else {
+<b class="nc"><i>645</i>&nbsp;            Player[] newPlayersArray = new Player[currentGame.getNumPlayers() - 1];</b>
+<i>646</i>&nbsp;            Player tempPlayer;
+<b class="nc"><i>647</i>&nbsp;            int newPlayersArrayIndex = 0;</b>
+<b class="nc"><i>648</i>&nbsp;            for (int i = 0; i &lt; currentGame.getNumPlayers(); ++i) {</b>
+<b class="nc"><i>649</i>&nbsp;                if ((tempPlayer = currentPlayers[i]) != playerToRemove) {</b>
+<b class="nc"><i>650</i>&nbsp;                    newPlayersArray[newPlayersArrayIndex] = tempPlayer;</b>
+<b class="nc"><i>651</i>&nbsp;                    ++newPlayersArrayIndex;</b>
+<b class="nc"><i>652</i>&nbsp;                    if (currentGame.getStarterPlayer() == currentPlayers[i]) {</b>
+<b class="nc"><i>653</i>&nbsp;                        if (i == 2) currentGame.setStarterPlayer(newPlayersArray[0].getUsername());</b>
+<b class="nc"><i>654</i>&nbsp;                        else currentGame.setStarterPlayer(currentPlayers[i + 1].getUsername());</b>
+<i>655</i>&nbsp;                    }
+<i>656</i>&nbsp;                } else {
+<b class="nc"><i>657</i>&nbsp;                    if (i &gt; 0) currentGame.setCurrentPlayer(currentPlayers[i - 1]);</b>
+<b class="nc"><i>658</i>&nbsp;                    else currentGame.setCurrentPlayer(currentPlayers[1]);</b>
+<i>659</i>&nbsp;                }
+<i>660</i>&nbsp;            }
+<b class="nc"><i>661</i>&nbsp;            currentGame.setPlayers(newPlayersArray);</b>
+<i>662</i>&nbsp;        }
+<b class="nc"><i>663</i>&nbsp;    }</b>
+<i>664</i>&nbsp;    /**
+<i>665</i>&nbsp;     * Method waitValidMessage
+<i>666</i>&nbsp;     * @param senderVirtualView virtual view of the client from who the controller needs a message
+<i>667</i>&nbsp;     * @param messageIDs list of accepted messages.
+<i>668</i>&nbsp;     */
+<i>669</i>&nbsp;    private void waitValidMessage(VirtualView senderVirtualView,int[] messageIDs) {
+<b class="fc"><i>670</i>&nbsp;        boolean receivedValidMessage = false;</b>
+<b class="fc"><i>671</i>&nbsp;        System.out.println(&quot;Waiting for a valid message&quot;);</b>
+<i>672</i>&nbsp;        do {
+<i>673</i>&nbsp;            try{
+<b class="fc"><i>674</i>&nbsp;                while((receivedMessage = senderVirtualView.dequeueFirstMessage())==null) Thread.sleep(RESPONSE_MESSAGE_WAIT_TIMEOUT);</b>
+<b class="nc"><i>675</i>&nbsp;                System.out.println(&quot;New message received, checking validity&quot;);</b>
+<b class="nc"><i>676</i>&nbsp;                receivedValidMessage = checkMessageValidity(receivedMessage,messageIDs);</b>
+<b class="nc"><i>677</i>&nbsp;            } catch (InterruptedException e) {</b>
+<b class="nc"><i>678</i>&nbsp;                System.out.println(&quot;&quot;);</b>
+<b class="nc"><i>679</i>&nbsp;            }</b>
+<b class="nc"><i>680</i>&nbsp;        } while (!receivedValidMessage);</b>
+<b class="nc"><i>681</i>&nbsp;    }</b>
+<i>682</i>&nbsp;    /**
+<i>683</i>&nbsp;     * Method used to get the worker selected by the player. If the selected worker is invalid it send an error message to the client.
+<i>684</i>&nbsp;     * @param message received select worker response message.
+<i>685</i>&nbsp;     * @return The selected worker, null if it&#39;s invalid
+<i>686</i>&nbsp;     */
+<i>687</i>&nbsp;    private Worker getSelectedWorker(SelectWorkerResponse message){
+<b class="nc"><i>688</i>&nbsp;        int X = message.getCoordinateX(),Y=message.getCoordinateY();</b>
+<i>689</i>&nbsp;        Worker selectedWorker;
+<b class="nc"><i>690</i>&nbsp;        if ((X&lt;1||X&gt;IslandBoard.TABLE_DIMENSION)||(Y&lt;1||Y&gt;IslandBoard.TABLE_DIMENSION)||(((selectedWorker = getWorkerByCoordinates(X,Y))==null))||!selectedWorker.getOwner().equals(currentPlayer.getUsername())){</b>
+<b class="nc"><i>691</i>&nbsp;            currentClient.sendMessage(new InvalidWorkerError());</b>
+<b class="nc"><i>692</i>&nbsp;            currentClient.sendMessage(new SelectWorkerRequest());</b>
+<i>693</i>&nbsp;        }
+<b class="nc"><i>694</i>&nbsp;        else return selectedWorker;</b>
+<b class="nc"><i>695</i>&nbsp;        return null;</b>
+<i>696</i>&nbsp;    }
+<i>697</i>&nbsp;
+<i>698</i>&nbsp;    /**
+<i>699</i>&nbsp;     * Method used to implement Artemis power.
+<i>700</i>&nbsp;     * @param previousPosition the start position during first move of the worker selected by the player.
+<i>701</i>&nbsp;     */
+<i>702</i>&nbsp;    private void ArtemisPower(Space previousPosition){
+<b class="nc"><i>703</i>&nbsp;        boolean moveMade = false;</b>
+<b class="nc"><i>704</i>&nbsp;        Space fromSpace = moveWorker.getWorkerPosition();</b>
+<b class="nc"><i>705</i>&nbsp;        boolean[][] allowedMoves = possibleArtemisSecondMoveDestinations(previousPosition,fromSpace);</b>
+<b class="nc"><i>706</i>&nbsp;        if (workerCanMakeMove(allowedMoves)){</b>
+<b class="nc"><i>707</i>&nbsp;            currentClient.sendMessage(new UsePowerRequest());</b>
+<b class="nc"><i>708</i>&nbsp;            waitValidMessage(currentClient,new int[]{Message.USE_POWER_RESPONSE});</b>
+<b class="nc"><i>709</i>&nbsp;            if (((UsePowerResponse)receivedMessage).wantUsePower()) do{</b>
+<b class="nc"><i>710</i>&nbsp;                currentClient.sendMessage(new MoveRequest(allowedMoves,false));</b>
+<b class="nc"><i>711</i>&nbsp;                waitValidMessage(currentClient,new int[]{Message.MOVE_RESPONSE});</b>
+<b class="nc"><i>712</i>&nbsp;                int destX = ((MoveResponse) receivedMessage).getDestCoordinateX(), destY = ((MoveResponse) receivedMessage).getDestCoordinateY();</b>
+<b class="nc"><i>713</i>&nbsp;                if (allowedMoves[destX-1][destY-1]){</b>
+<b class="nc"><i>714</i>&nbsp;                    moveWorker.changePosition(currentGame.getGameBoard().getSpace(destX,destY));</b>
+<b class="nc"><i>715</i>&nbsp;                    moveMade = true;</b>
+<i>716</i>&nbsp;                }
+<i>717</i>&nbsp;                else {
+<b class="nc"><i>718</i>&nbsp;                    currentClient.sendMessage(new InvalidMoveError());</b>
+<b class="nc"><i>719</i>&nbsp;                    currentClient.sendMessage(new MoveRequest(allowedMoves,false));</b>
+<i>720</i>&nbsp;                }
+<b class="nc"><i>721</i>&nbsp;            }while(!moveMade);</b>
+<i>722</i>&nbsp;        }
+<b class="nc"><i>723</i>&nbsp;    }</b>
+<i>724</i>&nbsp;
+<i>725</i>&nbsp;    /**
+<i>726</i>&nbsp;     * Method used to create the boolean matrix of possible moves for the second move of the player having Artemis god card.
+<i>727</i>&nbsp;     * @param previousSpace the position of the worker before the first move
+<i>728</i>&nbsp;     * @param currentSpace the current position of the worker
+<i>729</i>&nbsp;     * @return boolean matrix indicating with true the position where the selected worker can move, false otherwise.
+<i>730</i>&nbsp;     */
+<i>731</i>&nbsp;    protected boolean[][] possibleArtemisSecondMoveDestinations(Space previousSpace,Space currentSpace){
+<b class="nc"><i>732</i>&nbsp;        boolean[][] allowedMoves = checkPossibleMoves(currentSpace.getCoordinateX(),currentSpace.getCoordinateY());</b>
+<b class="nc"><i>733</i>&nbsp;        allowedMoves[previousSpace.getCoordinateX()-1][previousSpace.getCoordinateY()-1] = false;</b>
+<b class="nc"><i>734</i>&nbsp;        return allowedMoves;</b>
+<i>735</i>&nbsp;    }
+<i>736</i>&nbsp;
+<i>737</i>&nbsp;    /**
+<i>738</i>&nbsp;     * Method used to get the current game Board
+<i>739</i>&nbsp;     * @return the current game board.
+<i>740</i>&nbsp;     */
+<i>741</i>&nbsp;    protected IslandBoard getCurrentBoard(){
+<b class="nc"><i>742</i>&nbsp;        return currentGame.getGameBoard();</b>
+<i>743</i>&nbsp;    }
+<i>744</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 14:06</div>
+</div>
+</body>
+</html>

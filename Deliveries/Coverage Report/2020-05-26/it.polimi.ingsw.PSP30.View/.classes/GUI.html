@@ -1,0 +1,340 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GUI</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.View</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GUI (it.polimi.ingsw.PSP30.View)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GUI</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 44)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.View;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP30.Client.Client;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP30.Model.Game;
+<i>5</i>&nbsp;import it.polimi.ingsw.PSP30.Model.God;
+<i>6</i>&nbsp;import it.polimi.ingsw.PSP30.Model.Player;
+<i>7</i>&nbsp;import it.polimi.ingsw.PSP30.View.Gui.StartScene;
+<i>8</i>&nbsp;import javafx.application.Platform;
+<i>9</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>10</i>&nbsp;import javafx.scene.Parent;
+<i>11</i>&nbsp;import javafx.scene.Scene;
+<i>12</i>&nbsp;import javafx.stage.Stage;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;import java.io.IOException;
+<i>15</i>&nbsp;import java.util.ArrayList;
+<i>16</i>&nbsp;
+<b class="nc"><i>17</i>&nbsp;public class GUI implements UI,Runnable{</b>
+<i>18</i>&nbsp;    private static Stage primaryStage;
+<i>19</i>&nbsp;    private static Stage gameStage;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    public static Stage getStage() {
+<b class="nc"><i>23</i>&nbsp;        return primaryStage;</b>
+<i>24</i>&nbsp;    }
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    public static Stage getGameStage(){
+<b class="nc"><i>27</i>&nbsp;        return gameStage;</b>
+<i>28</i>&nbsp;    }
+<i>29</i>&nbsp;
+<i>30</i>&nbsp;    public static void setGameStage(Stage newGameStage){
+<b class="nc"><i>31</i>&nbsp;        gameStage = newGameStage;</b>
+<i>32</i>&nbsp;    }
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;    public static void setPrimaryStage(Stage newPrimaryStage){
+<b class="nc"><i>35</i>&nbsp;        primaryStage = newPrimaryStage;</b>
+<i>36</i>&nbsp;    }
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    public void createCLI() {
+<b class="nc"><i>39</i>&nbsp;        primaryStage.close();</b>
+<b class="nc"><i>40</i>&nbsp;        UI newInterface = new CLI();</b>
+<b class="nc"><i>41</i>&nbsp;        Client.setUI(newInterface);</b>
+<b class="nc"><i>42</i>&nbsp;        Client.interruptClientThread();</b>
+<i>43</i>&nbsp;        }
+<i>44</i>&nbsp;    public void createGUI() {
+<b class="nc"><i>45</i>&nbsp;        UI newInterface = new GUI();</b>
+<b class="nc"><i>46</i>&nbsp;        Client.setUI(newInterface);</b>
+<b class="nc"><i>47</i>&nbsp;        Client.interruptClientThread();</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    @Override
+<i>51</i>&nbsp;    public void gameInfo() {
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    }
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;    @Override
+<i>56</i>&nbsp;    public void chooseServerAddress() {
+<b class="nc"><i>57</i>&nbsp;        Platform.runLater(this::showServerAddress);</b>
+<i>58</i>&nbsp;        try {
+<b class="nc"><i>59</i>&nbsp;            Client.getClientThread().sleep(12312312);</b>
+<b class="nc"><i>60</i>&nbsp;        } catch (InterruptedException e) {</b>
+<b class="nc"><i>61</i>&nbsp;            System.out.println(&quot;Server address inserted&quot; );</b>
+<b class="nc"><i>62</i>&nbsp;        }</b>
+<i>63</i>&nbsp;    }
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;    public void showServerAddress(){
+<i>66</i>&nbsp;        try{
+<b class="nc"><i>67</i>&nbsp;            Parent addressScene = FXMLLoader.load(getClass().getClassLoader().getResource(&quot;Fxml/AddressScene.fxml&quot;));</b>
+<b class="nc"><i>68</i>&nbsp;            Scene scene1 = new Scene(addressScene);</b>
+<b class="nc"><i>69</i>&nbsp;            primaryStage.setScene(scene1);</b>
+<b class="nc"><i>70</i>&nbsp;            primaryStage.show();</b>
+<b class="nc"><i>71</i>&nbsp;        }catch (IOException e){</b>
+<b class="nc"><i>72</i>&nbsp;            System.out.println();</b>
+<b class="nc"><i>73</i>&nbsp;        }</b>
+<i>74</i>&nbsp;    }
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;    @Override
+<i>77</i>&nbsp;    public void errorServerAddress() {
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;    }
+<i>80</i>&nbsp;
+<i>81</i>&nbsp;    @Override
+<i>82</i>&nbsp;    public void chooseUsername() {
+<b class="nc"><i>83</i>&nbsp;        Platform.runLater(this::showUsername);</b>
+<i>84</i>&nbsp;    }
+<i>85</i>&nbsp;    public void showUsername(){
+<b class="nc"><i>86</i>&nbsp;        Parent usernameScene = null;</b>
+<i>87</i>&nbsp;        try {
+<b class="nc"><i>88</i>&nbsp;            usernameScene = FXMLLoader.load(getClass().getClassLoader().getResource(&quot;Fxml/UsernameScene.fxml&quot;));</b>
+<b class="nc"><i>89</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>90</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>91</i>&nbsp;        }</b>
+<b class="nc"><i>92</i>&nbsp;        Scene scene2 = new Scene(usernameScene);</b>
+<b class="nc"><i>93</i>&nbsp;        primaryStage.setScene(scene2);</b>
+<b class="nc"><i>94</i>&nbsp;        primaryStage.show();</b>
+<i>95</i>&nbsp;    }
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    @Override
+<i>98</i>&nbsp;    public void usernameError() {
+<i>99</i>&nbsp;
+<i>100</i>&nbsp;    }
+<i>101</i>&nbsp;
+<i>102</i>&nbsp;    @Override
+<i>103</i>&nbsp;    public void chooseNumPlayers() {
+<b class="nc"><i>104</i>&nbsp;        Platform.runLater(this::showChooseNumPlayers);</b>
+<i>105</i>&nbsp;    }
+<i>106</i>&nbsp;    public void showChooseNumPlayers() {
+<b class="nc"><i>107</i>&nbsp;        Parent numPlayerScene = null;</b>
+<i>108</i>&nbsp;        try {
+<b class="nc"><i>109</i>&nbsp;            numPlayerScene = FXMLLoader.load(getClass().getClassLoader().getResource(&quot;Fxml/ChoosePlayerScene.fxml&quot;));</b>
+<b class="nc"><i>110</i>&nbsp;        } catch (IOException e) {</b>
+<b class="nc"><i>111</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>112</i>&nbsp;        }</b>
+<b class="nc"><i>113</i>&nbsp;        Scene scene2 = new Scene(numPlayerScene);</b>
+<b class="nc"><i>114</i>&nbsp;        primaryStage.setScene(scene2);</b>
+<b class="nc"><i>115</i>&nbsp;        primaryStage.show();</b>
+<i>116</i>&nbsp;    }
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;    @Override
+<i>119</i>&nbsp;    public void printLobbyStatus(int selectedLobby, int slotsOccupied) {
+<i>120</i>&nbsp;
+<i>121</i>&nbsp;    }
+<i>122</i>&nbsp;
+<i>123</i>&nbsp;    @Override
+<i>124</i>&nbsp;    public void startNotification() {
+<i>125</i>&nbsp;
+<i>126</i>&nbsp;    }
+<i>127</i>&nbsp;
+<i>128</i>&nbsp;    @Override
+<i>129</i>&nbsp;    public void showGodList(ArrayList&lt;God&gt; gods) {
+<i>130</i>&nbsp;
+<i>131</i>&nbsp;    }
+<i>132</i>&nbsp;
+<i>133</i>&nbsp;    @Override
+<i>134</i>&nbsp;    public void chooseGameGods() {
+<i>135</i>&nbsp;
+<i>136</i>&nbsp;    }
+<i>137</i>&nbsp;
+<i>138</i>&nbsp;    @Override
+<i>139</i>&nbsp;    public void printAllPlayers(Player[] players) {
+<i>140</i>&nbsp;
+<i>141</i>&nbsp;    }
+<i>142</i>&nbsp;
+<i>143</i>&nbsp;    @Override
+<i>144</i>&nbsp;    public void playerError() {
+<i>145</i>&nbsp;
+<i>146</i>&nbsp;    }
+<i>147</i>&nbsp;
+<i>148</i>&nbsp;    @Override
+<i>149</i>&nbsp;    public void chooseFirstPlayer() {
+<i>150</i>&nbsp;
+<i>151</i>&nbsp;    }
+<i>152</i>&nbsp;
+<i>153</i>&nbsp;    @Override
+<i>154</i>&nbsp;    public void chooseGod(ArrayList&lt;God&gt; godList, ArrayList&lt;God&gt; unavailableList) {
+<i>155</i>&nbsp;
+<i>156</i>&nbsp;    }
+<i>157</i>&nbsp;
+<i>158</i>&nbsp;    @Override
+<i>159</i>&nbsp;    public void godChoiceError() {
+<i>160</i>&nbsp;
+<i>161</i>&nbsp;    }
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;    @Override
+<i>164</i>&nbsp;    public void showLastGod(ArrayList&lt;God&gt; godList, God lastGod) {
+<i>165</i>&nbsp;
+<i>166</i>&nbsp;    }
+<i>167</i>&nbsp;
+<i>168</i>&nbsp;    @Override
+<i>169</i>&nbsp;    public void placeWorkerInSpace(int currentWorker, boolean[][] allowedPositions) {
+<i>170</i>&nbsp;
+<i>171</i>&nbsp;    }
+<i>172</i>&nbsp;
+<i>173</i>&nbsp;    @Override
+<i>174</i>&nbsp;    public void chooseWorker() {
+<i>175</i>&nbsp;
+<i>176</i>&nbsp;    }
+<i>177</i>&nbsp;
+<i>178</i>&nbsp;    @Override
+<i>179</i>&nbsp;    public void workerChosenError() {
+<i>180</i>&nbsp;
+<i>181</i>&nbsp;    }
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;    @Override
+<i>184</i>&nbsp;    public boolean confirmChoice() {
+<b class="nc"><i>185</i>&nbsp;        return false;</b>
+<i>186</i>&nbsp;    }
+<i>187</i>&nbsp;
+<i>188</i>&nbsp;    @Override
+<i>189</i>&nbsp;    public void moveWorker(boolean[][] allowedMoves) {
+<i>190</i>&nbsp;
+<i>191</i>&nbsp;    }
+<i>192</i>&nbsp;
+<i>193</i>&nbsp;    @Override
+<i>194</i>&nbsp;    public void otherWorker() {
+<i>195</i>&nbsp;
+<i>196</i>&nbsp;    }
+<i>197</i>&nbsp;
+<i>198</i>&nbsp;    @Override
+<i>199</i>&nbsp;    public void moveOtherWorker(boolean[][] allowedMoves) {
+<i>200</i>&nbsp;
+<i>201</i>&nbsp;    }
+<i>202</i>&nbsp;
+<i>203</i>&nbsp;    @Override
+<i>204</i>&nbsp;    public void printPossibleAction(boolean[][] allowed) {
+<i>205</i>&nbsp;
+<i>206</i>&nbsp;    }
+<i>207</i>&nbsp;
+<i>208</i>&nbsp;    @Override
+<i>209</i>&nbsp;    public void changeWorker(boolean canChangeWorker) {
+<i>210</i>&nbsp;
+<i>211</i>&nbsp;    }
+<i>212</i>&nbsp;
+<i>213</i>&nbsp;    @Override
+<i>214</i>&nbsp;    public void buildTower(boolean[][] allowedBuild) {
+<i>215</i>&nbsp;
+<i>216</i>&nbsp;    }
+<i>217</i>&nbsp;
+<i>218</i>&nbsp;    @Override
+<i>219</i>&nbsp;    public void askPowerUsage() {
+<i>220</i>&nbsp;
+<i>221</i>&nbsp;    }
+<i>222</i>&nbsp;
+<i>223</i>&nbsp;    @Override
+<i>224</i>&nbsp;    public void chooseRemoval(boolean[][] allowedToRemove) {
+<i>225</i>&nbsp;
+<i>226</i>&nbsp;    }
+<i>227</i>&nbsp;
+<i>228</i>&nbsp;    @Override
+<i>229</i>&nbsp;    public void noPossibleMoves() {
+<i>230</i>&nbsp;
+<i>231</i>&nbsp;    }
+<i>232</i>&nbsp;
+<i>233</i>&nbsp;    @Override
+<i>234</i>&nbsp;    public void invalidMove() {
+<i>235</i>&nbsp;
+<i>236</i>&nbsp;    }
+<i>237</i>&nbsp;
+<i>238</i>&nbsp;    @Override
+<i>239</i>&nbsp;    public void printCurrentStatus(Game updatedGame) {
+<i>240</i>&nbsp;
+<i>241</i>&nbsp;    }
+<i>242</i>&nbsp;
+<i>243</i>&nbsp;    @Override
+<i>244</i>&nbsp;    public void printCurrentBoard(Game updatedGame) {
+<i>245</i>&nbsp;
+<i>246</i>&nbsp;    }
+<i>247</i>&nbsp;
+<i>248</i>&nbsp;    @Override
+<i>249</i>&nbsp;    public void isWinner(String winner) {
+<i>250</i>&nbsp;
+<i>251</i>&nbsp;    }
+<i>252</i>&nbsp;
+<i>253</i>&nbsp;    @Override
+<i>254</i>&nbsp;    public void run() {
+<b class="nc"><i>255</i>&nbsp;        StartScene.main();</b>
+<i>256</i>&nbsp;    }
+<i>257</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 14:06</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,145 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: StartScene</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.View.Gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: StartScene (it.polimi.ingsw.PSP30.View.Gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">StartScene</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.View.Gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP30.View.GUI;
+<i>4</i>&nbsp;import javafx.application.*;
+<i>5</i>&nbsp;import javafx.fxml.*;
+<i>6</i>&nbsp;import javafx.scene.*;
+<i>7</i>&nbsp;import javafx.stage.*;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;import java.io.IOException;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;/**
+<i>13</i>&nbsp; * This class start the GUI application
+<i>14</i>&nbsp; */
+<b class="nc"><i>15</i>&nbsp;public class StartScene extends Application implements Runnable {</b>
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    /**
+<i>20</i>&nbsp;     * This method launches the application
+<i>21</i>&nbsp;   //  * @param args
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;/*    public static void main(String[] args) {
+<i>24</i>&nbsp;        launch(args);
+<i>25</i>&nbsp;    }
+<i>26</i>&nbsp;
+<i>27</i>&nbsp; */
+<i>28</i>&nbsp;    public static void main() {
+<b class="nc"><i>29</i>&nbsp;        launch();</b>
+<i>30</i>&nbsp;    }
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;
+<i>36</i>&nbsp;    /**
+<i>37</i>&nbsp;     * This method load Home.fxml file and shows it into a stage
+<i>38</i>&nbsp;     * @param stage indicates the stage on which the scene will be projected.
+<i>39</i>&nbsp;     * @throws IOException throws an exception for method load
+<i>40</i>&nbsp;     **/
+<i>41</i>&nbsp;    @Override
+<i>42</i>&nbsp;    public void start(Stage stage) throws Exception {
+<i>43</i>&nbsp;
+<b class="nc"><i>44</i>&nbsp;        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(&quot;Fxml/Home.fxml&quot;));</b>
+<b class="nc"><i>45</i>&nbsp;        Scene scene = new Scene(root);</b>
+<b class="nc"><i>46</i>&nbsp;        stage.setScene(scene);</b>
+<b class="nc"><i>47</i>&nbsp;        stage.setResizable(false);</b>
+<b class="nc"><i>48</i>&nbsp;        GUI.setPrimaryStage(stage);</b>
+<b class="nc"><i>49</i>&nbsp;        stage.show();</b>
+<i>50</i>&nbsp;    }
+<i>51</i>&nbsp;
+<i>52</i>&nbsp;    @Override
+<i>53</i>&nbsp;    public void run() {
+<i>54</i>&nbsp;
+<i>55</i>&nbsp;
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;}
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 14:06</div>
+</div>
+</body>
+</html>

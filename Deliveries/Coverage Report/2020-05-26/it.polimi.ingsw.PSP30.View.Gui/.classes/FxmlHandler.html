@@ -1,0 +1,112 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: FxmlHandler</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.View.Gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: FxmlHandler (it.polimi.ingsw.PSP30.View.Gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">FxmlHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 8)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.View.Gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>4</i>&nbsp;import javafx.scene.layout.Pane;
+<i>5</i>&nbsp;import javafx.scene.layout.StackPane;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;/**
+<i>9</i>&nbsp; * This class manages the loading of new fxml files  and checks whether the file exists or not
+<i>10</i>&nbsp; */
+<b class="nc"><i>11</i>&nbsp;public class FxmlHandler {</b>
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;    private StackPane pane;
+<i>14</i>&nbsp;
+<i>15</i>&nbsp;    public StackPane getHomePage(String fileName) {
+<i>16</i>&nbsp;        try {
+<b class="nc"><i>17</i>&nbsp;            pane= FXMLLoader.load(getClass().getClassLoader().getResource(&quot;Fxml/&quot; +fileName+ &quot;.fxml&quot;));</b>
+<b class="nc"><i>18</i>&nbsp;            if (fileName==null){</b>
+<b class="nc"><i>19</i>&nbsp;                throw new java.io.FileNotFoundException(&quot;Fxml cannot be found&quot;);</b>
+<i>20</i>&nbsp;            }
+<i>21</i>&nbsp;
+<b class="nc"><i>22</i>&nbsp;        }catch (Exception e){</b>
+<b class="nc"><i>23</i>&nbsp;            System.out.println(&quot;no page found&quot;);</b>
+<b class="nc"><i>24</i>&nbsp;        }</b>
+<b class="nc"><i>25</i>&nbsp;        return pane;</b>
+<i>26</i>&nbsp;    }
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;}
+<i>29</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 14:06</div>
+</div>
+</body>
+</html>

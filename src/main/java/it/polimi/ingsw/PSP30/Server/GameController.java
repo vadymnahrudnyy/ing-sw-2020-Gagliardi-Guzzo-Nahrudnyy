@@ -57,7 +57,7 @@ class GameController implements Runnable {
         startGame();
     }
 
-    private void turnStart(VirtualView client, IslandBoard gameBoard){
+    private void turnInitializer(){
         currentGame.setCurrentPhase(TurnPhase.START);
         MoveAllowed = BuildAllowed = true;
         currentPlayer = currentGame.getCurrentPlayer();
@@ -67,6 +67,11 @@ class GameController implements Runnable {
         currentPlayer.getWorkers()[0].setWasMoved(false);
         currentPlayer.getWorkers()[1].setWasMoved(false);
         if (currentPlayer.getGod().getSinglePower(0) == Power.OPPONENTS_NOT_MOVE_UP_POWER) currentGame.setAthenaMovedUp(false);
+    }
+
+    private void turnStart(VirtualView client, IslandBoard gameBoard){
+        turnInitializer();
+
         if (currentPlayer.getGod().getSinglePower(0) == Power.NOT_MOVE_UP_DOUBLE_BUILD_POWER){
                 currentClient.sendMessage(new UsePowerRequest());
                 notifyGameStatusToAll();
@@ -174,7 +179,7 @@ class GameController implements Runnable {
 
         currentGame.nextTurnPhase();
         if (MoveAllowed){
-            Move(/*currentPlayer,currentClient,currentBoard,currentGodPower*/);
+            Move();
         }
         //BUILD PHASE
         currentGame.setCurrentPhase(TurnPhase.BUILD);
@@ -493,7 +498,7 @@ class GameController implements Runnable {
      * @param value initial value of each item in the matrix.
      * @return the created matrix.
      */
-    private boolean[][] initializeMatrix(boolean value){
+    protected boolean[][] initializeMatrix(boolean value){
         boolean[][] allowedPositions = new boolean[IslandBoard.TABLE_DIMENSION][IslandBoard.TABLE_DIMENSION];
         for (int coordinateX = 0; coordinateX < IslandBoard.TABLE_DIMENSION; ++coordinateX)
             for (int coordinateY = 0; coordinateY < IslandBoard.TABLE_DIMENSION; ++coordinateY)
@@ -521,7 +526,7 @@ class GameController implements Runnable {
      * @param response Message received from the client
      * @return boolean value indicating with "true" that a valid move has been chosen by the client. false otherwise.
      */
-    private boolean verifyValidPosition(boolean[][] allowedPositions,WorkerPositionResponse response){
+    protected boolean verifyValidPosition(boolean[][] allowedPositions,WorkerPositionResponse response){
         int coordinateX = response.getCoordinateX();
         int coordinateY = response.getCoordinateY();
         return allowedPositions[coordinateX - 1][coordinateY - 1];

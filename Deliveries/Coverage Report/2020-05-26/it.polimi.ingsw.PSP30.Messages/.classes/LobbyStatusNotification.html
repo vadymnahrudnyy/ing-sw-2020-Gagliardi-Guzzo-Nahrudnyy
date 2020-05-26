@@ -1,0 +1,110 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: LobbyStatusNotification</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.Messages</a> ]
+</div>
+
+<h1>Coverage Summary for Class: LobbyStatusNotification (it.polimi.ingsw.PSP30.Messages)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LobbyStatusNotification</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.Messages;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * LobbyStatusNotification sends to the player waiting for a new
+<i>5</i>&nbsp; * game the actual status of the lobby.
+<i>6</i>&nbsp; */
+<i>7</i>&nbsp;public class LobbyStatusNotification extends Message{
+<i>8</i>&nbsp;    private static final long serialVersionUID = 100005L;
+<i>9</i>&nbsp;    private final int selectedLobby;
+<i>10</i>&nbsp;    private final int SlotsOccupied;
+<i>11</i>&nbsp;    /**
+<i>12</i>&nbsp;     * Builder of a new LobbyStatus message
+<i>13</i>&nbsp;     * @param Lobby indicates in which lobby the player is
+<i>14</i>&nbsp;     * @param SlotOccupation indicates the actual slots occupied in the selected lobby
+<i>15</i>&nbsp;     */
+<b class="nc"><i>16</i>&nbsp;    public LobbyStatusNotification(int Lobby,int SlotOccupation){</b>
+<b class="nc"><i>17</i>&nbsp;        messageID = LOBBY_STATUS_NOTIFICATION;</b>
+<b class="nc"><i>18</i>&nbsp;        selectedLobby = Lobby;</b>
+<b class="nc"><i>19</i>&nbsp;        SlotsOccupied = SlotOccupation;</b>
+<i>20</i>&nbsp;    }
+<i>21</i>&nbsp;    public int getSelectedLobby(){
+<b class="nc"><i>22</i>&nbsp;        return selectedLobby;</b>
+<i>23</i>&nbsp;    }
+<i>24</i>&nbsp;    public int getSlotsOccupied(){
+<b class="nc"><i>25</i>&nbsp;        return SlotsOccupied;</b>
+<i>26</i>&nbsp;    }
+<i>27</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 14:06</div>
+</div>
+</body>
+</html>

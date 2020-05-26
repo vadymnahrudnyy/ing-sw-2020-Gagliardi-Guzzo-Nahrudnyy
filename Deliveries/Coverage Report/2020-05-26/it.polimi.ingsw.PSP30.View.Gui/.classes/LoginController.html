@@ -1,0 +1,179 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: LoginController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.View.Gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: LoginController (it.polimi.ingsw.PSP30.View.Gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LoginController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 16)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.View.Gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP30.Client.Client;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.NumPlayersResponse;
+<i>5</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.UsernameResponse;
+<i>6</i>&nbsp;import javafx.fxml.FXML;
+<i>7</i>&nbsp;import javafx.fxml.Initializable;
+<i>8</i>&nbsp;import javafx.scene.control.Alert;
+<i>9</i>&nbsp;import javafx.scene.control.TextField;
+<i>10</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;import java.io.IOException;
+<i>13</i>&nbsp;import java.net.URL;
+<i>14</i>&nbsp;import java.util.ResourceBundle;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;/**
+<i>17</i>&nbsp; * This class is the controller for LoginScene.fxml and Home.fxml
+<i>18</i>&nbsp; */
+<b class="nc"><i>19</i>&nbsp;public class LoginController implements Initializable {</b>
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;
+<i>22</i>&nbsp;    @FXML
+<i>23</i>&nbsp;    private TextField addressField,usernameField;
+<i>24</i>&nbsp;    private static final int SOCKET_PORT = 50000;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;    @Override
+<i>27</i>&nbsp;    public void initialize(URL url, ResourceBundle resourceBundle) {
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    }
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;
+<i>33</i>&nbsp;    @FXML
+<i>34</i>&nbsp;    public void handleAddress(MouseEvent event) throws IOException {
+<i>35</i>&nbsp;        /*Parent usernameScene = FXMLLoader.load(getClass().getClassLoader().getResource(&quot;Fxml/UsernameScene.fxml&quot;));
+<i>36</i>&nbsp;        Scene scene2 = new Scene(usernameScene);
+<i>37</i>&nbsp;        GUI.getStage().setScene(scene2);
+<i>38</i>&nbsp;        GUI.getStage().show();*/
+<i>39</i>&nbsp;
+<b class="nc"><i>40</i>&nbsp;        String address=addressField.getText();</b>
+<b class="nc"><i>41</i>&nbsp;        address = address.trim();</b>
+<b class="nc"><i>42</i>&nbsp;        if(address.isEmpty()) showEmptyAddressAlert();</b>
+<i>43</i>&nbsp;        else {
+<b class="nc"><i>44</i>&nbsp;            Client.setServerAddress(address);</b>
+<b class="nc"><i>45</i>&nbsp;            Client.interruptClientThread();</b>
+<i>46</i>&nbsp;        }
+<i>47</i>&nbsp;    }
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    private void showEmptyAddressAlert() {
+<b class="nc"><i>50</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.INFORMATION);</b>
+<b class="nc"><i>51</i>&nbsp;        alert.setTitle(&quot;Address Null&quot;);</b>
+<b class="nc"><i>52</i>&nbsp;        alert.setHeaderText(null);</b>
+<b class="nc"><i>53</i>&nbsp;        alert.setContentText(&quot;Insert an address first!&quot;);</b>
+<b class="nc"><i>54</i>&nbsp;        alert.showAndWait();</b>
+<i>55</i>&nbsp;    }
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;
+<i>59</i>&nbsp;    public void handlethreePlayer(MouseEvent event) throws IOException {
+<i>60</i>&nbsp;        /*GUI.getStage().close();
+<i>61</i>&nbsp;        Stage stage=new Stage();
+<i>62</i>&nbsp;        GUI.setGameStage(stage);
+<i>63</i>&nbsp;        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(&quot;Fxml/ThreePlayersLobby.fxml&quot;));
+<i>64</i>&nbsp;        Scene scene = new Scene(root);
+<i>65</i>&nbsp;        stage.setScene(scene);
+<i>66</i>&nbsp;        stage.show();*/
+<b class="nc"><i>67</i>&nbsp;        Client.sendMessageToServer(new NumPlayersResponse(3));</b>
+<i>68</i>&nbsp;
+<i>69</i>&nbsp;    }
+<i>70</i>&nbsp;
+<i>71</i>&nbsp;    public void handletwoPlayer(MouseEvent event) throws IOException {
+<i>72</i>&nbsp;        /*GUI.getStage().close();
+<i>73</i>&nbsp;        Stage stage=new Stage();
+<i>74</i>&nbsp;        GUI.setGameStage(stage);
+<i>75</i>&nbsp;        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource(&quot;Fxml/TwoPlayersLobby.fxml&quot;));
+<i>76</i>&nbsp;        Scene scene = new Scene(root);
+<i>77</i>&nbsp;        stage.setScene(scene);
+<i>78</i>&nbsp;        stage.show();*/
+<b class="nc"><i>79</i>&nbsp;        Client.sendMessageToServer(new NumPlayersResponse(2));</b>
+<i>80</i>&nbsp;    }
+<i>81</i>&nbsp;    public void handleUsernameButton(MouseEvent event){
+<b class="nc"><i>82</i>&nbsp;        String username = usernameField.getText();</b>
+<b class="nc"><i>83</i>&nbsp;        username = username.trim();</b>
+<i>84</i>&nbsp;        /*if(username.isEmpty()) showEmptyAddressAlert();
+<i>85</i>&nbsp;        else {
+<i>86</i>&nbsp;            Client.setServerAddress(address);
+<i>87</i>&nbsp;            Client.interruptClientThread();
+<i>88</i>&nbsp;        }*/
+<b class="nc"><i>89</i>&nbsp;        Client.sendMessageToServer(new UsernameResponse(username));</b>
+<i>90</i>&nbsp;    }
+<i>91</i>&nbsp;}
+<i>92</i>&nbsp;
+<i>93</i>&nbsp;
+<i>94</i>&nbsp;
+<i>95</i>&nbsp;
+<i>96</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 14:06</div>
+</div>
+</body>
+</html>

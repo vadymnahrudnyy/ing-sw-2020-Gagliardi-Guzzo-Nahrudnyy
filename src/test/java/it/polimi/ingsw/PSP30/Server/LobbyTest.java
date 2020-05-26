@@ -19,8 +19,10 @@ public class LobbyTest {
     Thread testThread1, testThread2, testThread3;
     Thread testClientThread1,testClientThread2,testClientThread3;
     ServerSocket testSocket;
+
     private static int TEST_NUM_PLAYERS,testNum;
-    private static final int TEST_PORT = 50000,EMPTY_LOBBY = 0, ONE_PLAYER_IN_LOBBY = 1, TWO_PLAYERS_IN_LOBBY = 2;
+    protected static final int TEST_PORT = 50000;
+    private static final int EMPTY_LOBBY = 0, ONE_PLAYER_IN_LOBBY = 1, TWO_PLAYERS_IN_LOBBY = 2;
 
     @Before
     public void setup()  {
@@ -57,7 +59,7 @@ public class LobbyTest {
         testThread3.start();
     }
     @After
-    public void clean(){
+    public void tearDown(){
         testLobby.removePlayerFromLobby(testView1,testView1.getUsername(),testThread1);
         testLobby.removePlayerFromLobby(testView2,testView2.getUsername(),testThread2);
         testLobby.removePlayerFromLobby(testView3,testView3.getUsername(),testThread3);
@@ -151,7 +153,7 @@ public class LobbyTest {
         assertEquals(EMPTY_LOBBY,testNum);
     }
 
-    private static class testClient implements Runnable{
+    protected static class testClient implements Runnable{
         Socket socket;
         ObjectInputStream input;
         ObjectOutputStream output;

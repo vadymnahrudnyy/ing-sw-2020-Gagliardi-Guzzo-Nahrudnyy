@@ -1,0 +1,148 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: IslandBoard</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.Model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: IslandBoard (it.polimi.ingsw.PSP30.Model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">IslandBoard</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (7/ 7)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (17/ 17)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.Model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.Serializable;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * @author Vadym Nahrudnyy
+<i>7</i>&nbsp; * @version 1.0
+<i>8</i>&nbsp; */
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;public class IslandBoard implements Serializable {
+<i>11</i>&nbsp;    private static final long serialVersionUID = 50002L;
+<i>12</i>&nbsp;    public static final int TABLE_DIMENSION = 5; //Indicates the dimension of the game board, assumed to be a square. Count starting from 0
+<i>13</i>&nbsp;    private int numberCompleteTowers;
+<i>14</i>&nbsp;    private Space[][] matrix;
+<i>15</i>&nbsp;
+<i>16</i>&nbsp;    /**
+<i>17</i>&nbsp;     * This method builds the game board. The game board is represented as a matrix N*N where N is the dimension of the board.
+<i>18</i>&nbsp;     * It doesn&#39;t need any parameter during the setting of the board.
+<i>19</i>&nbsp;     */
+<b class="fc"><i>20</i>&nbsp;    public IslandBoard() {</b>
+<b class="fc"><i>21</i>&nbsp;        this.numberCompleteTowers = 0;</b>
+<b class="fc"><i>22</i>&nbsp;        this.matrix = new Space[TABLE_DIMENSION][TABLE_DIMENSION];</b>
+<i>23</i>&nbsp;        int coordinateX,coordinateY;
+<b class="fc"><i>24</i>&nbsp;        for (coordinateX = 0;coordinateX &lt; TABLE_DIMENSION;++coordinateX){</b>
+<b class="fc"><i>25</i>&nbsp;            for (coordinateY = 0; coordinateY &lt; TABLE_DIMENSION; ++coordinateY){</b>
+<b class="fc"><i>26</i>&nbsp;                matrix [coordinateX][coordinateY] = new Space(coordinateX+1,coordinateY+1);</b>
+<i>27</i>&nbsp;            }
+<i>28</i>&nbsp;        }
+<b class="fc"><i>29</i>&nbsp;    }</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;    public void setMatrix(Space[][] newmatrix) {
+<b class="fc"><i>32</i>&nbsp;        this.matrix = newmatrix;</b>
+<b class="fc"><i>33</i>&nbsp;    }</b>
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    public Space[][] getMatrix() {
+<b class="fc"><i>36</i>&nbsp;        return matrix;</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    public int getNumberCompleteTowers() {
+<b class="fc"><i>40</i>&nbsp;        return numberCompleteTowers;</b>
+<i>41</i>&nbsp;    }
+<i>42</i>&nbsp;
+<i>43</i>&nbsp;    /**
+<i>44</i>&nbsp;     * Method getSpace is used to get a single Space from the board.
+<i>45</i>&nbsp;     * @param coordinateX indicates the X coordinate of the wanted space.
+<i>46</i>&nbsp;     * @param coordinateY indicates the Y coordinate of the wanted space.
+<i>47</i>&nbsp;     * @return the desired Space.
+<i>48</i>&nbsp;     */
+<i>49</i>&nbsp;    public Space getSpace(int coordinateX, int coordinateY) {
+<b class="fc"><i>50</i>&nbsp;        return matrix[coordinateX-1][coordinateY-1];</b>
+<i>51</i>&nbsp;    }
+<i>52</i>&nbsp;
+<i>53</i>&nbsp;    public void setNumberCompleteTowers(int numberCompleteTowers) {
+<b class="fc"><i>54</i>&nbsp;        this.numberCompleteTowers = numberCompleteTowers;</b>
+<b class="fc"><i>55</i>&nbsp;    }</b>
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    /**
+<i>58</i>&nbsp;     * The method increments the number of completed towers when a complete tower is built.
+<i>59</i>&nbsp;     */
+<i>60</i>&nbsp;    public void incrementNumberCompleteTowers() {
+<b class="fc"><i>61</i>&nbsp;        int CompleteTowers = getNumberCompleteTowers();</b>
+<b class="fc"><i>62</i>&nbsp;        setNumberCompleteTowers(++CompleteTowers);</b>
+<b class="fc"><i>63</i>&nbsp;    }</b>
+<i>64</i>&nbsp;
+<i>65</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-05-26 14:06</div>
+</div>
+</body>
+</html>
