@@ -14,6 +14,7 @@ import java.net.*;
  */
 
 public class VirtualView implements Runnable {
+    private int numPlayers;
     private String username;
     private final Socket client;
     private final Lobby serverLobby;
@@ -51,14 +52,14 @@ public class VirtualView implements Runnable {
                 do {
                 sendMessage(new NumPlayersRequest());
                 message = (Message) input.readObject();
-                } while (message.getMessageID() != Message.NUM_PLAYERS_RESPONSE);
-                int numPlayers = ((NumPlayersResponse) message).getNumPlayers();
+                } while (message.getMessageID() != Message.NUM_PLAYERS_RESPONSE&&(((NumPlayersResponse)message).getNumPlayers() != 2 && ((NumPlayersResponse)message).getNumPlayers() != 3 ));
+                setNumPlayers(((NumPlayersResponse) message).getNumPlayers());
                 do {
                     do {
                         sendMessage(new UsernameRequest());
                         message = (Message) input.readObject();
                     } while (message.getMessageID() != Message.USERNAME_RESPONSE);
-                    username = ((UsernameResponse) message).getUsername();
+                    setUsername(((UsernameResponse) message).getUsername());
                     serverLobby.addPlayerToLobby(numPlayers,this,username,virtualViewThread);
                     Thread.sleep(1000000);
                 }while(!isInLobby);
@@ -82,9 +83,18 @@ public class VirtualView implements Runnable {
         }
 
     }
+    protected void setNumPlayers(int value){
+        numPlayers = value;
+    }
+
+    protected void setUsername(String name){
+        username = name;
+    }
 
     /**
-     * This methods receives messages from client, adds them into the queue and notify the controller of the update.
+     * Method used to read a message(if there is one) from the input stream  and interrupts the controller thread.
+     * In case a socket error occurs, usually meaning the player disconnected, enqueues in the message queue, the disconnection message
+     * which will be handled by the controller during the first request of interaction from the player.
      */
     private void receiveMessage(){
         try{
@@ -115,10 +125,11 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * Method used to send a message to the client
+     * Method used to send a message to the client. Before each operation it
+     * flushes the stream in order to avoid usually serialized objects to be cached.
      * @param message the message to send.
      */
-    public void sendMessage(Message message) {
+    protected void sendMessage(Message message) {
         synchronized (output){
             try{
                 output.flush();
@@ -134,20 +145,36 @@ public class VirtualView implements Runnable {
      * Method used to get the username chosen by the player associated to the virtual list
      * @return the username string.
      */
-    public String getUsername() { return username; }
+    protected String getUsername() { return username; }
+
+    /**
+     * Method used to obtain the desired number of player for the game of the associated client.
+     * @return desired number of players.
+     */
+    protected int getNumPlayers(){
+        return numPlayers;
+    }
 
     /**
      * Method used to set the associatedGameThread for an instance of class VirtualView.
      * @param gameThread the Game the player is associated to.
      */
-    public void setAssociatedGameThread(Thread gameThread){
+    protected void setAssociatedGameThread(Thread gameThread){
         associatedGameThread = gameThread;
+    }
+
+    /**
+     * Method used to obtain the thread the given virtual view is running on.
+     * @return Thread object.
+     */
+    protected Thread getVirtualViewThread(){
+        return virtualViewThread;
     }
 
     /**
      * This method close the connection if one of the players disconnect
      */
-    public synchronized void closeConnection() {
+    protected synchronized void closeConnection() {
         try {
             connected = false;
             input.close();
@@ -164,7 +191,7 @@ public class VirtualView implements Runnable {
      * Getter of the queue of the incoming messages.
      * @return the queue of the incoming messages.
      */
-    public QueueOfEvents getIncomingMessages() {
+    protected QueueOfEvents getIncomingMessages() {
         return incomingMessages;
     }
 
@@ -176,12 +203,20 @@ public class VirtualView implements Runnable {
         return getIncomingMessages().dequeueEvent();
     }
 
-    public void setInGame(boolean value){
+    protected void setInGame(boolean value){
         isInGame = value;
     }
-    public void setInLobby(boolean value){
+    protected void setInLobby(boolean value){
         isInLobby = value;
     }
+    protected boolean isInGame(){
+        return isInGame;
+    }
+    protected boolean isInLobby(){
+        return isInLobby;
+    }
+
+
 
 
     /**

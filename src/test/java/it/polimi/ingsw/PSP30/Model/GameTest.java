@@ -1,4 +1,4 @@
-package Model;
+package it.polimi.ingsw.PSP30.Model;
 
 import it.polimi.ingsw.PSP30.Model.Game;
 import it.polimi.ingsw.PSP30.Model.IslandBoard;

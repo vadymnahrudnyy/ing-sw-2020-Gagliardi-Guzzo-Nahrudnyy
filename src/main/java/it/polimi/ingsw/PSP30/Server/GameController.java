@@ -178,7 +178,7 @@ class GameController implements Runnable {
         }
         //BUILD PHASE
         currentGame.setCurrentPhase(TurnPhase.BUILD);
-        if (BuildAllowed) Build(currentClient,currentBoard,currentGodPower,moveWorker);
+        if (BuildAllowed) Build(currentClient,currentGodPower,moveWorker);
         if ((opponentHasPower(Power.FIVE_TOWER_VICTORY_POWER)||currentGodPower.getPowerID()==Power.FIVE_TOWER_VICTORY_POWER)&&(currentBoard.getNumberCompleteTowers()>=5)){
             for (Player player:currentGame.getPlayers())
                 if (player.getGod().getSinglePower(0)==Power.FIVE_TOWER_VICTORY_POWER) victory(player.getUsername());
@@ -240,7 +240,7 @@ class GameController implements Runnable {
         }
     }
 
-    private void Build(VirtualView client,IslandBoard gameBoard,Power actualPower,Worker selectedWorker){
+    private void Build(VirtualView client,Power actualPower,Worker selectedWorker){
         Space workerPosition = selectedWorker.getWorkerPosition();
         boolean[][] allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());
         client.sendMessage(new BuildRequest(allowedBuild));
@@ -618,7 +618,7 @@ class GameController implements Runnable {
      * @param allowedMoves is previously created matrix indicating where the worker can move or build;
      * @return a boolean value. True when an action can be performed, false otherwise.
      */
-    private boolean workerCanMakeMove (boolean[][] allowedMoves){
+    protected boolean workerCanMakeMove (boolean[][] allowedMoves){
         for (int X = 0; X < IslandBoard.TABLE_DIMENSION; ++X)
             for(int Y = 0; Y < IslandBoard.TABLE_DIMENSION; ++Y)
                 if (allowedMoves[X][Y]) return true;

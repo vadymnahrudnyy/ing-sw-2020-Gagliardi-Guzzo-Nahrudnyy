@@ -37,7 +37,7 @@ public class Lobby {
      * Method getTwoPlayersLobbySlotsOccupied
      * @return the number of players waiting for a two players game.
      */
-    private synchronized int getTwoPlayersLobbySlotsOccupied(){
+    protected synchronized int getTwoPlayersLobbySlotsOccupied(){
         return twoPlayersLobby.size();
     }
     /**
@@ -79,7 +79,7 @@ public class Lobby {
      * Method getThreePlayersLobbySlotsOccupied
      * @return the number of players waiting for a three players game.
      */
-    private synchronized int getThreePlayersLobbySlotsOccupied() {
+    protected synchronized int getThreePlayersLobbySlotsOccupied() {
         return threePlayersLobby.size();
     }
     /**
@@ -154,7 +154,7 @@ public class Lobby {
      * @param client VirtualView of the player.
      * @param username username of the player.
      */
-     synchronized void addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username,Thread viewThread){
+     protected synchronized void addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username,Thread viewThread){
         System.out.println("Adding user"+ username +" to lobby");
             if (desiredNumPlayers == 2){
                 if (!(getTwoPlayersLobby().contains(username))) {
@@ -203,7 +203,7 @@ public class Lobby {
      * Method used to delete a player from a lobby.
      * @since version 2.1
      */
-    public synchronized void removePlayerFromLobby(VirtualView client, String username,Thread viewThread){
+    protected synchronized void removePlayerFromLobby(VirtualView client, String username,Thread viewThread){
         if (getTwoPlayersLobby().contains(username))removePlayerFromTwoPlayersLobby(username,client);
         else removePlayerFromThreePlayersLobby(username,client);
     }

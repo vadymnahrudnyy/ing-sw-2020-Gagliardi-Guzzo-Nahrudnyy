@@ -1,4 +1,4 @@
-package Model;
+package it.polimi.ingsw.PSP30.Model;
 
 import it.polimi.ingsw.PSP30.Model.God;
 import org.junit.Before;
