@@ -4,6 +4,8 @@ import it.polimi.ingsw.PSP30.View.GUI;
 import javafx.application.*;
 import javafx.fxml.*;
 import javafx.scene.*;
+import javafx.scene.control.Button;
+import javafx.scene.input.MouseEvent;
 import javafx.stage.*;
 
 
@@ -15,23 +17,9 @@ import java.io.IOException;
 public class StartScene extends Application implements Runnable {
 
 
-
-    /**
-     * This method launches the application
-   //  * @param args
-     */
-/*    public static void main(String[] args) {
-        launch(args);
-    }
-
- */
     public static void main() {
         launch();
     }
-
-
-
-
 
     /**
      * This method load Home.fxml file and shows it into a stage
@@ -50,13 +38,6 @@ public class StartScene extends Application implements Runnable {
     }
 
     @Override
-    public void run() {
-
+    public void run() {}
 
     }
-}
-
-
-
-
-

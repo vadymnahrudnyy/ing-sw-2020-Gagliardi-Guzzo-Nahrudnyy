@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane stylesheets="@../Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.GUI">
+   <children>
+      <ImageView fitHeight="800.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/Backgrounds/GodPowersRules.png" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="nextButton1" fitHeight="60.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" styleClass="button" StackPane.alignment="CENTER_RIGHT">
+         <image>
+            <Image url="@../Images/Backgrounds/btn_next.png" />
+         </image>
+         <StackPane.margin>
+            <Insets right="50.0" />
+         </StackPane.margin>
+      </ImageView>
+   </children>
+</StackPane>

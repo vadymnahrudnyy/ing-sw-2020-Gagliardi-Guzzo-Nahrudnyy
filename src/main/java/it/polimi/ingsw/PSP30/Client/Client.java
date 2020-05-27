@@ -71,8 +71,8 @@ public class Client {
      */
     public static void main(String[] args) throws Exception {
         clientThread = Thread.currentThread();
-        GUI banana = new GUI();
-        Thread ThreadGUI = new Thread(banana);
+        GUI gui = new GUI();
+        Thread ThreadGUI = new Thread(gui);
         ThreadGUI.start();
         try{
             Thread.sleep(1000000000);
@@ -115,7 +115,7 @@ public class Client {
                         lobbyStatusNotification(receivedMessage);
                         break;
                     case Message.GAME_START_NOTIFICATION:
-                        startNotification();
+                        startNotification(receivedMessage);
                         break;
                     case Message.START_PLAYER_REQUEST:
                         selectFirstPlayer(receivedMessage);
@@ -216,8 +216,8 @@ public class Client {
     /**
      * This method manages the start notification and warns all the players in the lobby the game can start
      */
-    private static void startNotification() {
-        ui.startNotification();
+    private static void startNotification(Message message) {
+        ui.startNotification((GameStartNotification) message);
     }
 
 

@@ -92,7 +92,7 @@ public class CLI implements UI {
     }
 
     @Override
-    public void startNotification() {
+    public void startNotification(GameStartNotification message) {
         System.out.println("Full lobby: the game can begin, good luck!");
         System.out.println("");
     }

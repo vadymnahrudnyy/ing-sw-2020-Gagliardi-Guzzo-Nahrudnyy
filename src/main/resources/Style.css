@@ -134,8 +134,13 @@
     -fx-background-image: url("/Images/Backgrounds/om_nameTagActive.png");
     -fx-background-size: 210px 55px;
     -fx-background-repeat: no-repeat;
-    -fx-background-position: center
+    -fx-background-position: center;
+
+
 }
+
+
+
 
 .bg_board{
     -fx-background-image: url("/Images/Backgrounds/SantoriniBoard.png");

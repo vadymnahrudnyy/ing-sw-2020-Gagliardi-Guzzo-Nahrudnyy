@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP30.View;
 
+import it.polimi.ingsw.PSP30.Messages.GameStartNotification;
 import it.polimi.ingsw.PSP30.Model.Game;
 import it.polimi.ingsw.PSP30.Model.God;
 import it.polimi.ingsw.PSP30.Model.Player;
@@ -56,7 +57,7 @@ public interface UI {
     /**
      *  This method notifies the game can start (the lobby is full)
      */
-    void startNotification();
+    void startNotification(GameStartNotification message);
 
     /**
      * This method shows all the God cards of the deck

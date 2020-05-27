@@ -26,7 +26,7 @@
                   <Image url="@../Images/Buttons/CliButton.png" />
                </image>
             </ImageView>
-            <ImageView fx:id="InfoButton" fitHeight="150.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true" styleClass="button">
+            <ImageView fx:id="InfoButton" fitHeight="150.0" fitWidth="245.0" pickOnBounds="true" preserveRatio="true" styleClass="button" onMouseClicked="#showRules">
                <image>
                   <Image url="@../Images/Buttons/InfoButton.png" />
                </image>

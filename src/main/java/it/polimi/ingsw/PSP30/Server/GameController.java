@@ -290,7 +290,7 @@ class GameController implements Runnable {
      * Method used to notify all player about the game being start
      */
     private void sendStartGameMessage() {
-        for (VirtualView view : virtualViewsList) view.sendMessage(new GameStartNotification());
+        for (VirtualView view : virtualViewsList) view.sendMessage(new GameStartNotification(currentGame));
     }
     /**
      * Method used to choose the gods before start playing.It asks the first player the list of gods to use, then the others chose their god card
