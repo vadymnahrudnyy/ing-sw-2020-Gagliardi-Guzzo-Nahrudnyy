@@ -4,6 +4,7 @@ import it.polimi.ingsw.PSP30.Model.Game;
 import it.polimi.ingsw.PSP30.Model.IslandBoard;
 import it.polimi.ingsw.PSP30.Model.Player;
 import it.polimi.ingsw.PSP30.Model.TurnPhase;
+import javafx.application.Platform;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -148,4 +149,25 @@ public class GameTest {
         assertEquals(testPlayer,newTestedGame.getCurrentPlayer());
     }
 
+    @Test
+    public void testSetStarterPlayer() {
+        testedGame.setStarterPlayer(testPlayer.getUsername());
+        assertEquals(testPlayer,testedGame.getStarterPlayer());
+    }
+
+    @Test
+    public void testGetPlayerByUsername() {
+        Player getByUsernameTest = testedGame.getPlayerByUsername("not defined");
+        assertNull(getByUsernameTest);
+        getByUsernameTest = testedGame.getPlayerByUsername(testPlayer.getUsername());
+        assertEquals(testPlayer,getByUsernameTest);
+    }
+
+    @Test
+    public void AthenaMovedUpTest() {
+        testedGame.setAthenaMovedUp(true);
+        assertTrue(testedGame.hasAthenaMovedUpDuringLastRound());
+        testedGame.setAthenaMovedUp(false);
+        assertFalse(testedGame.hasAthenaMovedUpDuringLastRound());
+    }
 }

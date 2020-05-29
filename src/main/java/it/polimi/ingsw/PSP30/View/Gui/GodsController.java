@@ -1,15 +1,26 @@
 package it.polimi.ingsw.PSP30.View.Gui;
 
+import it.polimi.ingsw.PSP30.Client.Client;
+import it.polimi.ingsw.PSP30.Model.Deck;
+import it.polimi.ingsw.PSP30.Model.God;
+import it.polimi.ingsw.PSP30.View.GUI;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.StackPane;
+import javafx.scene.layout.VBox;
 
+import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class GodsController implements Initializable {
@@ -23,14 +34,25 @@ public class GodsController implements Initializable {
 
 
     private int areSelected;
-    private int numPlayers=3;
+    private ArrayList<String> selectedGods = new ArrayList<>();
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
 
+    }
 
-
+    public static void showGodSelector(ArrayList<God> godList) throws IOException {
+        StackPane godSelectionPane = FXMLLoader.load(GodsController.class.getClassLoader().getResource("Fxml/Gods.fxml"));
+        if(Client.getNumPlayers() == 3){
+            BorderPane godsBorderPane = (BorderPane) godSelectionPane.getChildren().get(1);
+            StackPane godIconsStackPane = (StackPane)godsBorderPane.getRight();
+            VBox godsVBox = (VBox) godIconsStackPane.getChildren().get(0);
+            HBox CronusHBox = (HBox)godsVBox.getChildren().get(3);
+            ToggleButton CronusButton = (ToggleButton)CronusHBox.getChildren().get(1);
+            CronusButton.setDisable(true);
+        }
+        GUI.getGameStage().setScene(new Scene(godSelectionPane));
     }
 
 
@@ -45,11 +67,6 @@ public class GodsController implements Initializable {
         img2.setFitWidth(450.0);
         img2.setFitHeight(900.0);
         borderPane.setLeft(img2);
-        artemis.setOnMouseClicked(event1 -> {
-            areSelected++;
-            selectedGod();
-        });
-
     }
 
     private void selectedGod() {

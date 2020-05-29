@@ -46,13 +46,13 @@ public class VirtualView implements Runnable {
     public void run() {
         virtualViewThread = Thread.currentThread();
         try {
-            System.out.println("User "+client.getInetAddress()+" connected");
+            System.out.println("User " + client.getInetAddress() + " connected");
             Message message;
-            try{
+            try {
                 do {
-                sendMessage(new NumPlayersRequest());
-                message = (Message) input.readObject();
-                } while (message.getMessageID() != Message.NUM_PLAYERS_RESPONSE&&(((NumPlayersResponse)message).getNumPlayers() != 2 && ((NumPlayersResponse)message).getNumPlayers() != 3 ));
+                    sendMessage(new NumPlayersRequest());
+                    message = (Message) input.readObject();
+                } while (message.getMessageID() != Message.NUM_PLAYERS_RESPONSE && (((NumPlayersResponse) message).getNumPlayers() != 2 && ((NumPlayersResponse) message).getNumPlayers() != 3));
                 setNumPlayers(((NumPlayersResponse) message).getNumPlayers());
                 do {
                     do {
@@ -60,10 +60,10 @@ public class VirtualView implements Runnable {
                         message = (Message) input.readObject();
                     } while (message.getMessageID() != Message.USERNAME_RESPONSE);
                     setUsername(((UsernameResponse) message).getUsername());
-                    serverLobby.addPlayerToLobby(numPlayers,this,username,virtualViewThread);
+                    serverLobby.addPlayerToLobby(numPlayers, this, username, virtualViewThread);
                     Thread.sleep(1000000);
-                }while(!isInLobby);
-            } catch (SocketException e){
+                } while (!isInLobby);
+            } catch (SocketException e) {
                 connected = false;
                 closeConnection();
             } catch (InterruptedException e) {
@@ -75,8 +75,6 @@ public class VirtualView implements Runnable {
             //pingThread.start();
             //System.out.println("Ping Thread Created");
             //System.out.println("Ping Thread for user "+client.getInetAddress()+" created");
-
-
             while (connected) receiveMessage();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();

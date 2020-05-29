@@ -1,10 +1,7 @@
 package it.polimi.ingsw.PSP30.View.Gui;
 
 import it.polimi.ingsw.PSP30.Messages.GameStartNotification;
-import it.polimi.ingsw.PSP30.Model.IslandBoard;
-import it.polimi.ingsw.PSP30.Model.Player;
-import it.polimi.ingsw.PSP30.Model.Space;
-import it.polimi.ingsw.PSP30.Model.Worker;
+import it.polimi.ingsw.PSP30.Model.*;
 import it.polimi.ingsw.PSP30.View.GUI;
 import javafx.application.Application;
 import javafx.fxml.FXML;
@@ -16,6 +13,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
@@ -27,12 +25,10 @@ import java.util.Stack;
 
 public class BoardController{
 
-
-
-    @FXML private static BorderPane mainPane;
-    @FXML private static StackPane leftPane, centerPane;
-    @FXML private static Label label1, label2, label3;
-    @FXML private static VBox vBox;
+    @FXML private static StackPane mainPane, playerPane, firstOpponentPane, secondOpponentPane;
+    @FXML private static Label playerUsername, firstOpponentUsername, secondOpponentUsername;
+    @FXML private static ImageView playerGod, secondOpponentGod, firstOpponentGod, exitButton, rulesButton;
+    @FXML private static VBox opponentsPane;
 
     private static Cell[][] cell = new Cell[5][5];
     private static GridPane gridPane=new GridPane();
@@ -44,17 +40,26 @@ public class BoardController{
         }catch (IOException e){
             e.printStackTrace();
         }
-        centerPane=(StackPane) mainPane.getCenter();
-        leftPane = (StackPane) mainPane.getLeft();
-        vBox = (VBox)leftPane.getChildren().get(1);
-        label1 = (Label) vBox.getChildren().get(0);
-        label2 = (Label) vBox.getChildren().get(1);
-        label3 = (Label) vBox.getChildren().get(2);
+
+        exitButton=(ImageView) mainPane.getChildren().get(1);
+        rulesButton=(ImageView) mainPane.getChildren().get(2);
+        playerPane= (StackPane) mainPane.getChildren().get(4);
+        playerGod=(ImageView) playerPane.getChildren().get(0);
+        playerUsername=(Label) playerPane.getChildren().get(3);
+        opponentsPane=(VBox) mainPane.getChildren().get(5);
+        firstOpponentPane= (StackPane) opponentsPane.getChildren().get(0);
+        firstOpponentGod=(ImageView) firstOpponentPane.getChildren().get(0);
+        firstOpponentUsername=(Label) firstOpponentPane.getChildren().get(2);
+        secondOpponentPane= (StackPane) opponentsPane.getChildren().get(1);
+        secondOpponentGod=(ImageView) secondOpponentPane.getChildren().get(0);
+        secondOpponentUsername=(Label) secondOpponentPane.getChildren().get(2);
         Player[] playersUsername = message.getGame().getPlayers();
-        label1.setText(playersUsername[0].getUsername());
-        label2.setText(playersUsername[1].getUsername());
-        if(message.getGame().getNumPlayers() == 3) label3.setText(playersUsername[2].getUsername());
-        else label3.setVisible(false);
+        playerUsername.setText(playersUsername[0].getUsername());
+        firstOpponentUsername.setText(playersUsername[1].getUsername());
+        if(message.getGame().getNumPlayers() == 3) secondOpponentUsername.setText(playersUsername[2].getUsername());
+        else secondOpponentPane.setVisible(false);
+
+
         IslandBoard board = message.getGame().getGameBoard();
 
         for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
@@ -63,27 +68,43 @@ public class BoardController{
                 cell[X][Y]=new Cell(X, Y, currentSpace);
                 gridPane.add(cell[X][Y],Y,X);
             }
-        centerPane.getChildren().add(gridPane);
+        mainPane.getChildren().add(gridPane);
         gridPane.setAlignment(Pos.CENTER);
         Scene scene = new Scene(mainPane);
         GUI.getGameStage().setScene(scene);
         GUI.getGameStage().show();
     }
 
-public static class Cell extends StackPane {
+    public static void updateGameBoard(Game updatedGame){
+        Player currentPlayer = updatedGame.getCurrentPlayer();
+        IslandBoard currentBoard = updatedGame.getGameBoard();
+        //da aggiungere il colore dietro al current player
+
+        GridPane newGridPane = new GridPane();
+        for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
+            for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
+                Space currentSpace = currentBoard.getSpace(X+1,Y+1);
+                Cell newCell = new Cell(X, Y, currentSpace);
+                newGridPane.add(newCell,Y,X);
+            }
+        gridPane = newGridPane;
+
+    }
+
+    public static class Cell extends StackPane {
         protected int coordinateX, coordinateY;
 
         public Cell(int X, int Y, Space space) {
             coordinateX = X;
             coordinateY = Y;
+            this.setStyle("-fx-border-color: black");
             this.setPrefSize(107, 107);
             Pane buildingPane = new Pane(), workerPane = new Pane();
             StackPane cellStack = new StackPane();
             cellStack.getChildren().addAll(buildingPane,workerPane);
             int height = space.getHeight();
             if (space.getHasDome()) {
-                if (height == 1)
-                    buildingPane.setStyle("-fx-background-image: url(Images/Backgrounds/OnlyDome.png); -fx-background-size: 107px 107px");
+                if (height == 1)buildingPane.setStyle("-fx-background-image: url(Images/Backgrounds/OnlyDome.png); -fx-background-size: 107px 107px");
                 else if (height == 2)
                     buildingPane.setStyle("-fx-background-image: url(Images/Backgrounds/Height1WithDome.png); -fx-background-size: 107px 107px");
                 else if (height == 3)

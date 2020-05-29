@@ -34,12 +34,11 @@ class GameController implements Runnable {
         for(int i=0;i<numPlayers;++i) virtualViewsList[i] = virtualViews.get(i);
         for (int i=0;i<numPlayers;++i) {playersArray[i] = new Player(virtualViewsList[i].getUsername(),i+1,null,null);}
         currentGame = new Game(numPlayers,playersArray[0],playersArray);
-        if(numPlayers == 3) {
-            gameGodList = new ArrayList<>();
-            for (God threePlayersGods:Server.getGodsList()) if (threePlayersGods.getPlayersAllowed() >= God.ONLY_THREE_PLAYERS_ALLOWED ) gameGodList.add(threePlayersGods);
-        }
+        if(numPlayers == 3) gameGodList = threePlayerGodsListInitialization();
         else gameGodList = Server.getGodsList();
     }
+
+
 
     @Override
     public void run() {
@@ -454,7 +453,7 @@ class GameController implements Runnable {
      * @param workerCoordinateY coordinate y of the moved worker.
      * @return Boolean matrix with true value in the cells the worker can build.
      */
-    private boolean[][] checkPossibleBuilds(int workerCoordinateX,int workerCoordinateY){
+    protected boolean[][] checkPossibleBuilds(int workerCoordinateX,int workerCoordinateY){
         boolean[][] allowedBuilds = initializeMatrix(false);
         for (int X = workerCoordinateX - 2; X < workerCoordinateX + 1;++ X){
             for (int Y = workerCoordinateY - 2; Y < workerCoordinateY + 1;++Y){
@@ -484,6 +483,15 @@ class GameController implements Runnable {
      */
     private void startGame(){
         currentGame.setCurrentRound(1);
+    }
+    /**
+     * Method used to prepare the god list in a three players game.
+     * @return the list of gods can be used during the game.
+     */
+    private ArrayList<God> threePlayerGodsListInitialization(){
+        ArrayList<God> threePlayersGodsList = new ArrayList<>();
+        for (God threePlayersGod:Server.getGodsList()) if (threePlayersGod.getPlayersAllowed() >= God.ONLY_THREE_PLAYERS_ALLOWED) threePlayersGodsList.add(threePlayersGod);
+        return threePlayersGodsList;
     }
     /**
      * Method used to send a Game Status Notification to all players of the game.
@@ -598,7 +606,7 @@ class GameController implements Runnable {
         return currentGame.getGameBoard().getSpace(coordinateX,coordinateY).getWorkerInPlace();
     }
     /**
-     * used to get the other worker of the player
+     * Method used to get the other worker of the player
      * @param player in the player considered
      * @param oneWorker is the worker we are considering
      * @return the other worker of the player
@@ -609,13 +617,13 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to notify to all players the winner of the game and close connections
+     * Method used to notify to all players the winner of the game and disconnect them.
      * @param winnerUsername Username of the winner.
      */
     private void victory(String winnerUsername){
         for (VirtualView player:virtualViewsList) {
             player.sendMessage(new WinnerNotification(winnerUsername));
-            //player.disconnect();
+            player.closeConnection();
         }
     }
     /**
@@ -635,7 +643,7 @@ class GameController implements Runnable {
      * so the victory method is called in order to notify the winner.
      * @param playerToRemove player to remove from the game
      */
-    private void removePlayerFromGame(Player playerToRemove) {
+    protected void removePlayerFromGame(Player playerToRemove) {
         Player[] currentPlayers = currentGame.getPlayers();
         if (currentGame.getNumPlayers() == 2) {
             if ((currentPlayers = currentGame.getPlayers())[0]==playerToRemove) victory(currentPlayers[1].getUsername());
@@ -674,6 +682,10 @@ class GameController implements Runnable {
                 while((receivedMessage = senderVirtualView.dequeueFirstMessage())==null) Thread.sleep(RESPONSE_MESSAGE_WAIT_TIMEOUT);
                 System.out.println("New message received, checking validity");
                 receivedValidMessage = checkMessageValidity(receivedMessage,messageIDs);
+                if (receivedMessage.getMessageID() == Message.DISCONNECTION_MESSAGE){
+                    for (VirtualView player:virtualViewsList) player.closeConnection();
+                    running = false;
+                }
             } catch (InterruptedException e) {
                 System.out.println("");
             }

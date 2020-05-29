@@ -96,4 +96,10 @@ public class WorkerTest {
         testWorker.setWorkerPosition(currentPosition);
         assertEquals(currentPosition,testWorker.getWorkerPosition());
     }
+
+    @Test
+    public void getOwnerTest(){
+        Worker testWorker = new Worker("Tom",'m' ,null, 1);
+        assertEquals("Tom",testWorker.getOwner());
+    }
 }

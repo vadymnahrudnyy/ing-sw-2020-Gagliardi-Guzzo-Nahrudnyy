@@ -6,6 +6,7 @@ import it.polimi.ingsw.PSP30.Model.Game;
 import it.polimi.ingsw.PSP30.Model.God;
 import it.polimi.ingsw.PSP30.Model.Player;
 import it.polimi.ingsw.PSP30.View.Gui.BoardController;
+import it.polimi.ingsw.PSP30.View.Gui.GodsController;
 import it.polimi.ingsw.PSP30.View.Gui.LoginController;
 import it.polimi.ingsw.PSP30.View.Gui.StartScene;
 import javafx.application.Platform;
@@ -228,7 +229,14 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void showGodList(ArrayList<God> gods) {
-
+        Runnable showGodSelector = () -> {
+            try {
+                GodsController.showGodSelector(gods);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+        Platform.runLater(showGodSelector);
     }
 
     @Override
@@ -343,7 +351,8 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void printCurrentBoard(Game updatedGame) {
-
+        Runnable updateGameStatus = () -> BoardController.updateGameBoard(updatedGame);
+        Platform.runLater(updateGameStatus);
     }
 
     @Override
