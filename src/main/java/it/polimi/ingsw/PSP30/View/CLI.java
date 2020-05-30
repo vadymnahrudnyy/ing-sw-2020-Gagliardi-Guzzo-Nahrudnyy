@@ -10,7 +10,9 @@ import it.polimi.ingsw.PSP30.Client.NetworkHandler;
 import it.polimi.ingsw.PSP30.Messages.*;
 import it.polimi.ingsw.PSP30.Model.*;
 
-
+/**
+ * CLI class implements the UI interface and defines all the features for play with command line interface
+ */
 public class CLI implements UI {
 
     private static int numPlayers;

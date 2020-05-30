@@ -382,6 +382,10 @@ public class Client {
         ui.isWinner(((WinnerNotification) message).getWinnerUsername());
     }
 
+    /**
+     * This method manages the transmission of a message from Client to Server
+     * @param message message which has to be sent
+     */
      public static void sendMessageToServer(Message message){
         NetworkHandler.sendMessage(message);
     }

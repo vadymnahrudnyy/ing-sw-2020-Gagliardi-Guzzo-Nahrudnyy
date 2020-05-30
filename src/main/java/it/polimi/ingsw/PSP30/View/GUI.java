@@ -20,6 +20,9 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
+/**
+ * GUI class implements the UI interface and defines all the features for play with graphic user interface
+ */
 public class GUI implements UI,Runnable{
     private static Stage primaryStage;
     private static Stage gameStage;
@@ -47,20 +50,27 @@ public class GUI implements UI,Runnable{
         primaryStage = newPrimaryStage;
     }
 
+    /**
+     * This method creates a new instance of the CLI class
+     */
     public void createCLI() {
         primaryStage.close();
         UI newInterface = new CLI();
         Client.setUI(newInterface);
         Client.interruptClientThread();
     }
+
+    /**
+     * This method creates a new instance of the GUI class
+     */
     public void createGUI() {
         UI newInterface = new GUI();
         Client.setUI(newInterface);
         Client.interruptClientThread();
     }
 
-    /*
-     * Method that runs when the user click on the Info&Rules button. It creates a new stages on which it load the first scene.
+    /**
+     * This method runs when the user click on the Info&Rules button. It creates a new stages on which it load the first scene.
      */
     public void showRules() throws IOException {
         rulesStage=new Stage();
@@ -81,8 +91,8 @@ public class GUI implements UI,Runnable{
 
     }
 
-    /*
-    This method show the "Power Rules" of the Info&Rules page and manages mouse click on next button.
+    /**
+     * This method show the "Power Rules" of the Info&Rules page and manages mouse click on next button.
     */
     public void rulesScene1(Stage stage) throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene1.fxml"));
@@ -100,8 +110,8 @@ public class GUI implements UI,Runnable{
     }
 
 
-    /*
-    This method show the glossary of the Info&Rules page and manages mouse click on next and back button.
+    /**
+     * This method show the glossary of the Info&Rules page and manages mouse click on next and back button.
     */
     public void rulesScene2(Stage stage) throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene2.fxml"));
@@ -118,17 +128,17 @@ public class GUI implements UI,Runnable{
         backButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
                 rulesScene1(rulesStage);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        });
+            catch (IOException e) {
+                e.printStackTrace();
+            } });
         Scene scene = new Scene(stackPane);
         stage.setScene(scene);
         stage.show();
     }
 
-    /*
-    This method show the "How to Play" of the Info&Rules page and manages mouse click on back button.
+    /**
+     * This method show the "How to Play" of the Info&Rules page and manages mouse click on back button.
     */
     public void rulesScene3(Stage stage) throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene3.fxml"));
@@ -160,6 +170,9 @@ public class GUI implements UI,Runnable{
         }
     }
 
+    /**
+     * This method shows AddressScene in which the player have to insert the address of the Server he wants to connect to
+     */
     public void showServerAddress(){
         try{
             Parent addressScene = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/AddressScene.fxml"));
@@ -180,6 +193,10 @@ public class GUI implements UI,Runnable{
     public void chooseUsername() {
         Platform.runLater(this::showUsername);
     }
+
+    /**
+     * This method shows usernameScene in which the player have to insert his username
+     */
     public void showUsername(){
         Parent usernameScene = null;
         try {
@@ -201,6 +218,10 @@ public class GUI implements UI,Runnable{
     public void chooseNumPlayers() {
         Platform.runLater(this::showChooseNumPlayers);
     }
+
+    /**
+     * This method shows numPlayerScene in which the player have to choose how many players he wants to be in the game (2 or 3)
+     */
     public void showChooseNumPlayers() {
         Parent numPlayerScene = null;
         try {
@@ -259,7 +280,14 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void chooseGod(ArrayList<God> godList, ArrayList<God> unavailableList) {
-
+        Runnable singleGodSelection = () -> {
+            try {
+                godsController.showSingleGodSelector(godList,unavailableList);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+        Platform.runLater(singleGodSelection);
     }
 
     @Override
@@ -371,11 +399,3 @@ public class GUI implements UI,Runnable{
         StartScene.main();
     }
 }
-
-
-
-
-
-
-
-
