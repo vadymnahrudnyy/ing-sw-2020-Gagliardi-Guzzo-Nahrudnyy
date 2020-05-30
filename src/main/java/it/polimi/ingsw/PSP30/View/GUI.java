@@ -5,10 +5,7 @@ import it.polimi.ingsw.PSP30.Messages.GameStartNotification;
 import it.polimi.ingsw.PSP30.Model.Game;
 import it.polimi.ingsw.PSP30.Model.God;
 import it.polimi.ingsw.PSP30.Model.Player;
-import it.polimi.ingsw.PSP30.View.Gui.BoardController;
-import it.polimi.ingsw.PSP30.View.Gui.GodsController;
-import it.polimi.ingsw.PSP30.View.Gui.LoginController;
-import it.polimi.ingsw.PSP30.View.Gui.StartScene;
+import it.polimi.ingsw.PSP30.View.Gui.*;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -216,7 +213,6 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void printLobbyStatus(int selectedLobby, int slotsOccupied) {
-
     }
 
     @Override
@@ -357,6 +353,14 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void isWinner(String winner) {
+        Runnable endGame = () -> {
+            try {
+                EndSceneController.winner(winner);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+        Platform.runLater(endGame);
 
     }
 

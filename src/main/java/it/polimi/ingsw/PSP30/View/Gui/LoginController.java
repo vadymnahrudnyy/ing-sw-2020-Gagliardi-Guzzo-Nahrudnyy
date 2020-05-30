@@ -12,25 +12,37 @@ import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/**
+/*
  * This class is the controller for LoginScene.fxml and Home.fxml
  */
-public class LoginController implements Initializable {
+public class LoginController {
 
 
+    @FXML private static StackPane lobbyPane;
     @FXML
     private TextField addressField,usernameField;
     private static final int SOCKET_PORT = 50000;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-
+    public static void displayLobby() {
+        GUI.setGameStage(new Stage());
+        try{
+            lobbyPane = FXMLLoader.load(BoardController.class.getClassLoader().getResource("Fxml/Lobby.fxml"));
+        }catch (IOException e){
+            e.printStackTrace();
+        }
+        Scene scene = new Scene(lobbyPane);
+        GUI.getGameStage().setScene(scene);
+        GUI.getGameStage().show();
     }
+
 
 
 
@@ -59,7 +71,7 @@ public class LoginController implements Initializable {
         /*GUI.getStage().close();
         Stage stage=new Stage();
         GUI.setGameStage(stage);
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/ThreePlayersLobby.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/Lobby.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.show();*/

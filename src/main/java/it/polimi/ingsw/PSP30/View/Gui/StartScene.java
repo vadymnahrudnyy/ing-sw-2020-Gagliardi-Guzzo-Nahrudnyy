@@ -29,7 +29,7 @@ public class StartScene extends Application implements Runnable {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/Home.fxml"));
+        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/Board.fxml"));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setResizable(false);
