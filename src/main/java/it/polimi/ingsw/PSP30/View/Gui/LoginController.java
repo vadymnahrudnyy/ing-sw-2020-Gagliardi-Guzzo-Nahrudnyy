@@ -11,6 +11,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.TextField;
+import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
@@ -27,8 +28,8 @@ public class LoginController {
 
 
     @FXML private static StackPane lobbyPane;
-    @FXML
-    private TextField addressField,usernameField;
+    @FXML public ImageView usernameNext;
+    @FXML private TextField addressField,usernameField;
     private static final int SOCKET_PORT = 50000;
 
     public static void displayLobby() {
@@ -68,25 +69,13 @@ public class LoginController {
 
 
     public void handlethreePlayer(MouseEvent event) throws IOException {
-        /*GUI.getStage().close();
-        Stage stage=new Stage();
-        GUI.setGameStage(stage);
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/Lobby.fxml"));
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();*/
+        Client.setNumPlayer(3);
         Client.sendMessageToServer(new NumPlayersResponse(3));
 
     }
 
     public void handletwoPlayer(MouseEvent event) throws IOException {
-        /*GUI.getStage().close();
-        Stage stage=new Stage();
-        GUI.setGameStage(stage);
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/TwoPlayersLobby.fxml"));
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.show();*/
+      Client.setNumPlayer(2);
         Client.sendMessageToServer(new NumPlayersResponse(2));
     }
     public void handleUsernameButton(MouseEvent event){
@@ -96,6 +85,7 @@ public class LoginController {
         else {
             Client.setUsername(username);
             Client.sendMessageToServer(new UsernameResponse(username));
+            usernameNext.setDisable(true);
         }
     }
 }

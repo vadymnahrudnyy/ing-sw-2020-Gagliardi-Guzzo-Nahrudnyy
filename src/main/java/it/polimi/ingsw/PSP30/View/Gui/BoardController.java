@@ -16,6 +16,7 @@ import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
+import org.w3c.dom.events.MouseEvent;
 
 import java.io.IOException;
 import java.net.URL;
@@ -25,16 +26,19 @@ import java.util.Stack;
 
 public class BoardController{
 
-    @FXML private static StackPane mainPane, playerPane, firstOpponentPane, secondOpponentPane;
-    @FXML private static Label playerUsername, firstOpponentUsername, secondOpponentUsername;
-    @FXML private static ImageView playerGod, secondOpponentGod, firstOpponentGod, exitButton, rulesButton;
-    @FXML private static VBox opponentsPane;
+    @FXML private StackPane mainPane, playerPane, firstOpponentPane, secondOpponentPane;
+    @FXML private Label playerUsername, firstOpponentUsername, secondOpponentUsername;
+    @FXML private ImageView playerGod, secondOpponentGod, firstOpponentGod, exitButton, rulesButton;
+    @FXML private VBox opponentsPane;
+
 
     private static Cell[][] cell = new Cell[5][5];
     private static GridPane gridPane=new GridPane();
+    private static Scene boardScene;
 
-    public static void initializeBoard(GameStartNotification message) {
+    public void initializeBoard(GameStartNotification message) {
         GUI.setGameStage(new Stage());
+        GUI.getGameStage().setResizable(false);
         try{
             mainPane = FXMLLoader.load(BoardController.class.getClassLoader().getResource("Fxml/Board.fxml"));
         }catch (IOException e){
@@ -57,7 +61,10 @@ public class BoardController{
         playerUsername.setText(playersUsername[0].getUsername());
         firstOpponentUsername.setText(playersUsername[1].getUsername());
         if(message.getGame().getNumPlayers() == 3) secondOpponentUsername.setText(playersUsername[2].getUsername());
-        else secondOpponentPane.setVisible(false);
+        else {
+            secondOpponentPane.setVisible(false);
+            opponentsPane.getChildren().remove(1);
+        }
 
 
         IslandBoard board = message.getGame().getGameBoard();
@@ -70,12 +77,13 @@ public class BoardController{
             }
         mainPane.getChildren().add(gridPane);
         gridPane.setAlignment(Pos.CENTER);
-        Scene scene = new Scene(mainPane);
-        GUI.getGameStage().setScene(scene);
+        boardScene = new Scene(mainPane);
+        GUI.getGameStage().setScene(boardScene);
         GUI.getGameStage().show();
     }
 
-    public static void updateGameBoard(Game updatedGame){
+    public void updateGameBoard(Game updatedGame){
+        GUI.getGameStage().setScene(boardScene);
         Player currentPlayer = updatedGame.getCurrentPlayer();
         IslandBoard currentBoard = updatedGame.getGameBoard();
         //da aggiungere il colore dietro al current player

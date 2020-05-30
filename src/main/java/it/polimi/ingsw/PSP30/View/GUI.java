@@ -24,6 +24,8 @@ public class GUI implements UI,Runnable{
     private static Stage primaryStage;
     private static Stage gameStage;
     private static Stage rulesStage;
+    GodsController godsController = new GodsController();
+    BoardController boardController = new BoardController();
 
     @FXML ImageView backButton2, backButton1, nextButton1, nextButton2;
 
@@ -217,9 +219,9 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void startNotification(GameStartNotification message) {
-        Runnable closePrimaryStage = () -> primaryStage.close();
+        Runnable closePrimaryStage = () -> {if(primaryStage!=null)primaryStage.close();};
         Platform.runLater(closePrimaryStage);
-        Runnable initializeBoard = () -> BoardController.initializeBoard(message);
+        Runnable initializeBoard = () -> boardController.initializeBoard(message);
         Platform.runLater(initializeBoard);
     }
 
@@ -227,7 +229,7 @@ public class GUI implements UI,Runnable{
     public void showGodList(ArrayList<God> gods) {
         Runnable showGodSelector = () -> {
             try {
-                GodsController.showGodSelector(gods);
+                godsController.showGodSelector(gods);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -347,7 +349,7 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void printCurrentBoard(Game updatedGame) {
-        Runnable updateGameStatus = () -> BoardController.updateGameBoard(updatedGame);
+        Runnable updateGameStatus = () -> boardController.updateGameBoard(updatedGame);
         Platform.runLater(updateGameStatus);
     }
 
