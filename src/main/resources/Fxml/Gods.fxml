@@ -54,7 +54,7 @@
                               <ToggleButton fx:id="hephaestus" onMouseClicked="#selectHephaestus" onMouseEntered="#showHephaestus" onMouseExited="#none" prefHeight="150.0" prefWidth="98.0" styleClass="hephaestusButton">
                                  <HBox.margin>
                                     <Insets right="3.0" />
-                                 </HBox.margin></ToggleButton>Alessia Gagliardi, [30.05.20 18:47]
+                                 </HBox.margin></ToggleButton>
                            </children>
                         </HBox>
                         <HBox layoutX="10.0" layoutY="160.0" prefHeight="125.0" prefWidth="200.0" style="-fx-border-color: transparent; -fx-border-width: 2px;">

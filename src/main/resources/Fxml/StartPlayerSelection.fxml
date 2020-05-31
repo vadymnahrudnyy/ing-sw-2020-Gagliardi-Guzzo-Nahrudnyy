@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+
+<StackPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Region opacity="0.3" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" />
+      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0">
+         <center>
+            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="550.0" prefWidth="1280.0" spacing="40.0" BorderPane.alignment="CENTER">
+               <children>
+                  <StackPane alignment="TOP_CENTER" prefHeight="550.0" prefWidth="330.0">
+                     <children>
+                        <ToggleButton alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="500.0" prefWidth="330.0" text="ToggleButton" StackPane.alignment="TOP_CENTER" />
+                        <ImageView fitHeight="500.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/toggleButtonGods/Hera.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="50.0" prefWidth="330.0" style="-fx-alignment: center;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER" />
+                     </children>
+                  </StackPane>
+                  <StackPane alignment="TOP_CENTER" prefHeight="550.0" prefWidth="330.0">
+                     <children>
+                        <ToggleButton mnemonicParsing="false" prefHeight="500.0" prefWidth="330.0" text="ToggleButton" StackPane.alignment="TOP_CENTER" />
+                        <ImageView fitHeight="500.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@../Images/toggleButtonGods/Artemis.png" />
+                           </image>
+                        </ImageView>
+                        <Label prefHeight="50.0" prefWidth="330.0" style="-fx-alignment: center;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER" />
+                     </children>
+                  </StackPane>
+                  <StackPane prefHeight="550.0" prefWidth="330.0">
+                     <children>
+                        <ToggleButton mnemonicParsing="false" prefHeight="500.0" prefWidth="330.0" text="ToggleButton" StackPane.alignment="TOP_CENTER" />
+                        <ImageView fitHeight="500.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER">
+                           <image>
+                              <Image url="@../Images/toggleButtonGods/Hestia.png" />
+                           </image>
+                        </ImageView>
+                        <Label contentDisplay="CENTER" prefHeight="50.0" prefWidth="330.0" style="-fx-alignment: center;" StackPane.alignment="BOTTOM_CENTER" />
+                     </children>
+                  </StackPane>
+               </children>
+            </HBox>
+         </center>
+         <bottom>
+            <ImageView fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+               <BorderPane.margin>
+                  <Insets bottom="50.0" />
+               </BorderPane.margin>
+               <image>
+                  <Image url="@../Images/Buttons/BluePressed.png" />
+               </image>
+            </ImageView>
+         </bottom>
+      </BorderPane>
+   </children>
+</StackPane>

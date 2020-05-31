@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP30.View.Gui;
 
+import it.polimi.ingsw.PSP30.Client.Client;
 import it.polimi.ingsw.PSP30.Messages.GameStartNotification;
 import it.polimi.ingsw.PSP30.Model.*;
 import it.polimi.ingsw.PSP30.View.GUI;
@@ -13,12 +14,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Cell;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
 import org.w3c.dom.events.MouseEvent;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import java.util.Stack;
@@ -35,6 +38,9 @@ public class BoardController{
     private static Cell[][] cell = new Cell[5][5];
     private static GridPane gridPane=new GridPane();
     private static Scene boardScene;
+
+    private static String firstOpponent;
+    private static String secondOpponent;
 
     public void initializeBoard(GameStartNotification message) {
         GUI.setGameStage(new Stage());
@@ -58,9 +64,22 @@ public class BoardController{
         secondOpponentGod=(ImageView) secondOpponentPane.getChildren().get(0);
         secondOpponentUsername=(Label) secondOpponentPane.getChildren().get(2);
         Player[] playersUsername = message.getGame().getPlayers();
-        playerUsername.setText(playersUsername[0].getUsername());
-        firstOpponentUsername.setText(playersUsername[1].getUsername());
-        if(message.getGame().getNumPlayers() == 3) secondOpponentUsername.setText(playersUsername[2].getUsername());
+
+
+        playerUsername.setText(Client.getUsername());
+        for (Player player : playersUsername) {
+            if (!Client.getUsername().equals(player.getUsername())) {
+                if (firstOpponent == null) firstOpponent = player.getUsername();
+                else secondOpponent = player.getUsername();
+            }
+        }
+        firstOpponentUsername.setText(firstOpponent);
+
+        playerGod.setVisible(false);
+        firstOpponentGod.setVisible(false);
+        secondOpponentGod.setVisible(false);
+
+        if(message.getGame().getNumPlayers() == 3) secondOpponentUsername.setText(secondOpponent);
         else {
             secondOpponentPane.setVisible(false);
             opponentsPane.getChildren().remove(1);
@@ -86,6 +105,26 @@ public class BoardController{
         GUI.getGameStage().setScene(boardScene);
         Player currentPlayer = updatedGame.getCurrentPlayer();
         IslandBoard currentBoard = updatedGame.getGameBoard();
+
+        //Divinità
+        Player[] gamePlayers = updatedGame.getPlayers();
+        for (Player gamePlayer : gamePlayers) {
+            God currentGod = gamePlayer.getGod();
+            if (currentGod != null){
+                if (Client.getUsername().equals(gamePlayer.getUsername())) {
+                    playerGod.setImage(new Image(selectGodImage(false, gamePlayer.getGod().getName())));
+                    playerGod.setVisible(true);
+                }
+                else if (firstOpponent.equals(gamePlayer.getUsername())) {
+                firstOpponentGod.setImage(new Image(selectGodImage(true, gamePlayer.getGod().getName())));
+                firstOpponentGod.setVisible(true);
+                }
+                else {
+                    secondOpponentGod.setImage(new Image(selectGodImage(true, gamePlayer.getGod().getName())));
+                    secondOpponentGod.setVisible(true);
+                }
+            }
+        }
         //da aggiungere il colore dietro al current player
 
         GridPane newGridPane = new GridPane();
@@ -97,6 +136,60 @@ public class BoardController{
             }
         gridPane = newGridPane;
 
+    }
+
+    public void firstPlayerStart(MouseEvent event){
+
+    }
+
+
+    public String selectGodImage(boolean isOpponent, String godName) {
+        switch(godName){
+            case "Apollo":
+                if (!isOpponent)return ("/Images/Gods/Apollo.png");
+                else return ("/Images/SmallGods/Apollo.png");
+            case "Artemis":
+                if (!isOpponent) return ("/Images/Gods/Artemis.png");
+                else return ("/Images/SmallGods/Artemis.png");
+            case "Athena":
+                if (!isOpponent) return ("/Images/Gods/Athena.png");
+                else return ("/Images/SmallGods/Athena.png");
+            case "Atlas":
+                if (!isOpponent) return ("/Images/Gods/Atlas.png");
+                else return ("/Images/SmallGods/Atlas.png");
+            case "Chronus":
+                if (!isOpponent) return ("/Images/Gods/Chronus.png");
+                else return ("/Images/SmallGods/Chronus.png");
+            case "Demeter":
+                if (!isOpponent) return ("/Images/Gods/Demeter.png");
+                else return ("/Images/SmallGods/Demeter.png");
+            case "Hephaestus":
+                if (!isOpponent) return ("/Images/Gods/Hephaestus.png");
+                else return ("/Images/SmallGods/Hephaestus.png");
+            case "Hera":
+                if (!isOpponent) return ("/Images/Gods/Hera.png");
+                else return ("/Images/SmallGods/Hera.png");
+            case "Hestia":
+                if (!isOpponent) return ("/Images/Gods/Hestia.png");
+                else return ("/Images/SmallGods/Hestia.png");
+            case "Minotaur":
+                if (!isOpponent) return ("/Images/Gods/Minotaur.png");
+                else return ("/Images/SmallGods/Minotaur.png");
+            case "Pan":
+                if (!isOpponent) return ("/Images/Gods/Pan.png");
+                else return ("/Images/SmallGods/Pan.png");
+            case "Prometheus":
+                if (!isOpponent) return ("/Images/Gods/Prometheus.png");
+                else return ("/Images/SmallGods/Prometheus.png");
+            case "Zeus":
+                if (!isOpponent) return ("/Images/Gods/Zeus.png");
+                else return ("/Images/SmallGods/Zeus.png");
+            case "Ares":
+                if (!isOpponent) return ("/Images/Gods/Ares.png");
+                else return ("/Images/SmallGods/Ares.png");
+
+        }
+        return null;
     }
 
     public static class Cell extends StackPane {

@@ -306,6 +306,7 @@ class GameController implements Runnable {
         do {
             if(!(validGodsReceived = correctGodChose(firstVirtualView,gameGods))) firstVirtualView.sendMessage(new InvalidGodError());
         }while(!validGodsReceived);
+        notifyGameStatusToAll();
         for(int Index = 1; Index< currentGame.getNumPlayers();++Index){
             virtualViewsList[Index].sendMessage(new ChoseGodRequest(gameGods, chosenGods));
             waitValidMessage(virtualViewsList[Index],new int[]{Message.CHOSE_GOD_RESPONSE});
@@ -316,11 +317,13 @@ class GameController implements Runnable {
             else {
                 actualPlayer.setGod(receivedGod);
                 chosenGods.add(receivedGod);
+                notifyGameStatusToAll();
             }
         }
         God remainedGod = getRemainedGod(gameGods,chosenGods);
         firstPlayer.setGod(remainedGod);
         virtualViewsList[0].sendMessage(new LastGodNotification(gameGods,remainedGod));
+        notifyGameStatusToAll();
     }
 
     /**

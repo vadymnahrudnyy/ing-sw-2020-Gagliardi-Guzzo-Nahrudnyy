@@ -1,12 +1,12 @@
 package it.polimi.ingsw.PSP30.View.Gui;
 
 import it.polimi.ingsw.PSP30.Client.Client;
+import it.polimi.ingsw.PSP30.Messages.ChoseGodResponse;
 import it.polimi.ingsw.PSP30.Messages.GodsListResponse;
 import it.polimi.ingsw.PSP30.Model.God;
 import it.polimi.ingsw.PSP30.View.GUI;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.scene.Scene;
 import javafx.scene.control.ToggleButton;
 import javafx.scene.control.ToggleGroup;
@@ -18,10 +18,11 @@ import javafx.scene.layout.*;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.ResourceBundle;
 
-public class GodsController implements Initializable {
 
+public class GodsController {
+
+    //private ArrayList<String> buttonsSingleGod=new ArrayList<>();
     //First player gods selection
     @FXML private BorderPane borderPane;
     @FXML private ToggleButton apollo, artemis, ares;
@@ -31,23 +32,18 @@ public class GodsController implements Initializable {
     @FXML private ToggleButton pan, prometheus, minotaur;
     @FXML private ImageView godSelectionButton;
 
-    private final ArrayList<String> selectedGods = new ArrayList<>();
+    private static final ArrayList<String> selectedGods = new ArrayList<>();
 
     //Other players god selection
-    @FXML private StackPane singleGodStackPane;
     @FXML private VBox vBox ;
     @FXML private ToggleButton firstGod,secondGod,thirdGod;
     @FXML private BorderPane singleGodBorderPane;
     @FXML private ImageView selectSingleGod;
-    private String selectedGod;
-    private ArrayList<String> buttonsSingleGod = new ArrayList<>();
+    private static String selectedGod;
 
 
     private ToggleGroup toggleGroup=new ToggleGroup();
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
 
-    }
 
     /**
      * This method shows the list of all the Gods usable during the game and allows the first player to choose the Gods he wants for the current match.
@@ -74,6 +70,7 @@ public class GodsController implements Initializable {
      */
     public void showSingleGodSelector(ArrayList<God> gameGods,ArrayList<God> chosenGods) throws IOException {
         God tempGod;
+        //buttonsSingleGod = new ArrayList<>();
         StackPane singleGodSelectionPane = FXMLLoader.load(GodsController.class.getClassLoader().getResource("Fxml/chooseGod.fxml"));
         singleGodBorderPane=(BorderPane) singleGodSelectionPane.getChildren().get(1);
         vBox=(VBox) singleGodBorderPane.getRight();
@@ -84,14 +81,11 @@ public class GodsController implements Initializable {
         thirdGod=(ToggleButton) vBox.getChildren().get(2);
         thirdGod.setToggleGroup(toggleGroup);
         singleGodChoiceToggleButtonImage((tempGod = gameGods.get(0)).getName(), firstGod, singleGodBorderPane);
-        buttonsSingleGod.add(tempGod.getName());
         if (godAlreadyChosen(tempGod.getName(),chosenGods)) firstGod.setOpacity(0.3);
-        singleGodChoiceToggleButtonImage((tempGod =gameGods.get(1)).getName(), secondGod, singleGodBorderPane);
-        buttonsSingleGod.add(tempGod.getName());
+        singleGodChoiceToggleButtonImage((tempGod = gameGods.get(1)).getName(), secondGod, singleGodBorderPane);
         if (godAlreadyChosen(tempGod.getName(),chosenGods)) secondGod.setOpacity(0.3);
         if (Client.getNumPlayers() == 3){
             singleGodChoiceToggleButtonImage((tempGod = gameGods.get(2)).getName(), thirdGod, singleGodBorderPane);
-            buttonsSingleGod.add(tempGod.getName());
             if (godAlreadyChosen(gameGods.get(2).getName(),chosenGods)) thirdGod.setOpacity(0.3);
         }
         else vBox.getChildren().remove(2);
@@ -118,6 +112,7 @@ public class GodsController implements Initializable {
      * @param pane pane in which arrange the buttons
      */
     public void singleGodChoiceToggleButtonImage(String godName, ToggleButton button, BorderPane pane){
+        selectedGods.add(godName);
         switch (godName){
             case "Apollo":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Apollo.png); -fx-background-size: 150px;");
@@ -756,6 +751,11 @@ public class GodsController implements Initializable {
         else selectedGods.remove("Hestia");
     }
 
+    /**
+     * This method manages the selection of Zeus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected
+     * @param event mouse pointer have clicked on Zeus card
+     */
     public void selectZeus(MouseEvent event){
         if (zeus.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
@@ -767,7 +767,29 @@ public class GodsController implements Initializable {
     }
 
     /**
-     * This method manages the button clicked at the end of the choice of the God
+     * This method manages the selection of the firstGod card by the mouse
+     */
+    public void firstGodSelected(MouseEvent event){
+        if (firstGod.isSelected()) selectedGod = selectedGods.get(0);
+    }
+
+    /**
+     * This method manages the selection of the secondGod card by the mouse
+     */
+    public void secondGodSelected(MouseEvent event){
+        if (secondGod.isSelected()) selectedGod = selectedGods.get(1);
+    }
+
+    /**
+     * This method manages the selection of the thirdGod card by the mouse
+     */
+    public void thirdGodSelected(MouseEvent event){
+        if (thirdGod.isSelected()) selectedGod=selectedGods.get(2);
+    }
+
+
+    /**
+     * This method manages the button clicked at the end of the choice of the God by the first player
      * @param event mouse click on the godSelectionButton
      */
     public void handleGodSelectionButton(MouseEvent event){
@@ -775,9 +797,15 @@ public class GodsController implements Initializable {
             godSelectionButton.setDisable(true);
             Client.sendMessageToServer(new GodsListResponse(selectedGods));
         }
-
     }
 
-
-
+    /**
+     * This method manages the button clicked at the end of the choice of the God by the other players
+     * @param event mouse click on the selectSingleGod
+     */
+    public void handleSingleGodSelectionButton (MouseEvent event){
+        selectSingleGod.setDisable(true);
+        if(firstGod.isSelected()||secondGod.isSelected()|| thirdGod.isSelected()) Client.sendMessageToServer(new ChoseGodResponse(selectedGod));
+        else selectSingleGod.setDisable(false);
+    }
 }
