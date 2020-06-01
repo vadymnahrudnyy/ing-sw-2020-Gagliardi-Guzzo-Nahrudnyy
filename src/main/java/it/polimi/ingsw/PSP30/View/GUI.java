@@ -323,12 +323,14 @@ import java.util.ArrayList;
 
     @Override
     public void placeWorkerInSpace(int currentWorker, boolean[][] allowedPositions) {
-
+        Runnable workerPositionRequest = () -> boardController.workerPositionRequest(currentWorker);
+        Platform.runLater(workerPositionRequest);
     }
 
     @Override
     public void chooseWorker() {
-
+        Runnable chooseWorker = () -> boardController.selectWorkerRequest();
+        Platform.runLater(chooseWorker);
     }
 
     @Override
@@ -343,7 +345,13 @@ import java.util.ArrayList;
 
     @Override
     public void moveWorker(boolean[][] allowedMoves) {
-
+        Runnable moveWorker = new Runnable() {
+            @Override
+            public void run() {
+                boardController.moveRequest(allowedMoves);
+            }
+        };
+        Platform.runLater(moveWorker);
     }
 
     @Override
@@ -368,7 +376,13 @@ import java.util.ArrayList;
 
     @Override
     public void buildTower(boolean[][] allowedBuild) {
-
+        Runnable buildTower = new Runnable() {
+            @Override
+            public void run() {
+                boardController.buildRequest(allowedBuild);
+            }
+        };
+        Platform.runLater(buildTower);
     }
 
     @Override

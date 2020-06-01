@@ -172,7 +172,11 @@
     -fx-background-position: center;
 }
 
-
-
+.background{
+    -fx-background-image: url("/Images/Backgrounds/messagesBackgroud.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
 
 

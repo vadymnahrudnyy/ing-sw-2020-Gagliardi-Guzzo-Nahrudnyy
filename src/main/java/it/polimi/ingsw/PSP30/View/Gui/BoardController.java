@@ -25,7 +25,7 @@ public class BoardController{
 
     //Board
     @FXML private StackPane mainPane, playerPane, firstOpponentPane, secondOpponentPane;
-    @FXML private Label playerUsername, firstOpponentUsername, secondOpponentUsername;
+    @FXML private Label playerUsername, firstOpponentUsername, secondOpponentUsername, messagesTag;
     @FXML private ImageView playerGod, secondOpponentGod, firstOpponentGod, exitButton, rulesButton;
     @FXML private VBox opponentsPane;
 
@@ -52,6 +52,9 @@ public class BoardController{
     private static ToggleGroup toggleGroup=new ToggleGroup();
     private static final ArrayList<String> selectedGods = new ArrayList<>();
 
+    private static boolean[][] allowedMoves;
+    private static boolean workerPositionRequest = false, selectWorkerRequest = false, moveRequest = false, buildRequest = false;
+
     public void initializeBoard(GameStartNotification message) {
         if (GUI.getGameStage() == null) GUI.setGameStage(new Stage());
         GUI.getGameStage().setResizable(false);
@@ -61,6 +64,7 @@ public class BoardController{
             e.printStackTrace();
         }
 
+        messagesTag= (Label) mainPane.getChildren().get(6);
         exitButton=(ImageView) mainPane.getChildren().get(1);
         rulesButton=(ImageView) mainPane.getChildren().get(2);
         playerPane= (StackPane) mainPane.getChildren().get(4);
@@ -112,6 +116,7 @@ public class BoardController{
     }
 
     public void updateGameBoard(Game updatedGame){
+        //messagesTag.setText(" ");
         GUI.getGameStage().setScene(boardScene);
         Player currentPlayer = updatedGame.getCurrentPlayer();
         IslandBoard currentBoard = updatedGame.getGameBoard();
@@ -141,11 +146,13 @@ public class BoardController{
         for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
             for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
                 Space currentSpace = currentBoard.getSpace(X+1,Y+1);
-                Cell newCell = new Cell(X, Y, currentSpace);
-                newGridPane.add(newCell,Y,X);
+                cell[X][Y] = new Cell(X, Y, currentSpace);
+                newGridPane.add(cell[X][Y],Y,X);
             }
+        mainPane.getChildren().remove(gridPane);
+        mainPane.getChildren().add(newGridPane);
+        newGridPane.setAlignment(Pos.CENTER);
         gridPane = newGridPane;
-
     }
 
     public void firstPlayerStart(MouseEvent event){
@@ -264,7 +271,7 @@ public class BoardController{
                 else return ("/Images/SmallGods/Atlas.png");
             case "Chronus":
                 if (!isOpponent) return ("/Images/Gods/Chronus.png");
-                else return ("/Images/SmallGods/Chronus.png");
+                else return ("/Images/SmallGods/Chronos.png");
             case "Demeter":
                 if (!isOpponent) return ("/Images/Gods/Demeter.png");
                 else return ("/Images/SmallGods/Demeter.png");
@@ -297,19 +304,49 @@ public class BoardController{
         return null;
     }
 
+    public void workerPositionRequest(int workerIndex){
+        if (workerIndex == 1) messagesTag.setText("Select first worker's position");
+        else messagesTag.setText("Select second worker's position");
+        workerPositionRequest = true;
+    }
+    public void selectWorkerRequest(){
+        selectWorkerRequest = true;
+        messagesTag.setText("Select the worker you want to move");
+    }
+    public void moveRequest(boolean[][] allowedMove){
+        moveRequest = true;
+        allowedMoves = allowedMove;
+        for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
+            for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
+                if(allowedMove[X][Y])cell[X][Y].setAllowed();
+            }
+        messagesTag.setText("Select the position you want to move to");
+    }
+    public void buildRequest(boolean[][] allowedMove){
+        buildRequest = true;
+        allowedMoves = allowedMove;
+        for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
+            for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
+                if(allowedMove[X][Y])cell[X][Y].setAllowed();
+            }
+        messagesTag.setText("Select the space you want to build in");
+    }
+
 
 
     public static class Cell extends StackPane {
         protected int coordinateX, coordinateY;
+        Pane allowedMovePane = new Pane();
 
         public Cell(int X, int Y, Space space) {
-            coordinateX = X;
-            coordinateY = Y;
+            coordinateX = X+1;
+            coordinateY = Y+1;
             this.setStyle("-fx-border-color: black");
             this.setPrefSize(107, 107);
-            Pane buildingPane = new Pane(), workerPane = new Pane();
+            Pane buildingPane = new Pane(), workerPane = new Pane(), selectedCellPane = new Pane();
             StackPane cellStack = new StackPane();
-            cellStack.getChildren().addAll(buildingPane,workerPane);
+            cellStack.getChildren().addAll(buildingPane,workerPane,allowedMovePane,selectedCellPane);
+            this.getChildren().add(cellStack);
             int height = space.getHeight();
             if (space.getHasDome()) {
                 if (height == 1)buildingPane.setStyle("-fx-background-image: url(Images/Backgrounds/OnlyDome.png); -fx-background-size: 107px 107px");
@@ -337,8 +374,8 @@ public class BoardController{
                         else workerPane.setStyle("-fx-background-image: url(Images/Backgrounds/blueMale.png); -fx-background-size: 107px 107px");
                     }
                     else if (Color == 2){
-                        if (gender == 'f')workerPane.setStyle("-fx-background-image: url(Images/Backgrounds/greenFemale.png); -fx-background-size: 107px 107px");
-                        else workerPane.setStyle("-fx-background-image: url(Images/Backgrounds/greenMale.png); -fx-background-size: 107px 107px");
+                        if (gender == 'f')workerPane.setStyle("-fx-background-image: url(Images/Backgrounds/purpleFemale.png); -fx-background-size: 107px 107px");
+                        else workerPane.setStyle("-fx-background-image: url(Images/Backgrounds/purpleMale.png); -fx-background-size: 107px 107px");
                     }
                     else {
                         if (gender == 'f')workerPane.setStyle("-fx-background-image: url(Images/Backgrounds/yellowFemale.png); -fx-background-size: 107px 107px");
@@ -346,6 +383,36 @@ public class BoardController{
                     }
                 }
             }
+            this.addEventHandler(MouseEvent.MOUSE_ENTERED, e->{
+                selectedCellPane.setStyle("-fx-background-color: #ffad00; -fx-opacity: 0.5");
+            });
+            this.addEventHandler(MouseEvent.MOUSE_EXITED, e->{
+                selectedCellPane.setStyle("-fx-background-color: transparent");
+            });
+            this.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
+                System.out.println("click on X: "+coordinateX +"  Y: " + coordinateY);
+                if (workerPositionRequest) {
+                    workerPositionRequest = false;
+
+                    Client.sendMessageToServer(new WorkerPositionResponse(coordinateX,coordinateY));
+                }
+                if (selectWorkerRequest){
+                    selectWorkerRequest = false;
+                    Client.sendMessageToServer(new SelectWorkerResponse(coordinateX,coordinateY));
+                }
+                if (moveRequest){
+                    moveRequest = false;
+                    Client.sendMessageToServer(new MoveResponse(coordinateX,coordinateY));
+                }
+                if (buildRequest){
+                    buildRequest = false;
+                    Client.sendMessageToServer(new BuildResponse(coordinateX,coordinateY));
+                }
+            });
+        }
+
+        public void setAllowed(){
+            allowedMovePane.setStyle("-fx-background-color: #49eeff; -fx-opacity: 0.5");
         }
     }
 }
