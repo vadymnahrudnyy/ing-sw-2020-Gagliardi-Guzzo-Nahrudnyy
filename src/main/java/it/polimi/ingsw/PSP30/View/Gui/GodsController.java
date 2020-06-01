@@ -14,9 +14,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
-
 import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 
 
@@ -71,7 +69,7 @@ public class GodsController {
     public void showSingleGodSelector(ArrayList<God> gameGods,ArrayList<God> chosenGods) throws IOException {
         God tempGod;
         //buttonsSingleGod = new ArrayList<>();
-        StackPane singleGodSelectionPane = FXMLLoader.load(GodsController.class.getClassLoader().getResource("Fxml/chooseGod.fxml"));
+        StackPane singleGodSelectionPane = FXMLLoader.load(GodsController.class.getClassLoader().getResource("Fxml/ChooseGod.fxml"));
         singleGodBorderPane=(BorderPane) singleGodSelectionPane.getChildren().get(1);
         vBox=(VBox) singleGodBorderPane.getRight();
         firstGod= (ToggleButton) vBox.getChildren().get(0);

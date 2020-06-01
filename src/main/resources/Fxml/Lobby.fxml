@@ -1,20 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.control.Label?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.layout.VBox?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
 
-<StackPane fx:id="lobbyPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.LoginController">
+<StackPane fx:id="lobbyPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.LobbyController">
    <stylesheets><URL value="@../Style.css" /></stylesheets>
    <children>
       <Region prefHeight="720.0" prefWidth="1280.0" styleClass="bg_lobby" />
-      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0">
+      <BorderPane fx:id="borderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0">
          <bottom>
             <ImageView fx:id="exitButton" fitHeight="72.0" fitWidth="65.0" pickOnBounds="true" preserveRatio="true" styleClass="button" BorderPane.alignment="BOTTOM_RIGHT">
                <image>
@@ -26,7 +22,7 @@
             </ImageView>
          </bottom>
          <left>
-            <StackPane fx:id="leftArea" prefHeight="720.0" prefWidth="500.0" BorderPane.alignment="CENTER">
+            <StackPane fx:id="playerStackPane" prefHeight="720.0" prefWidth="500.0" BorderPane.alignment="CENTER">
                <children>
                   <ImageView fitHeight="400.0" fitWidth="500.0" pickOnBounds="true" StackPane.alignment="CENTER">
                      <image>
@@ -38,7 +34,7 @@
                         <Image url="@../Images/Backgrounds/om_nameTagActive.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="playerUsername" contentDisplay="CENTER" text="YOU" textAlignment="CENTER" textFill="#e8e2cf" StackPane.alignment="CENTER">
+                  <Label fx:id="playerUsername" contentDisplay="CENTER" textAlignment="CENTER" textFill="#e8e2cf" StackPane.alignment="CENTER">
                      <StackPane.margin>
                         <Insets bottom="5.0" />
                      </StackPane.margin>
@@ -50,9 +46,9 @@
             <Region prefHeight="50.0" prefWidth="200.0" BorderPane.alignment="CENTER" />
          </top>
          <right>
-            <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
+            <VBox fx:id="opponentsVBox" alignment="CENTER" prefHeight="200.0" prefWidth="100.0" BorderPane.alignment="CENTER">
                <children>
-                  <StackPane prefHeight="150.0" prefWidth="200.0">
+                  <StackPane fx:id="firstOpponentPane" prefHeight="150.0" prefWidth="200.0">
                      <children>
                         <ImageView fitHeight="300.0" fitWidth="500.0" pickOnBounds="true" StackPane.alignment="CENTER">
                            <image>
@@ -70,10 +66,10 @@
                               <Insets />
                            </StackPane.margin>
                         </ImageView>
-                        <Label fx:id="firstOpponent" textFill="#e8e2cf" StackPane.alignment="CENTER" />
+                        <Label fx:id="firstOpponentUsername" textFill="#e8e2cf" StackPane.alignment="CENTER" />
                      </children>
                   </StackPane>
-                  <StackPane layoutX="10.0" layoutY="159.0" prefHeight="150.0" prefWidth="200.0">
+                  <StackPane fx:id="secondOpponentPlayer" layoutX="10.0" layoutY="159.0" prefHeight="150.0" prefWidth="200.0">
                      <children>
                         <ImageView fx:id="secondOpponentAura" fitHeight="300.0" fitWidth="500.0" pickOnBounds="true" StackPane.alignment="CENTER">
                            <image>
@@ -91,7 +87,7 @@
                               <Insets />
                            </StackPane.margin>
                         </ImageView>
-                        <Label fx:id="secondOpponentLabel" textFill="#e8e2cf" StackPane.alignment="CENTER" />
+                        <Label fx:id="secondOpponentUsername" textFill="#e8e2cf" StackPane.alignment="CENTER" />
                      </children>
                   </StackPane>
                </children>

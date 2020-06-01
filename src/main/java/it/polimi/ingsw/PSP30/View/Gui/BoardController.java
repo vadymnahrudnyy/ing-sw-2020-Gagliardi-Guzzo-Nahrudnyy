@@ -1,38 +1,43 @@
 package it.polimi.ingsw.PSP30.View.Gui;
 
 import it.polimi.ingsw.PSP30.Client.Client;
-import it.polimi.ingsw.PSP30.Messages.GameStartNotification;
+import it.polimi.ingsw.PSP30.Messages.*;
 import it.polimi.ingsw.PSP30.Model.*;
 import it.polimi.ingsw.PSP30.View.GUI;
-import javafx.application.Application;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
-import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Cell;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-import org.w3c.dom.events.MouseEvent;
-
+import javafx.scene.input.MouseEvent;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ResourceBundle;
-import java.util.Stack;
+import java.util.ArrayList;
 
 
 public class BoardController{
 
+
+    //Board
     @FXML private StackPane mainPane, playerPane, firstOpponentPane, secondOpponentPane;
     @FXML private Label playerUsername, firstOpponentUsername, secondOpponentUsername;
     @FXML private ImageView playerGod, secondOpponentGod, firstOpponentGod, exitButton, rulesButton;
     @FXML private VBox opponentsPane;
+
+
+    //startPlayerSelection
+    @FXML private StackPane selectPlayerMainPane,firstPlayer, secondPlayer, thirdPlayer ;
+    @FXML private BorderPane selectPlayerBorderPane;
+    @FXML private ToggleButton firstButton, secondButton, thirdButton;
+    @FXML private Label firstLabel, secondLabel, thirdLabel;
+    @FXML private HBox hBox;
+    @FXML private ImageView selectButton;
+
+    //load startPlayerSelection
+    //controllare se è playerUsername o opponent's username e imporre toggle username in base alla divinità
 
 
     private static Cell[][] cell = new Cell[5][5];
@@ -41,6 +46,9 @@ public class BoardController{
 
     private static String firstOpponent;
     private static String secondOpponent;
+
+    private static ToggleGroup toggleGroup=new ToggleGroup();
+    private static final ArrayList<String> selectedGods = new ArrayList<>();
 
     public void initializeBoard(GameStartNotification message) {
         GUI.setGameStage(new Stage());
@@ -112,15 +120,15 @@ public class BoardController{
             God currentGod = gamePlayer.getGod();
             if (currentGod != null){
                 if (Client.getUsername().equals(gamePlayer.getUsername())) {
-                    playerGod.setImage(new Image(selectGodImage(false, gamePlayer.getGod().getName())));
+                    playerGod.setImage(new Image(getClass().getResourceAsStream(selectGodImage(false, gamePlayer.getGod().getName()))));
                     playerGod.setVisible(true);
                 }
                 else if (firstOpponent.equals(gamePlayer.getUsername())) {
-                firstOpponentGod.setImage(new Image(selectGodImage(true, gamePlayer.getGod().getName())));
+                firstOpponentGod.setImage(new Image(getClass().getResourceAsStream(selectGodImage(true, gamePlayer.getGod().getName()))));
                 firstOpponentGod.setVisible(true);
                 }
                 else {
-                    secondOpponentGod.setImage(new Image(selectGodImage(true, gamePlayer.getGod().getName())));
+                    secondOpponentGod.setImage(new Image(getClass().getResourceAsStream(selectGodImage(true, gamePlayer.getGod().getName()))));
                     secondOpponentGod.setVisible(true);
                 }
             }
@@ -142,6 +150,101 @@ public class BoardController{
 
     }
 
+
+    public void showSelectFirstPlayer(Player[] players) throws IOException {
+        selectPlayerMainPane = FXMLLoader.load(BoardController.class.getClassLoader().getResource("Fxml/StartPlayerSelection.fxml"));
+        selectPlayerBorderPane=(BorderPane) selectPlayerMainPane.getChildren().get(1);
+        hBox=(HBox) selectPlayerBorderPane.getCenter();
+        selectButton=(ImageView) selectPlayerBorderPane.getBottom();
+        firstPlayer=(StackPane) hBox.getChildren().get(0);
+        secondPlayer=(StackPane) hBox.getChildren().get(1);
+        thirdPlayer=(StackPane) hBox.getChildren().get(2);
+        firstButton=(ToggleButton) firstPlayer.getChildren().get(0);
+        firstButton.setToggleGroup(toggleGroup);
+        firstLabel=(Label) firstPlayer.getChildren().get(1);
+        secondButton=(ToggleButton) secondPlayer.getChildren().get(0);
+        secondButton.setToggleGroup(toggleGroup);
+        secondLabel=(Label) secondPlayer.getChildren().get(1);
+        if(Client.getNumPlayers()==3) {
+            thirdButton = (ToggleButton) thirdPlayer.getChildren().get(0);
+            thirdButton.setToggleGroup(toggleGroup);
+            thirdLabel = (Label) thirdPlayer.getChildren().get(1);
+        }
+        else hBox.getChildren().remove(2);
+        for(Player currentPlayer : players ){
+            if(!Client.getUsername().equals(currentPlayer.getUsername())) {
+                if(firstOpponent.equals(currentPlayer.getUsername())) {
+                    setToggleButtonImages(currentPlayer.getGod().getName(),secondButton);
+                    secondLabel.setText(currentPlayer.getUsername());
+                }
+                else {
+                    setToggleButtonImages(currentPlayer.getGod().getName(),thirdButton);
+                    thirdLabel.setText(currentPlayer.getUsername());
+                }
+            }
+            else{
+                setToggleButtonImages(currentPlayer.getGod().getName(),firstButton);
+                firstLabel.setText(currentPlayer.getUsername());
+            }
+        }
+        GUI.getGameStage().setScene(new Scene(selectPlayerMainPane));
+    }
+
+    public void setToggleButtonImages(String godName, ToggleButton button){
+        selectedGods.add(godName);
+        switch (godName) {
+            case "Apollo":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Apollo.png);");
+                break;
+            case "Artemis":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Artemis.png);");
+                break;
+            case "Athena":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Athena.png);");
+                break;
+            case "Atlas":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Atlas.png);");
+                break;
+            case "Demeter":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Demeter.png);");
+                break;
+            case "Hephaestus":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hephaestus.png);");
+                break;
+            case "Minotaur":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Minotaur.png);");
+                break;
+            case "Pan":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Pan.png);");
+                break;
+            case "Prometheus":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Prometheus.png);");
+                break;
+            case "Ares":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Ares.png);");
+                break;
+            case "Chronus":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Chronus.png);");
+                break;
+            case "Hera":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hera.png);");
+                break;
+            case "Hestia":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hestia.png);");
+                break;
+            case "Zeus":
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Zeus.png);");
+                break;
+        }
+    }
+
+    public void handleFirstPlayerSelection(MouseEvent mouseEvent) {
+        selectButton.setDisable(true);
+        if(firstButton.isSelected()) Client.sendMessageToServer(new StartPlayerResponse(firstLabel.getText()));
+        else if(secondButton.isSelected()) Client.sendMessageToServer(new StartPlayerResponse(secondLabel.getText()));
+        else if(thirdButton.isSelected()) Client.sendMessageToServer(new StartPlayerResponse(thirdLabel.getText()));
+        else selectButton.setDisable(false);
+    }
 
     public String selectGodImage(boolean isOpponent, String godName) {
         switch(godName){
@@ -191,6 +294,8 @@ public class BoardController{
         }
         return null;
     }
+
+
 
     public static class Cell extends StackPane {
         protected int coordinateX, coordinateY;

@@ -2,6 +2,7 @@ package it.polimi.ingsw.PSP30.View;
 
 import it.polimi.ingsw.PSP30.Client.Client;
 import it.polimi.ingsw.PSP30.Messages.GameStartNotification;
+import it.polimi.ingsw.PSP30.Messages.LobbyStatusNotification;
 import it.polimi.ingsw.PSP30.Model.Game;
 import it.polimi.ingsw.PSP30.Model.God;
 import it.polimi.ingsw.PSP30.Model.Player;
@@ -20,10 +21,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-/**
- * GUI class implements the UI interface and defines all the features for play with graphic user interface
- */
-public class GUI implements UI,Runnable{
+    /**
+    * GUI class implements the UI interface and defines all the features for play with graphic user interface
+    */
+    public class GUI implements UI,Runnable{
     private static Stage primaryStage;
     private static Stage gameStage;
     private static Stage rulesStage;
@@ -265,18 +266,25 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void printAllPlayers(Player[] players) {
-
-    }
+        Runnable firstPlayerSelection = () -> {
+        try {
+            boardController.showSelectFirstPlayer(players);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    };
+        Platform.runLater(firstPlayerSelection);}
 
     @Override
-    public void playerError() {
-
-    }
+    public void playerError() { }
 
     @Override
     public void chooseFirstPlayer() {
 
+
     }
+
+
 
     @Override
     public void chooseGod(ArrayList<God> godList, ArrayList<God> unavailableList) {

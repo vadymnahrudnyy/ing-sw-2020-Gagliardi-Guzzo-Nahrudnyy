@@ -76,9 +76,6 @@
     -fx-background-position: center;
 }
 
-
-
-
 .gods:pressed{
     -fx-scale-y: 0.95;
     -fx-scale-x: 0.95;
@@ -94,7 +91,6 @@
     -fx-alignment: CENTER;
 }
 
-
 .board{
 
     -fx-background-image: url("/Images/Backgrounds/SantoriniBoard.png");
@@ -109,6 +105,7 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center
 }
+
 .twoPlayerButton:pressed{
     -fx-border-color: white;
     -fx-border-width: 2px;
@@ -122,6 +119,7 @@
     -fx-background-repeat: no-repeat;
     -fx-background-position: center
 }
+
 .threePlayerButton:pressed{
     -fx-border-color: white;
     -fx-border-width: 2px;
@@ -135,23 +133,44 @@
     -fx-background-size: 210px 55px;
     -fx-background-repeat: no-repeat;
     -fx-background-position: center;
-
-
 }
 
-
-
-
 .bg_board{
-    -fx-background-image: url("/Images/Backgrounds/SantoriniBoard.png");
+    -fx-background-image: url("/Images/Backgrounds/Board.png");
     -fx-background-size: 1280px 720 px;
     -fx-background-position: 124px -3px;
 }
 
+.firstPlayerUsername{
 
+    -fx-background-image: url("/Images/Backgrounds/om_nameTagActive.png");
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
+.bg_selectStarPlayer{
+    -fx-background-image: url("/Images/Backgrounds/Board.png");
+    -fx-background-size: 1280px 720 px;
+}
 
+.toggle-button_bg{
+    -fx-background-image: url("/Images/Backgrounds/Board.png");
+    -fx-font-family: "Bangers";
+}
 
+.selectGodButton:selected{
+    -fx-border-color: yellow;
+    -fx-border-width: 3px;
+    -fx-scale-y: 0.95;
+    -fx-scale-x: 0.95;
+}
 
+.bg_gods
+{
+    -fx-background-image: url("/Images/Backgrounds/SantoriniBoard.png");
+    -fx-background-size: contain;
+    -fx-background-repeat: no-repeat;
+    -fx-background-position: center;
+}
 
 
 

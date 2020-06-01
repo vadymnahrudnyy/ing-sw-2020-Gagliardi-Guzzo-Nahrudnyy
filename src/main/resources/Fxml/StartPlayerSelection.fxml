@@ -1,63 +1,80 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.geometry.*?>
-<?import javafx.scene.control.*?>
-<?import javafx.scene.image.*?>
-<?import javafx.scene.layout.*?>
+<?import java.net.URL?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ToggleButton?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
 
-<StackPane xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1">
+<StackPane fx:id="mainPane" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.BoardController">
+   <stylesheets><URL value="@../Style.css" /></stylesheets>
    <children>
-      <Region opacity="0.3" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" />
-      <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0">
+      <Region opacity="0.2" prefHeight="720.0" prefWidth="1280.0" style="-fx-background-color: black;" styleClass="bg_gods">
+         <effect>
+            <GaussianBlur radius="11.0" />
+         </effect></Region>
+      <BorderPane fx:id="selectPlayerBorderPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="720.0" prefWidth="1280.0">
          <center>
-            <HBox alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="550.0" prefWidth="1280.0" spacing="40.0" BorderPane.alignment="CENTER">
+            <HBox fx:id="hBox" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" prefHeight="550.0" prefWidth="1280.0" spacing="40.0" BorderPane.alignment="CENTER">
                <children>
-                  <StackPane alignment="TOP_CENTER" prefHeight="550.0" prefWidth="330.0">
+                  <StackPane fx:id="firstPlayer" alignment="TOP_CENTER" prefHeight="550.0" prefWidth="330.0">
                      <children>
-                        <ToggleButton alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="500.0" prefWidth="330.0" text="ToggleButton" StackPane.alignment="TOP_CENTER" />
-                        <ImageView fitHeight="500.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../Images/toggleButtonGods/Hera.png" />
-                           </image>
-                        </ImageView>
-                        <Label prefHeight="50.0" prefWidth="330.0" style="-fx-alignment: center;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER" />
+                        <ToggleButton fx:id="firstButton" alignment="TOP_CENTER" mnemonicParsing="false" prefHeight="470.0" prefWidth="310.0" styleClass="selectGodButton" StackPane.alignment="TOP_CENTER" />
+                        <Label fx:id="firstLabel" prefHeight="55.0" prefWidth="330.0" style="-fx-alignment: center;" styleClass="firstPlayerUsername" textAlignment="CENTER" textFill="#e8e2cf" StackPane.alignment="BOTTOM_CENTER">
+                           <StackPane.margin>
+                              <Insets bottom="10.0" />
+                           </StackPane.margin>
+                        </Label>
                      </children>
                   </StackPane>
-                  <StackPane alignment="TOP_CENTER" prefHeight="550.0" prefWidth="330.0">
+                  <StackPane fx:id="secondPlayer" alignment="TOP_CENTER" prefHeight="550.0" prefWidth="330.0">
                      <children>
-                        <ToggleButton mnemonicParsing="false" prefHeight="500.0" prefWidth="330.0" text="ToggleButton" StackPane.alignment="TOP_CENTER" />
-                        <ImageView fitHeight="500.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true">
-                           <image>
-                              <Image url="@../Images/toggleButtonGods/Artemis.png" />
-                           </image>
-                        </ImageView>
-                        <Label prefHeight="50.0" prefWidth="330.0" style="-fx-alignment: center;" textAlignment="CENTER" StackPane.alignment="BOTTOM_CENTER" />
+                        <ToggleButton fx:id="secondButton" mnemonicParsing="false" prefHeight="470.0" prefWidth="310.0" styleClass="selectGodButton" StackPane.alignment="TOP_CENTER" />
+                        <Label fx:id="secondLabel" prefHeight="55.0" prefWidth="330.0" style="-fx-alignment: center;" styleClass="firstPlayerUsername" textAlignment="CENTER" textFill="#e8e2cf" StackPane.alignment="BOTTOM_CENTER">
+                           <StackPane.margin>
+                              <Insets bottom="10.0" />
+                           </StackPane.margin></Label>
                      </children>
                   </StackPane>
-                  <StackPane prefHeight="550.0" prefWidth="330.0">
+                  <StackPane fx:id="thirdPlayer" prefHeight="550.0" prefWidth="330.0">
                      <children>
-                        <ToggleButton mnemonicParsing="false" prefHeight="500.0" prefWidth="330.0" text="ToggleButton" StackPane.alignment="TOP_CENTER" />
-                        <ImageView fitHeight="500.0" fitWidth="330.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER">
-                           <image>
-                              <Image url="@../Images/toggleButtonGods/Hestia.png" />
-                           </image>
-                        </ImageView>
-                        <Label contentDisplay="CENTER" prefHeight="50.0" prefWidth="330.0" style="-fx-alignment: center;" StackPane.alignment="BOTTOM_CENTER" />
+                        <ToggleButton fx:id="thirdButton" mnemonicParsing="false" prefHeight="470.0" prefWidth="310.0" styleClass="selectGodButton" StackPane.alignment="TOP_CENTER" />
+                        <Label fx:id="thirdLabel" contentDisplay="CENTER" prefHeight="55.0" prefWidth="330.0" style="-fx-alignment: center;" styleClass="firstPlayerUsername" textFill="#e8e2cf" StackPane.alignment="BOTTOM_CENTER">
+                           <StackPane.margin>
+                              <Insets bottom="10.0" />
+                           </StackPane.margin></Label>
                      </children>
                   </StackPane>
                </children>
             </HBox>
          </center>
          <bottom>
-            <ImageView fitHeight="50.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" BorderPane.alignment="CENTER">
+            <ImageView fx:id="selectButton" fitWidth="250.0" onMouseClicked="#handleFirstPlayerSelection" pickOnBounds="true" preserveRatio="true" styleClass="button" BorderPane.alignment="CENTER">
                <BorderPane.margin>
-                  <Insets bottom="50.0" />
+                  <Insets bottom="10.0" />
                </BorderPane.margin>
                <image>
-                  <Image url="@../Images/Buttons/BluePressed.png" />
+                  <Image url="@../Images/Buttons/selectFirstPlayerButton.png" />
                </image>
             </ImageView>
          </bottom>
+         <top>
+            <Label text="SELECT FIRST PLAYER" textFill="#e8e2cf" BorderPane.alignment="CENTER">
+               <font>
+                  <Font size="22.0" />
+               </font>
+               <BorderPane.margin>
+                  <Insets top="10.0" />
+               </BorderPane.margin>
+            </Label>
+         </top>
       </BorderPane>
    </children>
 </StackPane>
