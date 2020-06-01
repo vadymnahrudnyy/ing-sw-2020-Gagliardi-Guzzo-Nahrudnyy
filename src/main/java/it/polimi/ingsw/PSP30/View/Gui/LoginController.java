@@ -72,6 +72,7 @@ public class LoginController {
         Client.setNumPlayer(3);
         Client.sendMessageToServer(new NumPlayersResponse(3));
 
+
     }
 
     public void handletwoPlayer(MouseEvent event) throws IOException {

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.effect.GaussianBlur?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Region?>
+<?import javafx.scene.layout.StackPane?>
+
+<StackPane fx:id="stackPane" prefHeight="400.0" prefWidth="600.0" stylesheets="@../Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.GodPowerController">
+   <children>
+      <ImageView fitHeight="400.0" fitWidth="700.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@../Images/Backgrounds/bg_modeselect.png" />
+         </image>
+         <effect>
+            <GaussianBlur />
+         </effect>
+      </ImageView>
+      <Region opacity="0.2" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" />
+      <ImageView fitHeight="150.0" fitWidth="400.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_CENTER">
+         <image>
+            <Image url="@../Images/Buttons/GodsPowerTitle.png" />
+         </image>
+         <StackPane.margin>
+            <Insets top="20.0" />
+         </StackPane.margin>
+      </ImageView>
+      <ImageView fitHeight="400.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+         <image>
+            <Image url="@../Images/Backgrounds/ps_curtain_left.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="400.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_RIGHT">
+         <image>
+            <Image url="@../Images/Backgrounds/ps_curtain_right.png" />
+         </image>
+      </ImageView>
+      <HBox fx:id="hBox" alignment="CENTER" spacing="30.0" StackPane.alignment="CENTER">
+         <children>
+            <ImageView fx:id="yesButton" fitHeight="200.0" fitWidth="250.0" onMouseClicked="#usePower" pickOnBounds="true" preserveRatio="true" styleClass="button">
+               <image>
+                  <Image url="@../Images/Buttons/YesButton.png" />
+               </image>
+            </ImageView>
+            <ImageView fx:id="noButton" fitHeight="150.0" fitWidth="250.0" onMouseClicked="#noPower" pickOnBounds="true" preserveRatio="true" styleClass="button">
+               <image>
+                  <Image url="@../Images/Buttons/NoButton.png" />
+               </image>
+            </ImageView>
+         </children>
+         <StackPane.margin>
+            <Insets top="50.0" />
+         </StackPane.margin>
+      </HBox>
+   </children>
+</StackPane>

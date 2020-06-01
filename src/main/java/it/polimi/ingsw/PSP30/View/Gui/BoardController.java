@@ -6,6 +6,7 @@ import it.polimi.ingsw.PSP30.Messages.*;
 
 
 import javafx.fxml.FXML;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.Scene;
 import java.io.IOException;
@@ -38,9 +39,8 @@ public class BoardController{
     @FXML private HBox hBox;
     @FXML private ImageView selectButton;
 
-    //load startPlayerSelection
-    //controllare se è playerUsername o opponent's username e imporre toggle username in base alla divinità
-
+    @FXML ImageView backButton2, backButton1, nextButton1, nextButton2;
+    private static Stage rulesStage;
 
     private static Cell[][] cell = new Cell[5][5];
     private static GridPane gridPane=new GridPane();
@@ -332,6 +332,88 @@ public class BoardController{
         messagesTag.setText("Select the space you want to build in");
     }
 
+    public void showInfoPane(MouseEvent mouseEvent) throws IOException {
+        rulesStage=new Stage();
+        rulesStage.initModality(Modality.APPLICATION_MODAL);
+        rulesStage.initOwner(GUI.getGameStage());
+        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard1.fxml"));
+        nextButton1=(ImageView) stackPane.getChildren().get(1);
+        nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                rulesScene2(rulesStage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        Scene scene = new Scene(stackPane);
+        rulesStage.setScene(scene);
+        rulesStage.show();
+    }
+
+
+    /**
+     * This method show the "Power Rules" of the Info&Rules page and manages mouse click on next button.
+     */
+    public void rulesScene1(Stage stage) throws IOException {
+        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard1.fxml"));
+        nextButton1=(ImageView) stackPane.getChildren().get(1);
+        nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                rulesScene2(rulesStage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        Scene scene = new Scene(stackPane);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+
+    /**
+     * This method show the glossary of the Info&Rules page and manages mouse click on next and back button.
+     */
+    public void rulesScene2(Stage stage) throws IOException {
+        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard2.fxml"));
+        nextButton2=(ImageView) stackPane.getChildren().get(1);
+        backButton2=(ImageView) stackPane.getChildren().get(2);
+        nextButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                rulesScene3(rulesStage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+
+        backButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                rulesScene1(rulesStage);
+            }
+            catch (IOException e) {
+                e.printStackTrace();
+            } });
+        Scene scene = new Scene(stackPane);
+        stage.setScene(scene);
+        stage.show();
+    }
+
+    /**
+     * This method show the "How to Play" of the Info&Rules page and manages mouse click on back button.
+     */
+    public void rulesScene3(Stage stage) throws IOException {
+        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard3.fxml"));
+        backButton1=(ImageView) stackPane.getChildren().get(1);
+        backButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                rulesScene2(rulesStage);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
+        Scene dialogScene = new Scene(stackPane);
+        stage.setScene(dialogScene);
+        stage.show();
+    }
 
 
     public static class Cell extends StackPane {
@@ -341,7 +423,6 @@ public class BoardController{
         public Cell(int X, int Y, Space space) {
             coordinateX = X+1;
             coordinateY = Y+1;
-            this.setStyle("-fx-border-color: black");
             this.setPrefSize(107, 107);
             Pane buildingPane = new Pane(), workerPane = new Pane(), selectedCellPane = new Pane();
             StackPane cellStack = new StackPane();

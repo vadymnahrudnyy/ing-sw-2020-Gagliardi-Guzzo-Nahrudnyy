@@ -30,6 +30,8 @@ import java.util.ArrayList;
     GodsController godsController = new GodsController();
     BoardController boardController = new BoardController();
     LobbyController lobbyController = new LobbyController();
+    AlertsController alertsController=new AlertsController();
+    GodPowerController godPowerController = new GodPowerController();
 
     @FXML ImageView backButton2, backButton1, nextButton1, nextButton2;
 
@@ -187,6 +189,8 @@ import java.util.ArrayList;
 
     @Override
     public void errorServerAddress() {
+        Runnable serverAddressError = () -> { alertsController.showServerAddressError();};
+        Platform.runLater(serverAddressError);
 
     }
 
@@ -212,7 +216,8 @@ import java.util.ArrayList;
 
     @Override
     public void usernameError() {
-
+        Runnable usernameError = () -> { alertsController.showUsernameError();};
+        Platform.runLater(usernameError);
     }
 
     @Override
@@ -292,10 +297,7 @@ import java.util.ArrayList;
     public void playerError() { }
 
     @Override
-    public void chooseFirstPlayer() {
-
-
-    }
+    public void chooseFirstPlayer() { }
 
 
 
@@ -312,9 +314,7 @@ import java.util.ArrayList;
     }
 
     @Override
-    public void godChoiceError() {
-
-    }
+    public void godChoiceError() { }
 
     @Override
     public void showLastGod(ArrayList<God> godList, God lastGod) {
@@ -335,7 +335,8 @@ import java.util.ArrayList;
 
     @Override
     public void workerChosenError() {
-
+        Runnable chooseWorkerError = () -> alertsController.showWorkerSelectedError();
+        Platform.runLater(chooseWorkerError);
     }
 
     @Override
@@ -356,23 +357,18 @@ import java.util.ArrayList;
 
     @Override
     public void otherWorker() {
-
+        Runnable workerCannotMoveError = () -> alertsController.showWorkerCannotMoveError();
+        Platform.runLater(workerCannotMoveError);
     }
 
     @Override
-    public void moveOtherWorker(boolean[][] allowedMoves) {
-
-    }
+    public void moveOtherWorker(boolean[][] allowedMoves) { }
 
     @Override
-    public void printPossibleAction(boolean[][] allowed) {
-
-    }
+    public void printPossibleAction(boolean[][] allowed) { }
 
     @Override
-    public void changeWorker(boolean canChangeWorker) {
-
-    }
+    public void changeWorker(boolean canChangeWorker) { }
 
     @Override
     public void buildTower(boolean[][] allowedBuild) {
@@ -387,28 +383,27 @@ import java.util.ArrayList;
 
     @Override
     public void askPowerUsage() {
-
+        Runnable powerStage = () -> {godPowerController.showScene();};
+        Platform.runLater(powerStage);
     }
 
     @Override
-    public void chooseRemoval(boolean[][] allowedToRemove) {
-
-    }
+    public void chooseRemoval(boolean[][] allowedToRemove) { }
 
     @Override
     public void noPossibleMoves() {
-
+        Runnable noPossibleMovesError = () -> alertsController.showNoPossibleMovesError();
+        Platform.runLater(noPossibleMovesError);
     }
 
     @Override
     public void invalidMove() {
-
+        Runnable invalidMoveError = () -> alertsController.showInvalidMoveError();
+        Platform.runLater(invalidMoveError);
     }
 
     @Override
-    public void printCurrentStatus(Game updatedGame) {
-
-    }
+    public void printCurrentStatus(Game updatedGame) {}
 
     @Override
     public void printCurrentBoard(Game updatedGame) {

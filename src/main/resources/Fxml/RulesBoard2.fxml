@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.image.Image?>
+<?import javafx.geometry.Insets?>
+<StackPane stylesheets="@../Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.BoardController">
+<children>
+    <ImageView fitHeight="800.0" pickOnBounds="true" preserveRatio="true">
+        <image>
+            <Image url="@../Images/Backgrounds/Glossary.png" />
+        </image>
+    </ImageView>
+    <ImageView fx:id="nextButton2" fitHeight="60.0" fitWidth="89.0" pickOnBounds="true" preserveRatio="true" styleClass="button" StackPane.alignment="CENTER_RIGHT">
+        <image>
+            <Image url="@../Images/Backgrounds/btn_next.png" />
+        </image>
+        <StackPane.margin>
+            <Insets right="50.0" />
+        </StackPane.margin>
+    </ImageView>
+    <ImageView fx:id="backButton1" fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="button" StackPane.alignment="CENTER_LEFT">
+        <image>
+            <Image url="@../Images/Backgrounds/btn_back.png" />
+        </image>
+        <StackPane.margin>
+            <Insets left="40.0" />
+        </StackPane.margin>
+    </ImageView>
+</children>
+</StackPane>
