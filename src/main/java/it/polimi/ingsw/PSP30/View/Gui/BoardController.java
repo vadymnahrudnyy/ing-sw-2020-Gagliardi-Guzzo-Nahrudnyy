@@ -1,21 +1,23 @@
 package it.polimi.ingsw.PSP30.View.Gui;
 
-import it.polimi.ingsw.PSP30.Client.Client;
-import it.polimi.ingsw.PSP30.Messages.*;
 import it.polimi.ingsw.PSP30.Model.*;
 import it.polimi.ingsw.PSP30.View.GUI;
+import it.polimi.ingsw.PSP30.Messages.*;
+
+
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Pos;
+import javafx.stage.Stage;
 import javafx.scene.Scene;
+import java.io.IOException;
+import java.util.ArrayList;
+import javafx.geometry.Pos;
+import javafx.scene.layout.*;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.layout.*;
-import javafx.stage.Stage;
 import javafx.scene.input.MouseEvent;
-import java.io.IOException;
-import java.util.ArrayList;
+import it.polimi.ingsw.PSP30.Client.Client;
 
 
 public class BoardController{
@@ -51,7 +53,7 @@ public class BoardController{
     private static final ArrayList<String> selectedGods = new ArrayList<>();
 
     public void initializeBoard(GameStartNotification message) {
-        GUI.setGameStage(new Stage());
+        if (GUI.getGameStage() == null) GUI.setGameStage(new Stage());
         GUI.getGameStage().setResizable(false);
         try{
             mainPane = FXMLLoader.load(BoardController.class.getClassLoader().getResource("Fxml/Board.fxml"));

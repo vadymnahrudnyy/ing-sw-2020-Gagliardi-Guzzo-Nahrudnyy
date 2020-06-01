@@ -29,7 +29,11 @@ public class Server {
         } catch (IOException e) {
             System.out.println("Server initialization failed: Server will shutdown");
         }
-            //noinspection InfiniteLoopStatement
+
+        Thread lobbyStatusNotifierThread = new Thread(new Lobby.LobbyStatusNotifier());
+        lobbyStatusNotifierThread.start();
+
+        //noinspection InfiniteLoopStatement
         while (true) {
             try{
                 Socket newClient = server.accept();

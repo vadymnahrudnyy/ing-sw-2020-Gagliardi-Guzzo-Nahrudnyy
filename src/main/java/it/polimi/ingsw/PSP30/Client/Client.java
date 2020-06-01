@@ -209,7 +209,7 @@ public class Client {
      * in order to inform if it isn't full yet
      */
     private static void lobbyStatusNotification(Message message) {
-        ui.printLobbyStatus(((LobbyStatusNotification)message).getSelectedLobby(),((LobbyStatusNotification)message).getSlotsOccupied());
+        ui.printLobbyStatus(((LobbyStatusNotification)message).getSelectedLobby(),((LobbyStatusNotification)message).getSlotsOccupied(),((LobbyStatusNotification)message).getPlayersInLobby());
     }
 
 

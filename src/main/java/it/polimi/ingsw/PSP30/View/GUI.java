@@ -2,7 +2,6 @@ package it.polimi.ingsw.PSP30.View;
 
 import it.polimi.ingsw.PSP30.Client.Client;
 import it.polimi.ingsw.PSP30.Messages.GameStartNotification;
-import it.polimi.ingsw.PSP30.Messages.LobbyStatusNotification;
 import it.polimi.ingsw.PSP30.Model.Game;
 import it.polimi.ingsw.PSP30.Model.God;
 import it.polimi.ingsw.PSP30.Model.Player;
@@ -30,6 +29,7 @@ import java.util.ArrayList;
     private static Stage rulesStage;
     GodsController godsController = new GodsController();
     BoardController boardController = new BoardController();
+    LobbyController lobbyController = new LobbyController();
 
     @FXML ImageView backButton2, backButton1, nextButton1, nextButton2;
 
@@ -236,7 +236,20 @@ import java.util.ArrayList;
 
 
     @Override
-    public void printLobbyStatus(int selectedLobby, int slotsOccupied) {
+    public void printLobbyStatus(int selectedLobby, int slotsOccupied, ArrayList<String> usernames) {
+        Runnable showLobby = () ->{
+            try {
+                if (primaryStage != null) primaryStage.close();
+                if (gameStage == null) {
+                    gameStage = new Stage();
+                    gameStage.setResizable(false);
+                }
+                lobbyController.showLobby(usernames);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
+        Platform.runLater(showLobby);
     }
 
     @Override

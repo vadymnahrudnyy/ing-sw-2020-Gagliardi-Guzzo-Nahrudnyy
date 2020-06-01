@@ -89,7 +89,7 @@ public class CLI implements UI {
     }
 
     @Override
-    public void printLobbyStatus(int selectedLobby, int slotsOccupied) {
+    public void printLobbyStatus(int selectedLobby, int slotsOccupied, ArrayList<String> usernames) {
         System.out.println("Lobby and number of players currently in: ");
     }
 

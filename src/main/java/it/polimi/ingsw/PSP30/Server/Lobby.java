@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP30.Server;
 
+import it.polimi.ingsw.PSP30.Messages.LobbyStatusNotification;
 import it.polimi.ingsw.PSP30.Messages.UsernameTakenError;
 
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ public class Lobby {
      * Method getTwoPlayersLobby
      * @return the list of players waiting for a two players game.
      */
-    private synchronized ArrayList<String> getTwoPlayersLobby(){
+    protected static synchronized ArrayList<String> getTwoPlayersLobby(){
         return twoPlayersLobby;
     }
     /**
@@ -30,7 +31,7 @@ public class Lobby {
      * @since version 2.0
      * @return the list of virtual views of the players in the two players lobby.
      */
-    private synchronized ArrayList<VirtualView> getTwoPlayersLobbyVirtualViews(){
+    protected static synchronized ArrayList<VirtualView> getTwoPlayersLobbyVirtualViews(){
         return twoPlayersLobbyVirtualViews;
     }
     /**
@@ -64,7 +65,7 @@ public class Lobby {
      * Method getThreePlayersLobby
      * @return the list of players waiting for a three players game.
      */
-    private synchronized ArrayList<String> getThreePlayersLobby() {
+    protected static synchronized ArrayList<String> getThreePlayersLobby() {
         return threePlayersLobby;
     }
     /**
@@ -72,7 +73,7 @@ public class Lobby {
      * @since version 2.0
      * @return the list of virtual views of the players in the three players lobby.
      */
-    private synchronized ArrayList<VirtualView> getThreePlayersLobbyVirtualViews(){
+    protected static synchronized ArrayList<VirtualView> getThreePlayersLobbyVirtualViews(){
         return threePlayersLobbyVirtualViews;
     }
     /**
@@ -206,5 +207,22 @@ public class Lobby {
     protected synchronized void removePlayerFromLobby(VirtualView client, String username,Thread viewThread){
         if (getTwoPlayersLobby().contains(username))removePlayerFromTwoPlayersLobby(username,client);
         else removePlayerFromThreePlayersLobby(username,client);
+    }
+
+
+    protected static class LobbyStatusNotifier implements Runnable{
+        @Override
+        public void run() {
+            while(true){
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                System.out.println("Invio stato della lobby");
+                for (VirtualView view:twoPlayersLobbyVirtualViews) view.sendMessage(new LobbyStatusNotification(2,twoPlayersLobby.size(),twoPlayersLobby));
+                for (VirtualView view: threePlayersLobbyVirtualViews) view.sendMessage(new LobbyStatusNotification(3,threePlayersLobby.size(),threePlayersLobby));
+            }
+        }
     }
 }

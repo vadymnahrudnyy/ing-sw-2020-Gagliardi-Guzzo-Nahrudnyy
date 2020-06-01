@@ -52,7 +52,7 @@ public interface UI {
      * @param selectedLobby number of the lobby, it can be 2 or 3 depending on the selected players
      * @param slotsOccupied how many players are in the lobby at the moment
      */
-    void printLobbyStatus(int selectedLobby, int slotsOccupied);
+    void printLobbyStatus(int selectedLobby, int slotsOccupied,ArrayList<String> usernames);
 
     /**
      *  This method notifies the game can start (the lobby is full)

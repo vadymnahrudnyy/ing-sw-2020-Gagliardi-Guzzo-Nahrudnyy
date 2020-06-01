@@ -29,12 +29,12 @@
                         <Image url="@../Images/Backgrounds/hourglassGlow_1.png" />
                      </image>
                   </ImageView>
-                  <ImageView fitHeight="88.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" styleClass="select" StackPane.alignment="CENTER">
+                  <ImageView fitHeight="88.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
                      <image>
                         <Image url="@../Images/Backgrounds/om_nameTagActive.png" />
                      </image>
                   </ImageView>
-                  <Label fx:id="playerUsername" contentDisplay="CENTER" textAlignment="CENTER" textFill="#e8e2cf" StackPane.alignment="CENTER">
+                  <Label fx:id="playerUsernameLabel" contentDisplay="CENTER" textAlignment="CENTER" textFill="#e8e2cf" StackPane.alignment="CENTER">
                      <StackPane.margin>
                         <Insets bottom="5.0" />
                      </StackPane.margin>
@@ -58,7 +58,7 @@
                               <Insets />
                            </StackPane.margin>
                         </ImageView>
-                        <ImageView fitHeight="88.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" styleClass="select" StackPane.alignment="CENTER">
+                        <ImageView fitHeight="88.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
                            <image>
                               <Image url="@../Images/Backgrounds/om_nameTagActive.png" />
                            </image>
@@ -66,7 +66,7 @@
                               <Insets />
                            </StackPane.margin>
                         </ImageView>
-                        <Label fx:id="firstOpponentUsername" textFill="#e8e2cf" StackPane.alignment="CENTER" />
+                        <Label fx:id="firstOpponentLabel" textFill="#e8e2cf" StackPane.alignment="CENTER" />
                      </children>
                   </StackPane>
                   <StackPane fx:id="secondOpponentPlayer" layoutX="10.0" layoutY="159.0" prefHeight="150.0" prefWidth="200.0">
@@ -79,7 +79,7 @@
                               <Insets />
                            </StackPane.margin>
                         </ImageView>
-                        <ImageView fx:id="secondOpponentTag" fitHeight="88.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" styleClass="select" StackPane.alignment="CENTER">
+                        <ImageView fx:id="secondOpponentTag" fitHeight="88.0" fitWidth="300.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
                            <image>
                               <Image url="@../Images/Backgrounds/om_nameTagActive.png" />
                            </image>
@@ -87,7 +87,7 @@
                               <Insets />
                            </StackPane.margin>
                         </ImageView>
-                        <Label fx:id="secondOpponentUsername" textFill="#e8e2cf" StackPane.alignment="CENTER" />
+                        <Label fx:id="secondOpponentLabel" textFill="#e8e2cf" StackPane.alignment="CENTER" />
                      </children>
                   </StackPane>
                </children>
