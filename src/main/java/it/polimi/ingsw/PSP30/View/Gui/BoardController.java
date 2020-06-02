@@ -106,7 +106,7 @@ public class BoardController{
             for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
                 Space currentSpace = board.getSpace(X+1,Y+1);
                 cell[X][Y]=new Cell(X, Y, currentSpace);
-                gridPane.add(cell[X][Y],Y,X);
+                gridPane.add(cell[X][Y],X,Y);
             }
         mainPane.getChildren().add(gridPane);
         gridPane.setAlignment(Pos.CENTER);
@@ -147,7 +147,7 @@ public class BoardController{
             for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
                 Space currentSpace = currentBoard.getSpace(X+1,Y+1);
                 cell[X][Y] = new Cell(X, Y, currentSpace);
-                newGridPane.add(cell[X][Y],Y,X);
+                newGridPane.add(cell[X][Y],X,Y);
             }
         mainPane.getChildren().remove(gridPane);
         mainPane.getChildren().add(newGridPane);

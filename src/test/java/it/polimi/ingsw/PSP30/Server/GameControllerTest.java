@@ -60,11 +60,11 @@ public class GameControllerTest {
         testGame = new GameController(testViewsList,2);
         WorkerPositionResponse testMessage = new WorkerPositionResponse(2,3);
         boolean[][]testMoves = testGame.initializeMatrix(false);
-        assertFalse(testGame.verifyValidPosition(testMoves,testMessage));
+        assertFalse(testGame.verifyValidPosition(testMoves,testMessage.getCoordinateX(),testMessage.getCoordinateY()));
         testMoves[1][1] = testMoves[2][3]= true;
-        assertFalse(testGame.verifyValidPosition(testMoves,testMessage));
+        assertFalse(testGame.verifyValidPosition(testMoves,testMessage.getCoordinateX(),testMessage.getCoordinateY()));
         testMoves[1][2] = true;
-        assertTrue(testGame.verifyValidPosition(testMoves,testMessage));
+        assertTrue(testGame.verifyValidPosition(testMoves,testMessage.getCoordinateX(),testMessage.getCoordinateY()));
     }
 
     @Test

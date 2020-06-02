@@ -345,7 +345,9 @@ public class CLI implements UI {
         System.out.println("");
         for(int i=0; i<updatedGame.getPlayers().length; i++) {
             String playerUsername = (updatedGame.getPlayers())[i].getUsername();
-            String godName = (updatedGame.getPlayers())[i].getGod().getName();
+            God playerGod = (updatedGame.getPlayers())[i].getGod();
+            String godName = null;
+            if (playerGod!= null) godName = playerGod.getName();
             int workersColor = (updatedGame.getPlayers())[i].getUserID();
             if (workersColor == 1)
                 color = "red";

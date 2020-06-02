@@ -23,7 +23,7 @@ import java.util.ArrayList;
     /**
     * GUI class implements the UI interface and defines all the features for play with graphic user interface
     */
-    public class GUI implements UI,Runnable{
+    public class  GUI implements UI,Runnable{
     private static Stage primaryStage;
     private static Stage gameStage;
     private static Stage rulesStage;

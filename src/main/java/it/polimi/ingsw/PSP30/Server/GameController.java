@@ -7,35 +7,38 @@ import it.polimi.ingsw.PSP30.Model.*;
 import java.util.ArrayList;
 
 /**
- * GameController class implement the Logic level of the game.
+ * GameController is a runnable class implementing the game itself. An instance of GameController is used for only one game.
+ * Running in a separate thread it allows to handle multiple games without interference.
  * @author Vadym Nahrudnyy
- * @version 1.0
+ * @version 2.0
  */
 class GameController implements Runnable {
 
-    private Worker moveWorker;
+
     private final Game currentGame;
     private Message receivedMessage;
-    private boolean MoveAllowed,BuildAllowed;
+    private boolean moveAllowed,buildAllowed;
     private final ArrayList<God> gameGodList;
     private final ArrayList<Power> powerList;
     private boolean running = true;
-    private final VirtualView[] virtualViewsList;
-    private static final int RESPONSE_MESSAGE_WAIT_TIMEOUT = 20000;
+
+    private Worker moveWorker;
     private Player currentPlayer;
     private VirtualView currentClient;
+    private final VirtualView[] virtualViewsList;
+
+    private static final int RESPONSE_MESSAGE_WAIT_TIMEOUT = 20000; //Maximum time the thread will wait for a new message.
 
 
     public GameController(ArrayList<VirtualView> virtualViews, int numPlayers) {
-
         powerList = Server.getPowerList();
         virtualViewsList = new VirtualView[numPlayers];
         Player[] playersArray = new Player[numPlayers];
         for(int i=0;i<numPlayers;++i) virtualViewsList[i] = virtualViews.get(i);
         for (int i=0;i<numPlayers;++i) {playersArray[i] = new Player(virtualViewsList[i].getUsername(),i+1,null,null);}
         currentGame = new Game(numPlayers,playersArray[0],playersArray);
-        if(numPlayers == 3) gameGodList = threePlayerGodsListInitialization();
-        else gameGodList = Server.getGodsList();
+        if (numPlayers == 2) gameGodList = Server.getGodsList();
+        else gameGodList = threePlayerGodsListInitialization();
     }
 
 
@@ -58,7 +61,7 @@ class GameController implements Runnable {
 
     private void turnInitializer(){
         currentGame.setCurrentPhase(TurnPhase.START);
-        MoveAllowed = BuildAllowed = true;
+        moveAllowed = buildAllowed = true;
         currentPlayer = currentGame.getCurrentPlayer();
         currentClient = getVirtualViewByUsername(currentPlayer.getUsername());
         currentPlayer.getWorkers()[0].setMovedUp(false);
@@ -93,7 +96,7 @@ class GameController implements Runnable {
                         client.sendMessage(new MoveRequest(allowedMoves,false));
                         waitValidMessage(client,new int[]{Message.MOVE_RESPONSE});
                         moveWorker.changePosition(gameBoard.getSpace(((MoveResponse)receivedMessage).getDestCoordinateX(),((MoveResponse)receivedMessage).getDestCoordinateY()));
-                        MoveAllowed = false;
+                        moveAllowed = false;
                         notifyGameStatusToAll();
                     }
                 }
@@ -123,7 +126,7 @@ class GameController implements Runnable {
                     else {
                         currentClient.sendMessage(new NoPossibleMoveError());
                         removePlayerFromGame(currentPlayer);
-                        BuildAllowed = false;
+                        buildAllowed = false;
                         break;
                     }
                 }
@@ -155,7 +158,10 @@ class GameController implements Runnable {
                         moveWorker.setMovedUp(true);
                         if (currentPlayer.getGod().getSinglePower(0)==Power.OPPONENTS_NOT_MOVE_UP_POWER) currentGame.setAthenaMovedUp(true);
                     }
-                    if((((destSpace.getHeight()==Space.DOME_LEVEL-1)&&(moveWorker.isMovedUp()))||((currentPlayer.getGod().getSinglePower(0)==Power.TWO_BLOCK_FALL_VICTORY_POWER)&&(fromSpace.getHeight()-destSpace.getHeight() >= 2)))&&((!opponentHasPower(Power.PERIMETER_VICTORY_DENY_POWER))||(!destSpace.isPerimeter()))) victory(currentPlayer.getUsername());
+                    if((((destSpace.getHeight()==Space.DOME_LEVEL-1)&&(moveWorker.isMovedUp()))||((currentPlayer.getGod().getSinglePower(0)==Power.TWO_BLOCK_FALL_VICTORY_POWER)&&(fromSpace.getHeight()-destSpace.getHeight() >= 2)))&&((!opponentHasPower(Power.PERIMETER_VICTORY_DENY_POWER))||(!destSpace.isPerimeter()))) {
+                        victory(currentPlayer.getUsername());
+                        break;
+                    }
 
                     if (actualGodPower.getPowerID() == Power.DOUBLE_MOVE_POWER) ArtemisPower(fromSpace);
                 }
@@ -163,6 +169,7 @@ class GameController implements Runnable {
             }
         }while(!moveMade);
     }
+
 
 
     /**
@@ -177,12 +184,12 @@ class GameController implements Runnable {
         turnStart(currentClient,currentBoard);
 
         currentGame.nextTurnPhase();
-        if (MoveAllowed){
+        if (moveAllowed){
             Move();
         }
         //BUILD PHASE
         currentGame.setCurrentPhase(TurnPhase.BUILD);
-        if (BuildAllowed) Build(currentClient,currentGodPower,moveWorker);
+        if (buildAllowed) Build(currentClient,currentGodPower,moveWorker);
         if ((opponentHasPower(Power.FIVE_TOWER_VICTORY_POWER)||currentGodPower.getPowerID()==Power.FIVE_TOWER_VICTORY_POWER)&&(currentBoard.getNumberCompleteTowers()>=5)){
             for (Player player:currentGame.getPlayers())
                 if (player.getGod().getSinglePower(0)==Power.FIVE_TOWER_VICTORY_POWER) victory(player.getUsername());
@@ -245,10 +252,15 @@ class GameController implements Runnable {
     }
 
     private void Build(VirtualView client,Power actualPower,Worker selectedWorker){
+        boolean validBuildReceived;
         Space workerPosition = selectedWorker.getWorkerPosition();
         boolean[][] allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());
-        client.sendMessage(new BuildRequest(allowedBuild));
-        waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});
+        do{
+            client.sendMessage(new BuildRequest(allowedBuild));
+            waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});
+            validBuildReceived = verifyValidPosition(allowedBuild,((BuildResponse) receivedMessage).getBuildCoordinateX(),(((BuildResponse) receivedMessage).getBuildCoordinateY()));
+        }while (!validBuildReceived);
+
         Space toBuildSpace = currentGame.getGameBoard().getSpace(((BuildResponse) receivedMessage).getBuildCoordinateX(),((BuildResponse) receivedMessage).getBuildCoordinateY());
         buildInSpace(client,toBuildSpace,actualPower);
         notifyGameStatusToAll();
@@ -270,17 +282,14 @@ class GameController implements Runnable {
                     }
                     break;
                 case Power.NON_PERIMETER_DOUBLE_BUILD:
-                    allowedBuild = checkPossibleBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());
-                    int tempX = 0, tempY;
-                    for (tempY = 0; tempY < IslandBoard.TABLE_DIMENSION; ++tempY) allowedBuild[tempX][tempY] = false;
-                    for (tempX = 0, tempY = IslandBoard.TABLE_DIMENSION - 1; tempX < IslandBoard.TABLE_DIMENSION; ++tempX) allowedBuild[tempX][tempY] = false;
-                    for (tempX = tempY = IslandBoard.TABLE_DIMENSION - 1; tempY > 0; --tempY) allowedBuild[tempX][tempY] = false;
-                    for (tempX = IslandBoard.TABLE_DIMENSION - 1,tempY = 0; tempX > 0; --tempX) allowedBuild[tempX][tempY] = false;
+                    allowedBuild = checkHestiaAllowedBuilds(workerPosition.getCoordinateX(),workerPosition.getCoordinateY());
                     if(workerCanMakeMove(allowedBuild))secondBuildMake(allowedBuild,client);
                     break;
             }
         }
     }
+
+
 
 
     //DOUBLE CHECKED
@@ -388,7 +397,7 @@ class GameController implements Runnable {
             do{
                 currentClient.sendMessage(new WorkerPositionRequest(1,allowedPositions));
                 waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});
-                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
+                validPosition = verifyValidPosition(allowedPositions,((WorkerPositionResponse) receivedMessage).getCoordinateX(),(((WorkerPositionResponse) receivedMessage).getCoordinateY()));
             }while(!validPosition);
             allowedPositions[((WorkerPositionResponse) receivedMessage).getCoordinateX()-1][((WorkerPositionResponse) receivedMessage).getCoordinateY()-1] = false;
             createWorker(1,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
@@ -396,7 +405,7 @@ class GameController implements Runnable {
             do{
                 currentClient.sendMessage(new WorkerPositionRequest(2,allowedPositions));
                 waitValidMessage(currentClient,new int[]{Message.WORKER_POSITION_RESPONSE});
-                validPosition = verifyValidPosition(allowedPositions,(WorkerPositionResponse)receivedMessage);
+                validPosition = verifyValidPosition(allowedPositions,((WorkerPositionResponse) receivedMessage).getCoordinateX(),(((WorkerPositionResponse) receivedMessage).getCoordinateY()));
             }while(!validPosition);
             allowedPositions[((WorkerPositionResponse) receivedMessage).getCoordinateX()-1][((WorkerPositionResponse) receivedMessage).getCoordinateY()-1] = false;
             createWorker(2,currentGame.getCurrentPlayer(),((WorkerPositionResponse) receivedMessage).getCoordinateX(),((WorkerPositionResponse) receivedMessage).getCoordinateY());
@@ -534,13 +543,13 @@ class GameController implements Runnable {
      * Checks if the the client has chosen a valid position. This is first checked in the client in order to ensure
      * better performance and reduce socket load and double checked on the server for ensuring security.
      * @param allowedPositions matrix of allowed positions.
-     * @param response Message received from the client
+     * @param receivedX Coordinate X received from the client.
+     * @param receivedY Coordinate Y received from the client.
      * @return boolean value indicating with "true" that a valid move has been chosen by the client. false otherwise.
      */
-    protected boolean verifyValidPosition(boolean[][] allowedPositions,WorkerPositionResponse response){
-        int coordinateX = response.getCoordinateX();
-        int coordinateY = response.getCoordinateY();
-        return allowedPositions[coordinateX - 1][coordinateY - 1];
+    protected boolean verifyValidPosition(boolean[][] allowedPositions,int receivedX,int receivedY){
+        if (receivedX <= 0 || receivedX > IslandBoard.TABLE_DIMENSION || receivedY <= 0 || receivedY > IslandBoard.TABLE_DIMENSION) return false;
+        else return allowedPositions[receivedX - 1][receivedY - 1];
     }
     /**
      * Method used during the setup of the game. Create a worker instance in the position indicated by the player
@@ -690,7 +699,7 @@ class GameController implements Runnable {
                     running = false;
                 }
             } catch (InterruptedException e) {
-                System.out.println("");
+                e.printStackTrace();
             }
         } while (!receivedValidMessage);
     }
@@ -728,6 +737,7 @@ class GameController implements Runnable {
                 if (allowedMoves[destX-1][destY-1]){
                     moveWorker.changePosition(currentGame.getGameBoard().getSpace(destX,destY));
                     moveMade = true;
+                    notifyGameStatusToAll();
                 }
                 else {
                     currentClient.sendMessage(new InvalidMoveError());
@@ -747,6 +757,23 @@ class GameController implements Runnable {
         boolean[][] allowedMoves = checkPossibleMoves(currentSpace.getCoordinateX(),currentSpace.getCoordinateY());
         allowedMoves[previousSpace.getCoordinateX()-1][previousSpace.getCoordinateY()-1] = false;
         return allowedMoves;
+    }
+
+    /**
+     * Method used to build the matrix of positions where a player having Hestia can build the second time (using the power of the card)
+     * @param workerX X coordinate of the moved worker.
+     * @param workerY Y coordinate of the moved worker.
+     * @return boolean matrix with "true" in positions the worker can build.
+     */
+    protected boolean[][] checkHestiaAllowedBuilds(int workerX, int workerY){
+        boolean[][] allowedBuild = checkPossibleBuilds(workerX,workerY);//matrix is built using the regular rules of the game
+        //now the matrix perimeter values are set to false;
+        int tempX = 0, tempY;
+        for (tempY = 0; tempY < IslandBoard.TABLE_DIMENSION; ++tempY) allowedBuild[tempX][tempY] = false;
+        for (tempX = 0, tempY = IslandBoard.TABLE_DIMENSION - 1; tempX < IslandBoard.TABLE_DIMENSION; ++tempX) allowedBuild[tempX][tempY] = false;
+        for (tempX = tempY = IslandBoard.TABLE_DIMENSION - 1; tempY > 0; --tempY) allowedBuild[tempX][tempY] = false;
+        for (tempX = IslandBoard.TABLE_DIMENSION - 1,tempY = 0; tempX > 0; --tempX) allowedBuild[tempX][tempY] = false;
+        return allowedBuild;
     }
 
     /**
