@@ -65,8 +65,15 @@ public class BoardController{
         }
 
         messagesTag= (Label) mainPane.getChildren().get(6);
-        exitButton=(ImageView) mainPane.getChildren().get(1);
+        //exitButton=(ImageView) mainPane.getChildren().get(1);
         rulesButton=(ImageView) mainPane.getChildren().get(2);
+        rulesButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
+            try {
+                showInfoPane(event);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        });
         playerPane= (StackPane) mainPane.getChildren().get(4);
         playerGod=(ImageView) playerPane.getChildren().get(0);
         playerUsername=(Label) playerPane.getChildren().get(3);
@@ -106,7 +113,7 @@ public class BoardController{
             for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
                 Space currentSpace = board.getSpace(X+1,Y+1);
                 cell[X][Y]=new Cell(X, Y, currentSpace);
-                gridPane.add(cell[X][Y],X,Y);
+                gridPane.add(cell[X][Y],Y,X);
             }
         mainPane.getChildren().add(gridPane);
         gridPane.setAlignment(Pos.CENTER);
@@ -131,8 +138,8 @@ public class BoardController{
                     playerGod.setVisible(true);
                 }
                 else if (firstOpponent.equals(gamePlayer.getUsername())) {
-                firstOpponentGod.setImage(new Image(getClass().getResourceAsStream(selectGodImage(true, gamePlayer.getGod().getName()))));
-                firstOpponentGod.setVisible(true);
+                    firstOpponentGod.setImage(new Image(getClass().getResourceAsStream(selectGodImage(true, gamePlayer.getGod().getName()))));
+                    firstOpponentGod.setVisible(true);
                 }
                 else {
                     secondOpponentGod.setImage(new Image(getClass().getResourceAsStream(selectGodImage(true, gamePlayer.getGod().getName()))));
@@ -147,7 +154,7 @@ public class BoardController{
             for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
                 Space currentSpace = currentBoard.getSpace(X+1,Y+1);
                 cell[X][Y] = new Cell(X, Y, currentSpace);
-                newGridPane.add(cell[X][Y],X,Y);
+                newGridPane.add(cell[X][Y],Y,X);
             }
         mainPane.getChildren().remove(gridPane);
         mainPane.getChildren().add(newGridPane);
@@ -496,4 +503,5 @@ public class BoardController{
             allowedMovePane.setStyle("-fx-background-color: #49eeff; -fx-opacity: 0.5");
         }
     }
+
 }

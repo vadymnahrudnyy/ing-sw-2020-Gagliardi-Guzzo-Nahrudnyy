@@ -20,10 +20,10 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.ArrayList;
 
-    /**
-    * GUI class implements the UI interface and defines all the features for play with graphic user interface
-    */
-    public class  GUI implements UI,Runnable{
+/**
+ * GUI class implements the UI interface and defines all the features for play with graphic user interface
+ */
+public class GUI implements UI,Runnable{
     private static Stage primaryStage;
     private static Stage gameStage;
     private static Stage rulesStage;
@@ -96,7 +96,7 @@ import java.util.ArrayList;
 
     /**
      * This method show the "Power Rules" of the Info&Rules page and manages mouse click on next button.
-    */
+     */
     public void rulesScene1(Stage stage) throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene1.fxml"));
         nextButton1=(ImageView) stackPane.getChildren().get(1);
@@ -115,7 +115,7 @@ import java.util.ArrayList;
 
     /**
      * This method show the glossary of the Info&Rules page and manages mouse click on next and back button.
-    */
+     */
     public void rulesScene2(Stage stage) throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene2.fxml"));
         nextButton2=(ImageView) stackPane.getChildren().get(1);
@@ -142,7 +142,7 @@ import java.util.ArrayList;
 
     /**
      * This method show the "How to Play" of the Info&Rules page and manages mouse click on back button.
-    */
+     */
     public void rulesScene3(Stage stage) throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene3.fxml"));
         backButton1=(ImageView) stackPane.getChildren().get(1);
@@ -159,9 +159,7 @@ import java.util.ArrayList;
     }
 
     @Override
-    public void gameInfo() {
-
-    }
+    public void gameInfo() { }
 
     @Override
     public void chooseServerAddress() {
@@ -189,9 +187,11 @@ import java.util.ArrayList;
 
     @Override
     public void errorServerAddress() {
-        Runnable serverAddressError = () -> { alertsController.showServerAddressError();};
+      /*  Runnable serverAddressError = () -> { alertsController.showServerAddressError();};
         Platform.runLater(serverAddressError);
 
+
+       */
     }
 
     @Override
@@ -278,19 +278,17 @@ import java.util.ArrayList;
     }
 
     @Override
-    public void chooseGameGods() {
-
-    }
+    public void chooseGameGods() { }
 
     @Override
     public void printAllPlayers(Player[] players) {
         Runnable firstPlayerSelection = () -> {
-        try {
-            boardController.showSelectFirstPlayer(players);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    };
+            try {
+                boardController.showSelectFirstPlayer(players);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        };
         Platform.runLater(firstPlayerSelection);}
 
     @Override
@@ -317,9 +315,7 @@ import java.util.ArrayList;
     public void godChoiceError() { }
 
     @Override
-    public void showLastGod(ArrayList<God> godList, God lastGod) {
-
-    }
+    public void showLastGod(ArrayList<God> godList, God lastGod) { }
 
     @Override
     public void placeWorkerInSpace(int currentWorker, boolean[][] allowedPositions) {
@@ -428,4 +424,5 @@ import java.util.ArrayList;
     public void run() {
         StartScene.main();
     }
+
 }

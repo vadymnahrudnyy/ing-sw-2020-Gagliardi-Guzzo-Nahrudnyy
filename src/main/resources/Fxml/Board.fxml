@@ -8,69 +8,69 @@
 <?import javafx.scene.layout.VBox?>
 
 <StackPane fx:id="mainPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="720.0" prefWidth="1280.0" stylesheets="@../Style.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.BoardController">
-      <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
-         <image>
-            <Image url="@../Images/Backgrounds/Board.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="exitButton" fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="button" StackPane.alignment="BOTTOM_LEFT">
-         <image>
-            <Image url="@../Images/Backgrounds/Exit.png" />
-         </image>
-      </ImageView>
-      <ImageView fx:id="rulesButton" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="select" StackPane.alignment="BOTTOM_CENTER" onMouseClicked="#showInfoPane">
-         <image>
-            <Image url="@../Images/Buttons/InfoButton.png" />
-         </image>
-      </ImageView>
-      <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
-         <image>
-            <Image url="@../Images/Backgrounds/logo.png" />
-         </image>
-      </ImageView>
-      <StackPane fx:id="playerPane" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="250.0" StackPane.alignment="CENTER_LEFT">
-         <children>
-            <ImageView fx:id="playerGod" fitHeight="280.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-               <image>
-                  <Image url="@../Images/Gods/Athena.png" />
-               </image>
-               <StackPane.margin>
-                  <Insets />
-               </StackPane.margin>
-            </ImageView>
-            <ImageView fitHeight="300.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-               <image>
-                  <Image url="@../Images/Backgrounds/Frame.png" />
-               </image>
-               <StackPane.margin>
-                  <Insets />
-               </StackPane.margin>
-            </ImageView>
-            <ImageView fitHeight="150.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-               <image>
-                  <Image url="@../Images/Backgrounds/om_nameTagActive.png" />
-               </image>
-               <StackPane.margin>
-                  <Insets top="350.0" />
-               </StackPane.margin>
-            </ImageView>
-            <Label fx:id="playerUsername" style="-fx-font-size: 40;" styleClass="text" textFill="#e8e2cf" StackPane.alignment="CENTER">
-               <StackPane.margin>
-                  <Insets top="345.0" />
-               </StackPane.margin>
-            </Label>
-         </children>
-      </StackPane>
-      <VBox fx:id="opponentsPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="250.0" spacing="20.0" StackPane.alignment="CENTER_RIGHT">
-         <children>
-            <StackPane fx:id="firstOpponentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <ImageView fx:id="firstOpponentGod" fitHeight="150.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-                     <image>
-                        <Image url="@../Images/SmallGods/Apollo.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+   <ImageView fitHeight="720.0" fitWidth="1280.0" pickOnBounds="true" preserveRatio="true">
+      <image>
+         <Image url="@../Images/Backgrounds/Board.png" />
+      </image>
+   </ImageView>
+   <ImageView fx:id="exitButton" fitHeight="60.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="button" StackPane.alignment="BOTTOM_LEFT">
+      <image>
+         <Image url="@../Images/Backgrounds/Exit.png" />
+      </image>
+   </ImageView>
+   <ImageView fx:id="rulesButton" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" styleClass="select" StackPane.alignment="BOTTOM_RIGHT">
+      <image>
+         <Image url="@../Images/Buttons/InfoButton.png" />
+      </image>
+   </ImageView>
+   <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="TOP_LEFT">
+      <image>
+         <Image url="@../Images/Backgrounds/logo.png" />
+      </image>
+   </ImageView>
+   <StackPane fx:id="playerPane" alignment="CENTER_LEFT" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="500.0" prefWidth="250.0" StackPane.alignment="CENTER_LEFT">
+      <children>
+         <ImageView fx:id="playerGod" fitHeight="280.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+            <image>
+               <Image url="@../Images/Gods/Athena.png" />
+            </image>
+            <StackPane.margin>
+               <Insets />
+            </StackPane.margin>
+         </ImageView>
+         <ImageView fitHeight="300.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+            <image>
+               <Image url="@../Images/Backgrounds/Frame.png" />
+            </image>
+            <StackPane.margin>
+               <Insets />
+            </StackPane.margin>
+         </ImageView>
+         <ImageView fitHeight="150.0" fitWidth="225.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+            <image>
+               <Image url="@../Images/Backgrounds/om_nameTagActive.png" />
+            </image>
+            <StackPane.margin>
+               <Insets top="350.0" />
+            </StackPane.margin>
+         </ImageView>
+         <Label fx:id="playerUsername" style="-fx-font-size: 40;" styleClass="text" textFill="#e8e2cf" StackPane.alignment="CENTER">
+            <StackPane.margin>
+               <Insets top="345.0" />
+            </StackPane.margin>
+         </Label>
+      </children>
+   </StackPane>
+   <VBox fx:id="opponentsPane" alignment="CENTER" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="570.0" prefWidth="250.0" spacing="20.0" StackPane.alignment="CENTER_RIGHT">
+      <children>
+         <StackPane fx:id="firstOpponentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
+            <children>
+               <ImageView fx:id="firstOpponentGod" fitHeight="150.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+                  <image>
+                     <Image url="@../Images/SmallGods/Apollo.png" />
+                  </image>
+               </ImageView>
+               <ImageView fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
                   <image>
                      <Image url="@../Images/Backgrounds/om_nameTagActive.png" />
                   </image>
@@ -78,42 +78,43 @@
                      <Insets top="160.0" />
                   </StackPane.margin>
                </ImageView>
-                  <Label fx:id="firstOpponentUsername" style="-fx-font-size: 35;" styleClass="text" textFill="#e8e2cf">
-                     <StackPane.margin>
-                        <Insets top="155.0" />
-                     </StackPane.margin>
-                  </Label>
-               </children>
-               <VBox.margin>
-                  <Insets />
-               </VBox.margin>
-            </StackPane>
-            <StackPane fx:id="secondOpponentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
-               <children>
-                  <ImageView fx:id="secondOpponentGod" fitHeight="150.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
-                     <image>
-                        <Image url="@../Images/SmallGods/Artemis.png" />
-                     </image>
-                  </ImageView>
-                  <ImageView fx:id="secondOppponentTag" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
-                     <image>
-                        <Image url="@../Images/Backgrounds/om_nameTagActive.png" />
-                     </image>
-                     <StackPane.margin>
-                        <Insets top="160.0" />
-                     </StackPane.margin>
-                  </ImageView>
-                  <Label fx:id="secondOpponentUsername" style="-fx-font-size: 35;" styleClass="text" textFill="#e8e2cf">
-                     <StackPane.margin>
-                        <Insets top="160.0" />
-                     </StackPane.margin>
-                  </Label>
-               </children>
-            </StackPane>
-         </children>
-      </VBox>
+               <Label fx:id="firstOpponentUsername" style="-fx-font-size: 35;" styleClass="text" textFill="#e8e2cf">
+                  <StackPane.margin>
+                     <Insets top="155.0" />
+                  </StackPane.margin>
+               </Label>
+            </children>
+            <VBox.margin>
+               <Insets />
+            </VBox.margin>
+         </StackPane>
+         <StackPane fx:id="secondOpponentPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="200.0">
+            <children>
+               <ImageView fx:id="secondOpponentGod" fitHeight="150.0" fitWidth="250.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER">
+                  <image>
+                     <Image url="@../Images/SmallGods/Artemis.png" />
+                  </image>
+               </ImageView>
+               <ImageView fx:id="secondOpponentTag" fitHeight="150.0" fitWidth="200.0" pickOnBounds="true" preserveRatio="true" StackPane.alignment="CENTER_LEFT">
+                  <image>
+                     <Image url="@../Images/Backgrounds/om_nameTagActive.png" />
+                  </image>
+                  <StackPane.margin>
+                     <Insets top="160.0" />
+                  </StackPane.margin>
+               </ImageView>
+               <Label fx:id="secondOpponentUsername" style="-fx-font-size: 35;" styleClass="text" textFill="#e8e2cf">
+                  <StackPane.margin>
+                     <Insets top="160.0" />
+                  </StackPane.margin>
+               </Label>
+            </children>
+         </StackPane>
+      </children>
+   </VBox>
    <Label fx:id="messagesTag" prefHeight="50.0" prefWidth="600.0" style="-fx-font-size: 32; -fx-alignment: center;" styleClass="background" textFill="#e8e2cf" StackPane.alignment="TOP_CENTER">
       <StackPane.margin>
          <Insets top="18.0" />
       </StackPane.margin></Label>
 </StackPane>
+
