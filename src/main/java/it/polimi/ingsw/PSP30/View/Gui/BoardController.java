@@ -162,8 +162,8 @@ public class BoardController{
         gridPane = newGridPane;
     }
 
-    public void firstPlayerStart(MouseEvent event){
-
+    public void setMoveRequest(boolean value){
+        moveRequest = value;
     }
 
 

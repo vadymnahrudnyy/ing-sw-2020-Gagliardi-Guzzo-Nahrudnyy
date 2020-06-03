@@ -156,22 +156,30 @@ public class Lobby {
      * @param username username of the player.
      */
      protected synchronized void addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username,Thread viewThread){
-        System.out.println("Adding user"+ username +" to lobby");
+        System.out.println("Adding user "+ username +" to lobby");
             if (desiredNumPlayers == 2){
                 if (!(getTwoPlayersLobby().contains(username))) {
                     addPlayerToTwoPlayersLobby(username,client);
                     viewThread.interrupt();
+                    System.out.println(username + " added to lobby");
                 }
-                else client.sendMessage(new UsernameTakenError());
+                else {
+                    client.sendMessage(new UsernameTakenError());
+                    System.out.println("A player with username: " + username + " is already waiting in two players lobby");
+                }
             }
             else {
                 if (!(getThreePlayersLobby().contains(username))) {
                     addPlayerToThreePlayersLobby(username,client);
                     viewThread.interrupt();
+                    System.out.println(username + " added to lobby");
                 }
-                else client.sendMessage(new UsernameTakenError());
+                else {
+                    client.sendMessage(new UsernameTakenError());
+                    System.out.println("A player with username: " + username + " is already waiting in three players lobby");
+                }
             }
-        System.out.println("Added to lobby");
+
         checkReady();
         GameController newGame;
         Thread newGameThread;
@@ -211,6 +219,7 @@ public class Lobby {
 
 
     protected static class LobbyStatusNotifier implements Runnable{
+        @SuppressWarnings({"InfiniteLoopStatement", "BusyWait"})
         @Override
         public void run() {
             while(true){
@@ -219,7 +228,6 @@ public class Lobby {
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
-                System.out.println("Invio stato della lobby");
                 for (VirtualView view:twoPlayersLobbyVirtualViews) view.sendMessage(new LobbyStatusNotification(2,twoPlayersLobby.size(),twoPlayersLobby));
                 for (VirtualView view: threePlayersLobbyVirtualViews) view.sendMessage(new LobbyStatusNotification(3,threePlayersLobby.size(),threePlayersLobby));
             }

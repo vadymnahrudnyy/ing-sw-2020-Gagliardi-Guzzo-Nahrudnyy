@@ -61,7 +61,7 @@ public class VirtualView implements Runnable {
                     } while (message.getMessageID() != Message.USERNAME_RESPONSE);
                     setUsername(((UsernameResponse) message).getUsername());
                     serverLobby.addPlayerToLobby(numPlayers, this, username, virtualViewThread);
-                    Thread.sleep(1000000);
+                    Thread.sleep(100);
                 } while (!isInLobby);
             } catch (SocketException e) {
                 connected = false;

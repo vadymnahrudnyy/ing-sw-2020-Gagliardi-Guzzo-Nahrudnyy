@@ -394,7 +394,10 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void invalidMove() {
-        Runnable invalidMoveError = () -> alertsController.showInvalidMoveError();
+        Runnable invalidMoveError = () -> {
+            alertsController.showInvalidMoveError();
+            boardController.setMoveRequest(true);
+        };
         Platform.runLater(invalidMoveError);
     }
 
