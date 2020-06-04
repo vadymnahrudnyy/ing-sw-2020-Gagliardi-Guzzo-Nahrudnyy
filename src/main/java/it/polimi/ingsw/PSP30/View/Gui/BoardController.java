@@ -54,6 +54,10 @@ public class BoardController{
     private static boolean[][] allowedMoves;
     private static boolean workerPositionRequest = false, selectWorkerRequest = false, moveRequest = false, buildRequest = false, removeRequest = false;
 
+    /**
+     * This method initializes the Board scene with all the elements of the GameStage
+     * @param message GameStartNotification which contains the current status of the game
+     */
     public void initializeBoard(GameStartNotification message) {
         if (GUI.getGameStage() == null) GUI.setGameStage(new Stage());
         GUI.getGameStage().setResizable(false);
@@ -64,15 +68,7 @@ public class BoardController{
         }
 
         messagesTag= (Label) mainPane.getChildren().get(6);
-        //exitButton=(ImageView) mainPane.getChildren().get(1);
         rulesButton=(ImageView) mainPane.getChildren().get(2);
-        rulesButton.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            try {
-                showInfoPane(event);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
         playerPane= (StackPane) mainPane.getChildren().get(4);
         playerGod=(ImageView) playerPane.getChildren().get(0);
         playerUsername=(Label) playerPane.getChildren().get(3);
@@ -114,8 +110,10 @@ public class BoardController{
                 cell[X][Y]=new Cell(X, Y, currentSpace);
                 gridPane.add(cell[X][Y],Y,X);
             }
+        gridPane.setMaxSize(550,550);
         mainPane.getChildren().add(gridPane);
         gridPane.setAlignment(Pos.CENTER);
+
         boardScene = new Scene(mainPane);
         GUI.getGameStage().setScene(boardScene);
         GUI.getGameStage().show();
@@ -126,8 +124,6 @@ public class BoardController{
         GUI.getGameStage().setScene(boardScene);
         Player currentPlayer = updatedGame.getCurrentPlayer();
         IslandBoard currentBoard = updatedGame.getGameBoard();
-
-        //Divinità
         Player[] gamePlayers = updatedGame.getPlayers();
         for (Player gamePlayer : gamePlayers) {
             God currentGod = gamePlayer.getGod();
@@ -146,6 +142,11 @@ public class BoardController{
                 }
             }
         }
+
+        resetCurrentPlayerDropshadow();
+        if (Client.getUsername().equals(currentPlayer.getUsername())) playerGod.setStyle("-fx-effect: dropshadow(gaussian, #d40027, 30, 0.5, 0, 0)");
+        else if (firstOpponent.equals(currentPlayer.getUsername())) firstOpponentGod.setStyle("-fx-effect: dropshadow(gaussian, #d40027, 30, 0.5, 0, 0)");
+        else if (secondOpponent.equals(currentPlayer.getUsername())) secondOpponentGod.setStyle("-fx-effect: dropshadow(gaussian, #d40027, 30, 0.5, 0, 0)");
         //da aggiungere il colore dietro al current player
 
         GridPane newGridPane = new GridPane();
@@ -155,10 +156,17 @@ public class BoardController{
                 cell[X][Y] = new Cell(X, Y, currentSpace);
                 newGridPane.add(cell[X][Y],Y,X);
             }
+        newGridPane.setMaxSize(550,550);
         mainPane.getChildren().remove(gridPane);
         mainPane.getChildren().add(newGridPane);
         newGridPane.setAlignment(Pos.CENTER);
         gridPane = newGridPane;
+    }
+
+    public void resetCurrentPlayerDropshadow(){
+        playerGod.setStyle("");
+        firstOpponentGod.setStyle("");
+        secondOpponentGod.setStyle("");
     }
 
     public void setMoveRequest(boolean value){
@@ -264,46 +272,46 @@ public class BoardController{
     public String selectGodImage(boolean isOpponent, String godName) {
         switch(godName){
             case "Apollo":
-                if (!isOpponent)return ("/Images/Gods/Apollo.png");
+                if (!isOpponent)return ("/Images/toggleButtonGods/Apollo.png");
                 else return ("/Images/SmallGods/Apollo.png");
             case "Artemis":
-                if (!isOpponent) return ("/Images/Gods/Artemis.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Artemis.png");
                 else return ("/Images/SmallGods/Artemis.png");
             case "Athena":
-                if (!isOpponent) return ("/Images/Gods/Athena.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Athena.png");
                 else return ("/Images/SmallGods/Athena.png");
             case "Atlas":
-                if (!isOpponent) return ("/Images/Gods/Atlas.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Atlas.png");
                 else return ("/Images/SmallGods/Atlas.png");
             case "Chronus":
-                if (!isOpponent) return ("/Images/Gods/Chronus.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Chronus.png");
                 else return ("/Images/SmallGods/Chronos.png");
             case "Demeter":
-                if (!isOpponent) return ("/Images/Gods/Demeter.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Demeter.png");
                 else return ("/Images/SmallGods/Demeter.png");
             case "Hephaestus":
-                if (!isOpponent) return ("/Images/Gods/Hephaestus.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Hephaestus.png");
                 else return ("/Images/SmallGods/Hephaestus.png");
             case "Hera":
-                if (!isOpponent) return ("/Images/Gods/Hera.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Hera.png");
                 else return ("/Images/SmallGods/Hera.png");
             case "Hestia":
-                if (!isOpponent) return ("/Images/Gods/Hestia.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Hestia.png");
                 else return ("/Images/SmallGods/Hestia.png");
             case "Minotaur":
-                if (!isOpponent) return ("/Images/Gods/Minotaur.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Minotaur.png");
                 else return ("/Images/SmallGods/Minotaur.png");
             case "Pan":
-                if (!isOpponent) return ("/Images/Gods/Pan.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Pan.png");
                 else return ("/Images/SmallGods/Pan.png");
             case "Prometheus":
-                if (!isOpponent) return ("/Images/Gods/Prometheus.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Prometheus.png");
                 else return ("/Images/SmallGods/Prometheus.png");
             case "Zeus":
-                if (!isOpponent) return ("/Images/Gods/Zeus.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Zeus.png");
                 else return ("/Images/SmallGods/Zeus.png");
             case "Ares":
-                if (!isOpponent) return ("/Images/Gods/Ares.png");
+                if (!isOpponent) return ("/Images/toggleButtonGods/Ares.png");
                 else return ("/Images/SmallGods/Ares.png");
 
         }
@@ -355,7 +363,7 @@ public class BoardController{
         nextButton1=(ImageView) stackPane.getChildren().get(1);
         nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
-                rulesScene2(rulesStage);
+                rulesScene2();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -369,32 +377,32 @@ public class BoardController{
     /**
      * This method show the "Power Rules" of the Info&Rules page and manages mouse click on next button.
      */
-    public void rulesScene1(Stage stage) throws IOException {
+    public void rulesScene1() throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard1.fxml"));
         nextButton1=(ImageView) stackPane.getChildren().get(1);
         nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
-                rulesScene2(rulesStage);
+                rulesScene2();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         Scene scene = new Scene(stackPane);
-        stage.setScene(scene);
-        stage.show();
+        rulesStage.setScene(scene);
+        //rulesStage.show();
     }
 
 
     /**
      * This method show the glossary of the Info&Rules page and manages mouse click on next and back button.
      */
-    public void rulesScene2(Stage stage) throws IOException {
+    public void rulesScene2() throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard2.fxml"));
         nextButton2=(ImageView) stackPane.getChildren().get(1);
         backButton2=(ImageView) stackPane.getChildren().get(2);
         nextButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
-                rulesScene3(rulesStage);
+                rulesScene3();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -402,33 +410,40 @@ public class BoardController{
 
         backButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
-                rulesScene1(rulesStage);
+                rulesScene1();
             }
             catch (IOException e) {
                 e.printStackTrace();
             } });
         Scene scene = new Scene(stackPane);
-        stage.setScene(scene);
-        stage.show();
+        rulesStage.setScene(scene);
+        //stage.show();
     }
 
     /**
      * This method show the "How to Play" of the Info&Rules page and manages mouse click on back button.
      */
-    public void rulesScene3(Stage stage) throws IOException {
+    public void rulesScene3() throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard3.fxml"));
         backButton1=(ImageView) stackPane.getChildren().get(1);
         backButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
-                rulesScene2(rulesStage);
+                rulesScene2();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         });
         Scene dialogScene = new Scene(stackPane);
-        stage.setScene(dialogScene);
-        stage.show();
+        rulesStage.setScene(dialogScene);
+        //rulesStage.show();
     }
+
+    public void disconnectButton(MouseEvent event){
+        Client.sendMessageToServer(new Disconnection());
+        System.exit(0);
+    }
+
+
 
 
     public static class Cell extends StackPane {
@@ -436,6 +451,7 @@ public class BoardController{
         Pane allowedMovePane = new Pane();
 
         public Cell(int X, int Y, Space space) {
+            this.setMaxSize(107,107);
             coordinateX = X+1;
             coordinateY = Y+1;
             this.setPrefSize(107, 107);

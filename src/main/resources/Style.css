@@ -183,4 +183,6 @@
 
 }
 
-
+.colors:hover{
+    -fx-effect: dropshadow(gaussian, #d40027, 30, 0.5, 0, 0);
+}

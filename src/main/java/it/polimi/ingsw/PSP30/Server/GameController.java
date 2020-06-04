@@ -339,9 +339,11 @@ class GameController implements Runnable {
         boolean[][] removals = initializeMatrix(false);
         for (int X = workerX - 2; X < workerX + 1;++ X){
             for (int Y = workerY - 2; Y < workerY + 1;++Y){
-                int currentHeight = gameBoard.getSpace(X+1,Y+1).getHeight();
-                boolean hasDome = gameBoard.getSpace(X+1,Y+1).getHasDome();
-                if(((X >= 0 && X < IslandBoard.TABLE_DIMENSION) && (Y >= 0 && Y < IslandBoard.TABLE_DIMENSION))&&(currentHeight != 0)&&(!hasDome)) removals[X][Y] = true;
+                if((X >= 0 && X < IslandBoard.TABLE_DIMENSION) && (Y >= 0 && Y < IslandBoard.TABLE_DIMENSION)){
+                    int currentHeight = gameBoard.getSpace(X+1,Y+1).getHeight();
+                    boolean hasDome = gameBoard.getSpace(X+1,Y+1).getHasDome();
+                    if((currentHeight != 0)&&(!hasDome)) removals[X][Y] = true;
+                }
             }
         }
         return removals;
