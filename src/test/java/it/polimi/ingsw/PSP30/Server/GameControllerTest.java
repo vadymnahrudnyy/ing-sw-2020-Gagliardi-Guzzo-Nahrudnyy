@@ -81,4 +81,12 @@ public class GameControllerTest {
         assertTrue(testGame.workerCanMakeMove(testMoves));
     }
 
+    @Test
+    public void countPossibleMoves() {
+        testGame = new GameController(testViewsList,2);
+        boolean[][] moves = testGame.initializeMatrix(true);
+        assertEquals(25,testGame.countPossibleMoves(moves));
+        moves[3][3] = false;
+        assertEquals(24,testGame.countPossibleMoves(moves));
+    }
 }

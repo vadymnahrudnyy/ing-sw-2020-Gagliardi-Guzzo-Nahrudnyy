@@ -30,7 +30,6 @@ public class BoardController{
     @FXML private ImageView playerGod, secondOpponentGod, firstOpponentGod, exitButton, rulesButton;
     @FXML private VBox opponentsPane;
 
-
     //startPlayerSelection
     @FXML private StackPane selectPlayerMainPane,firstPlayer, secondPlayer, thirdPlayer ;
     @FXML private BorderPane selectPlayerBorderPane;
@@ -53,7 +52,7 @@ public class BoardController{
     private static final ArrayList<String> selectedGods = new ArrayList<>();
 
     private static boolean[][] allowedMoves;
-    private static boolean workerPositionRequest = false, selectWorkerRequest = false, moveRequest = false, buildRequest = false;
+    private static boolean workerPositionRequest = false, selectWorkerRequest = false, moveRequest = false, buildRequest = false, removeRequest = false;
 
     public void initializeBoard(GameStartNotification message) {
         if (GUI.getGameStage() == null) GUI.setGameStage(new Stage());
@@ -123,7 +122,7 @@ public class BoardController{
     }
 
     public void updateGameBoard(Game updatedGame){
-        //messagesTag.setText(" ");
+        messagesTag.setText("");
         GUI.getGameStage().setScene(boardScene);
         Player currentPlayer = updatedGame.getCurrentPlayer();
         IslandBoard currentBoard = updatedGame.getGameBoard();
@@ -339,6 +338,15 @@ public class BoardController{
         messagesTag.setText("Select the space you want to build in");
     }
 
+    public void blockRemoveRequest(boolean[][] allowedRemovals){
+        removeRequest = true;
+        for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
+            for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
+                if(allowedRemovals[X][Y])cell[X][Y].setAllowed();
+            }
+        messagesTag.setText("Select the block you want to remove");
+    }
+
     public void showInfoPane(MouseEvent mouseEvent) throws IOException {
         rulesStage=new Stage();
         rulesStage.initModality(Modality.APPLICATION_MODAL);
@@ -495,6 +503,10 @@ public class BoardController{
                 if (buildRequest){
                     buildRequest = false;
                     Client.sendMessageToServer(new BuildResponse(coordinateX,coordinateY));
+                }
+                if (removeRequest){
+                    removeRequest = false;
+                    Client.sendMessageToServer(new BlockRemovalResponse(coordinateX,coordinateY));
                 }
             });
         }

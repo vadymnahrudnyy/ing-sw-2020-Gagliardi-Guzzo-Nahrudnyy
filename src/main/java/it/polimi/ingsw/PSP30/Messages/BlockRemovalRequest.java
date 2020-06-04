@@ -9,7 +9,7 @@ public class BlockRemovalRequest extends Message {
     private final boolean[][] allowedToRemove;
 
     public BlockRemovalRequest(boolean[][] removesMatrix){
-        messageID = BUILD_REQUEST;
+        messageID = BLOCK_REMOVAL_REQUEST;
         allowedToRemove = removesMatrix;
     }
 

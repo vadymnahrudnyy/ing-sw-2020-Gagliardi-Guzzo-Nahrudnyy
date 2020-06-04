@@ -342,12 +342,7 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void moveWorker(boolean[][] allowedMoves) {
-        Runnable moveWorker = new Runnable() {
-            @Override
-            public void run() {
-                boardController.moveRequest(allowedMoves);
-            }
-        };
+        Runnable moveWorker = () -> boardController.moveRequest(allowedMoves);
         Platform.runLater(moveWorker);
     }
 
@@ -368,12 +363,7 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void buildTower(boolean[][] allowedBuild) {
-        Runnable buildTower = new Runnable() {
-            @Override
-            public void run() {
-                boardController.buildRequest(allowedBuild);
-            }
-        };
+        Runnable buildTower = () -> boardController.buildRequest(allowedBuild);
         Platform.runLater(buildTower);
     }
 
@@ -384,7 +374,10 @@ public class GUI implements UI,Runnable{
     }
 
     @Override
-    public void chooseRemoval(boolean[][] allowedToRemove) { }
+    public void chooseRemoval(boolean[][] allowedToRemove) {
+        Runnable blockRemoval = () -> {boardController.blockRemoveRequest(allowedToRemove);};
+        Platform.runLater(blockRemoval);
+    }
 
     @Override
     public void noPossibleMoves() {
