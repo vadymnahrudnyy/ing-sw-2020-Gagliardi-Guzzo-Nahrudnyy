@@ -5,7 +5,9 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
+import it.polimi.ingsw.PSP30.Messages.Disconnection;
 import it.polimi.ingsw.PSP30.Messages.Message;
+import it.polimi.ingsw.PSP30.Server.VirtualView;
 import it.polimi.ingsw.PSP30.Utils.QueueOfEvents;
 import it.polimi.ingsw.PSP30.Messages.PingMessage;
 
@@ -14,14 +16,15 @@ import it.polimi.ingsw.PSP30.Messages.PingMessage;
  * @version 1.0
  */
 public class NetworkHandler implements Runnable {
-    private Socket socket;
-    private ObjectInputStream input;
+    private static Socket socket;
+    private static ObjectInputStream input;
     private static ObjectOutputStream output;
-    private boolean isConnected=false;
+    private static boolean isConnected=false;
     private final String serverAddress;
     private final int serverPort;
     protected static final QueueOfEvents incomingMessages= new QueueOfEvents();
-    private boolean isPing=false;
+    private boolean pingReceived = false;
+    private Thread pingThread;
 
 
     public NetworkHandler(String serverAddress, int serverPort) {
@@ -43,18 +46,18 @@ public class NetworkHandler implements Runnable {
                 output.reset();
                 output.writeObject(message);
             } catch (IOException e) {
-                e.printStackTrace();
+                isConnected = false;
+                disconnect();
             }
         }
     }
 
     public QueueOfEvents receive(Message receivedMessage) throws IOException {
-        isPing(receivedMessage);
-        if(!isPing) incomingMessages.enqueueEvent(receivedMessage);
+        if(!isPing(receivedMessage)) incomingMessages.enqueueEvent(receivedMessage);
         return incomingMessages;
     }
 
-    public void close() throws Exception {
+    public static void close() throws Exception {
         socket.close();
         setConnected(false);
     }
@@ -65,6 +68,36 @@ public class NetworkHandler implements Runnable {
         } catch (Exception e) {
             setConnected(false);
             Client.addressError();
+        }
+        if(isConnected){
+            Runnable Ping = new Runnable() {
+                @SuppressWarnings("BusyWait")
+                @Override
+                public void run() {
+                    int missedPings = 0;
+                    do{
+                        try {
+                            sendMessage(new PingMessage());
+                            //10 Second
+                            int PING_TIMEOUT = 10000;//10 Seconds
+                            Thread.sleep(PING_TIMEOUT);
+                            if (!pingReceived) missedPings++;
+                            if(missedPings > 3){
+                                incomingMessages.enqueueEvent(new Disconnection());
+                                isConnected = false;
+                            }
+                        } catch (InterruptedException e) {
+                            if (pingReceived){
+                                setPingReceived(false);
+                                missedPings = 0;
+                            }
+                        }
+                    }while(isConnected);
+                }
+            };
+            pingThread = new Thread(Ping);
+            pingThread.start();
+
         }
         while (isConnected){
             try {
@@ -83,10 +116,10 @@ public class NetworkHandler implements Runnable {
 
 
     /**
-     * Setter of parameter connected.
+     * Getter of parameter connected.
      * @return true if the client is connected to the server or false if it is not connected.
      */
-    public boolean isConnected() {
+    public static boolean isConnected() {
         return isConnected;
     }
 
@@ -94,14 +127,15 @@ public class NetworkHandler implements Runnable {
      * Getter of parameter connected.
      * @param connected is the boolean that indicates if the client is connected to the server or not.
      */
-    public void setConnected(boolean connected) {
+    public static void setConnected(boolean connected) {
         Client.setDisconnected(!connected);
         isConnected = connected;
     }
+
     /**
      *This class disconnect the client.
      */
-    public void disconnect(){
+    public static void disconnect(){
         try {
             close();
         } catch (Exception e) {
@@ -128,8 +162,8 @@ public class NetworkHandler implements Runnable {
      * Setter parameter ping
      * @param ping value of the parameter
      */
-    public void setPing(boolean ping) {
-        isPing = ping;
+    public void setPingReceived(boolean ping) {
+        pingReceived = ping;
     }
 
     /**
@@ -140,9 +174,10 @@ public class NetworkHandler implements Runnable {
      */
     public boolean isPing(Message message) throws IOException {
         if (message.getMessageID()==Message.PING_MESSAGE){
-            setPing(true);
-            sendMessage(new PingMessage());
+            setPingReceived(true);
+            pingThread.interrupt();
+            return true;
         }
-        return true;
+        return false;
     }
 }

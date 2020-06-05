@@ -89,7 +89,7 @@ public class Client {
 
 
         while (!disconnected){
-            Thread.sleep(50);
+            Thread.sleep(150);
             Message receivedMessage;
             if((receivedMessage = NetworkHandler.incomingMessages.dequeueEvent())!=null){
                 switch (receivedMessage.getMessageID()){
@@ -164,11 +164,14 @@ public class Client {
                         break;
                     case Message.DISCONNECTION_MESSAGE:
                         disconnected=true;
-                        networkHandler.disconnect();
+                        NetworkHandler.disconnect();
                         break;
+                    default:
+                        disconnected = !NetworkHandler.isConnected();
                 }
             }
         }
+        System.exit(12);
     }
 
     /**

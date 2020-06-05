@@ -5,6 +5,7 @@ import it.polimi.ingsw.PSP30.Exception.Server.PlayerDisconnectedException;
 import it.polimi.ingsw.PSP30.Messages.*;
 import it.polimi.ingsw.PSP30.Model.*;
 
+import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -40,7 +41,10 @@ class GameController implements Runnable {
         //powerList = Server.getPowerList();
         virtualViewsList = new VirtualView[numPlayers];
         Player[] playersArray = new Player[numPlayers];
-        for(int i=0;i<numPlayers;++i) virtualViewsList[i] = virtualViews.get(i);
+        for(int i=0;i<numPlayers;++i) {
+            virtualViewsList[i] = virtualViews.get(i);
+            virtualViews.get(i).setAssociatedGame(this);
+        }
         for (int i=0;i<numPlayers;++i) {playersArray[i] = new Player(virtualViewsList[i].getUsername(),i+1,null,null);}
         currentGame = new Game(numPlayers,playersArray[0],playersArray);
         gameBoard = currentGame.getGameBoard();
@@ -58,13 +62,14 @@ class GameController implements Runnable {
             TurnHandle();
         }
         }catch (PlayerDisconnectedException e){
-            allPlayersDisconnect();
+                allPlayersDisconnect();
         }
         System.out.println(Thread.currentThread()+" game finished! It was nice to play with you");
     }
 
     private void allPlayersDisconnect(){
         for (VirtualView client : virtualViewsList) {
+            client.setConnected(false);
             client.sendMessage(new PlayerDisconnectedError());
             try{
                 Thread.sleep(50);
@@ -73,6 +78,7 @@ class GameController implements Runnable {
                 System.out.println("Disconnection interrupted");
             }
             client.closeConnection();
+            client.getVirtualViewThread().interrupt();
         }
     }
 
@@ -777,6 +783,9 @@ class GameController implements Runnable {
         return currentGame.getGameBoard();
     }
 
+    protected void setDisconnectionDetected(boolean value){
+        disconnectionDetected = value;
+    }
     //GOD POWER HANDLERS
 
     /**
