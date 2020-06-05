@@ -353,7 +353,10 @@ public class GUI implements UI,Runnable{
     }
 
     @Override
-    public void moveOtherWorker(boolean[][] allowedMoves) { }
+    public void moveOtherWorker(boolean[][] allowedMoves) {
+        Runnable moveWorker = () -> boardController.moveRequest(allowedMoves);
+        Platform.runLater(moveWorker);
+    }
 
     @Override
     public void printPossibleAction(boolean[][] allowed) { }
