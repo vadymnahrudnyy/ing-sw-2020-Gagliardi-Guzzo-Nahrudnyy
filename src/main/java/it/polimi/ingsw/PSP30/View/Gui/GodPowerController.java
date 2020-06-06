@@ -15,6 +15,9 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+/**
+ * This class creates a stage in order to ask to the player if he wants use the god's power
+ */
 public class GodPowerController {
 
     @FXML StackPane stackPane;

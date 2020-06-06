@@ -20,8 +20,6 @@ import java.util.ArrayList;
 
 public class GodsController {
 
-    //private ArrayList<String> buttonsSingleGod=new ArrayList<>();
-    //First player gods selection
     @FXML private BorderPane borderPane;
     @FXML private ToggleButton apollo, artemis, ares;
     @FXML private ToggleButton hestia, hera;
@@ -32,13 +30,11 @@ public class GodsController {
 
     private static final ArrayList<String> selectedGods = new ArrayList<>();
 
-    //Other players god selection
     @FXML private VBox vBox ;
     @FXML private ToggleButton firstGod,secondGod,thirdGod;
     @FXML private BorderPane singleGodBorderPane;
     @FXML private ImageView selectSingleGod;
     private static String selectedGod;
-
 
     private ToggleGroup toggleGroup=new ToggleGroup();
 
@@ -64,7 +60,7 @@ public class GodsController {
      * This method shows the list of the Gods chosen by the first player and allows the current player to choose what card he wants to use during the match
      * @param gameGods ArrayList of Gods chosen by the first player
      * @param chosenGods ArrayList of Gods already chosen by others players
-     * @throws IOException
+     * @throws IOException when an error occurred in loading fxml file
      */
     public void showSingleGodSelector(ArrayList<God> gameGods,ArrayList<God> chosenGods) throws IOException {
         God tempGod;

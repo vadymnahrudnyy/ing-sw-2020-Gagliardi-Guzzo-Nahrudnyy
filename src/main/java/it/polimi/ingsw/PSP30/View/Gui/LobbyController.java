@@ -25,7 +25,11 @@ public class LobbyController {
     @FXML private ImageView exitButton;
 
 
-
+    /**
+     * This method manages the Lobby scene
+     * @param players names of all the players
+     * @throws IOException when an error occurred in loading fxml file
+     */
     public void showLobby(ArrayList<String> players) throws IOException {
         String firstOpponentUsername = null, secondOpponentUsername;
         lobbyPane= FXMLLoader.load(GodsController.class.getClassLoader().getResource("Fxml/Lobby.fxml"));

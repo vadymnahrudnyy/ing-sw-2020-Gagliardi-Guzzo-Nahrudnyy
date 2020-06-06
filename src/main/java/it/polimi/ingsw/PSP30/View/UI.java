@@ -15,12 +15,6 @@ import java.util.ArrayList;
 public interface UI {
 
     /**
-     * This method shows all the significant information about the game
-     */
-    void gameInfo();
-
-
-    /**
      * This method asks the player the address of the server
      */
     void chooseServerAddress();
@@ -52,10 +46,10 @@ public interface UI {
      * @param selectedLobby number of the lobby, it can be 2 or 3 depending on the selected players
      * @param slotsOccupied how many players are in the lobby at the moment
      */
-    void printLobbyStatus(int selectedLobby, int slotsOccupied,ArrayList<String> usernames);
+    void printLobbyStatus(int selectedLobby, int slotsOccupied, ArrayList<String> usernames);
 
     /**
-     *  This method notifies the game can start (the lobby is full)
+     * This method notifies the game can start (the lobby is full)
      */
     void startNotification(GameStartNotification message);
 
@@ -113,6 +107,8 @@ public interface UI {
 
     /**
      * This method shows where the player can put the selected worker and then he inserts the chosen coordinate
+     * @param currentWorker integer that identifies the  selected current worker
+     * @param allowedPositions the boolean matrix of the allowed spaces where the player can position his worker
      */
     void placeWorkerInSpace(int currentWorker, boolean[][] allowedPositions);
 
@@ -136,6 +132,7 @@ public interface UI {
 
     /**
      * This method asks the player to choose where he wants to move the selected worker
+     * @param allowedMoves the boolean matrix of the allowed moves
      */
     void moveWorker(boolean[][] allowedMoves);
 
@@ -146,6 +143,7 @@ public interface UI {
 
     /**
      * This method asks the player to choose where he wants to move the other(selected) worker
+     * @param allowedMoves the boolean matrix of the allowed moves
      */
     void moveOtherWorker(boolean[][] allowedMoves);
 
@@ -163,6 +161,7 @@ public interface UI {
 
     /**
      * This method asks the player in which position he wants to build
+     * @param allowedBuild the boolean matrix of the spaces where the player is allowed to build
      */
     void buildTower(boolean[][] allowedBuild);
 
@@ -173,6 +172,7 @@ public interface UI {
 
     /**
      * This method asks the player in which position he wants to remove a building
+     * @param allowedToRemove the boolean matrix of the spaces where the player is allowed to remove a building
      */
     void chooseRemoval(boolean[][] allowedToRemove);
 

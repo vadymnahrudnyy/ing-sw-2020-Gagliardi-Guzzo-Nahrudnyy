@@ -72,8 +72,10 @@ public class GUI implements UI,Runnable{
         Client.interruptClientThread();
     }
 
+
     /**
-     * This method runs when the user click on the Info&Rules button. It creates a new stages on which it load the first scene.
+     * This method runs when the user click on the Info&Rules button. It creates a new stages on which it loads the first scene.
+     * @throws IOException when an error occurred in loading fxml file
      */
     public void showRules() throws IOException {
         rulesStage=new Stage();
@@ -95,7 +97,9 @@ public class GUI implements UI,Runnable{
     }
 
     /**
-     * This method show the "Power Rules" of the Info&Rules page and manages mouse click on next button.
+     *This method shows the "Power Rules" of the Info&Rules page and manages mouse click on next button.
+     * @param stage stage in which is loaded the scene
+     * @throws IOException when an error occurred in loading fxml file
      */
     public void rulesScene1(Stage stage) throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene1.fxml"));
@@ -141,7 +145,7 @@ public class GUI implements UI,Runnable{
     }
 
     /**
-     * This method show the "How to Play" of the Info&Rules page and manages mouse click on back button.
+     * This method shows the "How to Play" of the Info&Rules page and manages mouse click on back button.
      */
     public void rulesScene3(Stage stage) throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene3.fxml"));
@@ -159,9 +163,6 @@ public class GUI implements UI,Runnable{
     }
 
     @Override
-    public void gameInfo() { }
-
-    @Override
     public void chooseServerAddress() {
         Platform.runLater(this::showServerAddress);
         try {
@@ -172,7 +173,7 @@ public class GUI implements UI,Runnable{
     }
 
     /**
-     * This method shows AddressScene in which the player have to insert the address of the Server he wants to connect to
+     * This method shows AddressScene in which the player have to insert the address of the server he wants to connect to
      */
     public void showServerAddress(){
         try{
@@ -187,11 +188,9 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void errorServerAddress() {
-      /*  Runnable serverAddressError = () -> { alertsController.showServerAddressError();};
-        Platform.runLater(serverAddressError);
-
-
-       */
+      /*Runnable serverAddressError = () -> { alertsController.showServerAddressError()};
+      Platform.runLater(serverAddressError);
+      */
     }
 
     @Override
@@ -226,7 +225,7 @@ public class GUI implements UI,Runnable{
     }
 
     /**
-     * This method shows numPlayerScene in which the player have to choose how many players he wants to be in the game (2 or 3)
+     * This method shows numPlayerScene where the player have to choose how many players he wants to be in the game (2 or 3)
      */
     public void showChooseNumPlayers() {
         Parent numPlayerScene = null;
@@ -296,8 +295,6 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void chooseFirstPlayer() { }
-
-
 
     @Override
     public void chooseGod(ArrayList<God> godList, ArrayList<God> unavailableList) {

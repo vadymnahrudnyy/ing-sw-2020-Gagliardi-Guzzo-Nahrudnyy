@@ -21,17 +21,19 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-/*
+/**
  * This class is the controller for LoginScene.fxml and Home.fxml
  */
 public class LoginController {
-
 
     @FXML private static StackPane lobbyPane;
     @FXML public ImageView usernameNext;
     @FXML private TextField addressField,usernameField;
     private static final int SOCKET_PORT = 50000;
 
+    /**
+     * This method displays the lobby scene
+     */
     public static void displayLobby() {
         GUI.setGameStage(new Stage());
         try{
@@ -45,8 +47,6 @@ public class LoginController {
     }
 
 
-
-
     @FXML
     public void handleAddress(MouseEvent event) throws IOException {
         String address=addressField.getText();
@@ -58,6 +58,9 @@ public class LoginController {
         }
     }
 
+    /**
+     * Alert for empty address
+     */
     private void showEmptyAddressAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle("Address Null");
@@ -66,19 +69,28 @@ public class LoginController {
         alert.showAndWait();
     }
 
-
-
-    public void handlethreePlayer(MouseEvent event) throws IOException {
+    /**
+     * This method manages the choice of three players
+     * @param event mouse click on the image of the three players
+     */
+    public void handlethreePlayer(MouseEvent event) {
         Client.setNumPlayer(3);
         Client.sendMessageToServer(new NumPlayersResponse(3));
-
-
     }
 
-    public void handletwoPlayer(MouseEvent event) throws IOException {
+    /**
+     * This method manages the choice of two players
+     * @param event mouse click on the image of the two players
+     */
+    public void handletwoPlayer(MouseEvent event) {
       Client.setNumPlayer(2);
         Client.sendMessageToServer(new NumPlayersResponse(2));
     }
+
+    /**
+     * his method manages the insertion of the username
+     * @param event mouse click on next button
+     */
     public void handleUsernameButton(MouseEvent event){
         String username = usernameField.getText();
         username = username.trim();

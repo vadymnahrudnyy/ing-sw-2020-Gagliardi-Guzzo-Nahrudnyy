@@ -30,9 +30,9 @@ public class CLI implements UI {
     }
 
 
-
-
-    @Override
+    /**
+     * This method shows all the significant information about the game
+     */
     public void gameInfo() {
         System.out.println("Welcome in Santorini!");
         System.out.println("You will have to choose a deity card, which has a special power, that you can use in the game. You will also have 2 workers.");
@@ -90,12 +90,20 @@ public class CLI implements UI {
 
     @Override
     public void printLobbyStatus(int selectedLobby, int slotsOccupied, ArrayList<String> usernames) {
-        System.out.println("Lobby and number of players currently in: ");
+        System.out.println("Lobby: " + selectedLobby);
+        System.out.print("Number of players currently in: " + slotsOccupied + "-> " );
+        for (String username : usernames) System.out.print(username +" ");
+        System.out.println("");
+        System.out.println("");
+
+
     }
 
     @Override
     public void startNotification(GameStartNotification message) {
         System.out.println("Full lobby: the game can begin, good luck!");
+        System.out.println("");
+        gameInfo();
         System.out.println("");
     }
 
@@ -121,9 +129,8 @@ public class CLI implements UI {
 
     @Override
     public void printAllPlayers(Player[] players) {
-        System.out.print("Choose among these players which will start: ");
+        System.out.print("Choose among these players who will start: ");
         for (Player player : players) {
-            if(!(username.equals(player.getUsername())))
                 System.out.print(player.getUsername() + " ");
         }
         System.out.println("");
@@ -149,9 +156,9 @@ public class CLI implements UI {
             System.out.print(god.getName() + "   ");
         }
         System.out.println("");
-        System.out.println("Already selected  gods (not available): ");
+        System.out.print("Already selected  gods (not available): ");
         for (God god : unavailableList) {
-            System.out.print(god.getName() + ", ");
+            System.out.print(god.getName() + " ");
         }
 
         System.out.println("You have to choose one and avoid the ones already chosen.");
@@ -358,7 +365,8 @@ public class CLI implements UI {
 
             System.out.println("username: " + playerUsername);
             System.out.println("color of workers: " + color);
-            System.out.println("god: " + godName);
+            if(godName==null) System.out.println("god: not yet selected");
+            else System.out.println("god: " + godName);
             System.out.println("");
         }
     }
