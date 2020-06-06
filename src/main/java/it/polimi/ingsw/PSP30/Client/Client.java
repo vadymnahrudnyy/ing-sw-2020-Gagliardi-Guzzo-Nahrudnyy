@@ -60,7 +60,7 @@ public class Client {
      *This method creates a new network handler and creates a new thread
      */
     public static void startConnection(String serverAddress){
-        networkHandler=new NetworkHandler(serverAddress, SOCKET_PORT);
+        networkHandler=new NetworkHandler(serverAddress, SOCKET_PORT,Thread.currentThread());
         Thread network= new Thread(networkHandler);
         network.start();
     }
@@ -84,6 +84,11 @@ public class Client {
             ui.chooseServerAddress();
             System.out.println("");
             startConnection(serverAddress);
+            try{
+                Thread.sleep(150000);
+            }catch (InterruptedException e) {
+                System.out.println("Connection in progress...");
+            }
         }while(disconnected);
 
 

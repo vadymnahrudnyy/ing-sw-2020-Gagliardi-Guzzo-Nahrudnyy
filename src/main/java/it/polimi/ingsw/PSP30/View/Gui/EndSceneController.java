@@ -8,6 +8,9 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import java.io.IOException;
 
+/**
+ * This class shows the and scene, one for the winner player and one for the other
+ */
 public class EndSceneController {
     public static void winner(String winner)throws IOException {
         if(Client.getUsername().equals(winner)){
@@ -22,7 +25,6 @@ public class EndSceneController {
 
     public void endGame(MouseEvent event){
         GUI.getGameStage().close();
-        //Client.sendMessageToServer(new Disconnection());
     }
 }
 

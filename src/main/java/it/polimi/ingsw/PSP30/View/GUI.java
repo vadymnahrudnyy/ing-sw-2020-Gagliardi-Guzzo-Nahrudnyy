@@ -188,9 +188,8 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void errorServerAddress() {
-      /*Runnable serverAddressError = () -> { alertsController.showServerAddressError()};
+      Runnable serverAddressError = () -> { alertsController.showServerAddressError();};
       Platform.runLater(serverAddressError);
-      */
     }
 
     @Override

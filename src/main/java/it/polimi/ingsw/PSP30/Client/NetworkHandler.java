@@ -25,11 +25,13 @@ public class NetworkHandler implements Runnable {
     protected static final QueueOfEvents incomingMessages= new QueueOfEvents();
     private boolean pingReceived = false;
     private Thread pingThread;
+    private static Thread clientThread;
 
 
-    public NetworkHandler(String serverAddress, int serverPort) {
+    public NetworkHandler(String serverAddress, int serverPort, Thread thread) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
+        clientThread=thread;
     }
 
     public void connect() throws Exception {
@@ -68,6 +70,12 @@ public class NetworkHandler implements Runnable {
         } catch (Exception e) {
             setConnected(false);
             Client.addressError();
+            clientThread.interrupt();
+            try{
+                Thread.sleep(10000);
+            }catch (InterruptedException interruptedException){
+                interruptedException.printStackTrace();
+            }
         }
         if(isConnected){
             Runnable Ping = new Runnable() {
