@@ -15,53 +15,84 @@ import java.util.ArrayList;
  */
 public class Server {
     private static ServerSocket server;
+    private static boolean running = false;
     private static final int SOCKET_PORT = 50000;
+
+    private static Thread lobbyStatusNotifierThread;
+
     private static final Lobby serverLobby = new Lobby ();
+
     private static final ArrayList<God> godsList = GodParser.readGods();
     private static final ArrayList<Power> powerList = PowerParser.readPowers();
 
 
     public static void main(String[] args) {
         System.out.println("Server Started");
-        try {
-            server = new ServerSocket(SOCKET_PORT);
-            System.out.println("Server Socket created. Port used: "+ SOCKET_PORT);
-        } catch (IOException e) {
-            System.out.println("Server initialization failed: Server will shutdown");
-        }
-
-        Thread lobbyStatusNotifierThread = new Thread(new Lobby.LobbyStatusNotifier());
-        lobbyStatusNotifierThread.start();
-
-        //noinspection InfiniteLoopStatement
-        while (true) {
-            try{
-                Socket newClient = server.accept();
-                System.out.println("new connection accepted from IP: " + newClient.getInetAddress());
-                VirtualView newVirtualView = new VirtualView(newClient, serverLobby);
-                Thread newVirtualViewThread = new Thread(newVirtualView);
-                newVirtualViewThread.start();
-                System.out.println("Virtual View for user "+newClient.getInetAddress()+" created");
-            }catch (IOException e){
-                System.out.println("Connection to the client failed");
-            }
-        }
+        serverSocketCreation();
+        lobbyStatusThreadCreation();
+        while (running) acceptPlayersConnections();
     }
+
 
     /**
      * Method used to get the list of Gods by other components of the server.
      * @return Array List containing the gods usable in game.
      */
-    public static ArrayList<God> getGodsList(){
+    protected static ArrayList<God> getGodsList(){
         return godsList;
     }
-
     /**
      * Method used to get the list of Power by other components of the server.
      * @return Array List containing the powers of usable gods in game.
      */
-    public static ArrayList<Power> getPowerList() {
+    protected static ArrayList<Power> getPowerList() {
         return powerList;
     }
+    /**
+     * Method use to get the Thread notifying all the players in lobby about current lobby's status.
+     * @return Lobby status notifier Thread.
+     */
+    protected static Thread getLobbyStatusNotifierThread(){
+        return lobbyStatusNotifierThread;
+    }
+
+    /**
+     * Method creating the server socket.
+     * If socket is successfully created, running is set to "true", in case of error, running remains "false".
+     */
+    protected static void serverSocketCreation(){
+        try{
+            server = new ServerSocket(SOCKET_PORT);
+            running = true;
+            System.out.println("Server Socket created. Port user: " + SOCKET_PORT);
+        } catch (IOException e) {
+        System.out.println("Server initialization failed: Server will shutdown");
+        }
+    }
+
+    /**
+     * Method creating the Thread used to notify the status of the lobby.
+     */
+    protected static void lobbyStatusThreadCreation(){
+        lobbyStatusNotifierThread = new Thread(new Lobby.LobbyStatusNotifier());
+        lobbyStatusNotifierThread.start();
+    }
+
+    /**
+     * Method accepting the connection from a client and then creates a virtual view for the client.
+     */
+    protected static void acceptPlayersConnections(){
+        try{
+            Socket newClient = server.accept();
+            System.out.println("new connection accepted from IP: " + newClient.getInetAddress());
+            VirtualView newVirtualView = new VirtualView(newClient, serverLobby);
+            Thread newVirtualViewThread = new Thread(newVirtualView);
+            newVirtualViewThread.start();
+            System.out.println("Virtual View for user "+newClient.getInetAddress()+" created");
+        }catch (IOException e){
+            System.out.println("Connection to the client failed");
+        }
+    }
+
 }
 

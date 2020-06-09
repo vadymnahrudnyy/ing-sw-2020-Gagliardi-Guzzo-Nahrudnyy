@@ -34,6 +34,7 @@ public class StartScene extends Application implements Runnable {
         stage.setScene(scene);
         stage.setResizable(false);
         GUI.setPrimaryStage(stage);
+        stage.setOnCloseRequest(GUI::closeApp);
         stage.show();
     }
 

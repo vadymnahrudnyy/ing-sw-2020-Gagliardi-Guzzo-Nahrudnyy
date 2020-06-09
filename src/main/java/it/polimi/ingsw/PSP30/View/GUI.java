@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ public class GUI implements UI,Runnable{
     LobbyController lobbyController = new LobbyController();
     AlertsController alertsController=new AlertsController();
     GodPowerController godPowerController = new GodPowerController();
+
+    private static final int GAME_WINDOW_CLOSED = 3005;
 
     @FXML ImageView backButton2, backButton1, nextButton1, nextButton2;
 
@@ -246,6 +249,7 @@ public class GUI implements UI,Runnable{
                 if (gameStage == null) {
                     gameStage = new Stage();
                     gameStage.setResizable(false);
+                    gameStage.setOnCloseRequest(GUI::closeApp);
                 }
                 lobbyController.showLobby(usernames);
             } catch (IOException e) {
@@ -408,7 +412,7 @@ public class GUI implements UI,Runnable{
             try {
                 EndSceneController.winner(winner);
             } catch (IOException e) {
-                e.printStackTrace();
+                System.out.println("Failed to load end game popup");
             }
         };
         Platform.runLater(endGame);
@@ -416,8 +420,19 @@ public class GUI implements UI,Runnable{
     }
 
     @Override
+    public void opponentDisconnected() {
+        Runnable opponentDisconnectedNotification = EndSceneController::opponentDisconnection;
+        Platform.runLater(opponentDisconnectedNotification);
+    }
+
+    @Override
     public void run() {
         StartScene.main();
+    }
+
+    public static void closeApp(WindowEvent t){
+        Platform.exit();
+        System.exit(GAME_WINDOW_CLOSED);
     }
 
 }

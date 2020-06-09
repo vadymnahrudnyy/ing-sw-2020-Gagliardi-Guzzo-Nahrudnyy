@@ -28,6 +28,7 @@ public class LoginController {
 
     @FXML private static StackPane lobbyPane;
     @FXML public ImageView usernameNext;
+    @FXML public ImageView nextAddress;
     @FXML private TextField addressField,usernameField;
     private static final int SOCKET_PORT = 50000;
 
@@ -53,6 +54,7 @@ public class LoginController {
         address = address.trim();
         if(address.isEmpty()) showEmptyAddressAlert();
         else {
+            nextAddress.setDisable(true);
             Client.setServerAddress(address);
             Client.interruptClientThread();
         }

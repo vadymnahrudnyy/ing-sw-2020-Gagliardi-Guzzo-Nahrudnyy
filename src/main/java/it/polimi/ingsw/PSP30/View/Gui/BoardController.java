@@ -5,6 +5,7 @@ import it.polimi.ingsw.PSP30.View.GUI;
 import it.polimi.ingsw.PSP30.Messages.*;
 
 
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -19,6 +20,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import it.polimi.ingsw.PSP30.Client.Client;
+import javafx.stage.WindowEvent;
 
 
 public class BoardController{
@@ -79,6 +81,7 @@ public class BoardController{
         secondOpponentUsername=(Label) secondOpponentPane.getChildren().get(2);
         Player[] playersUsername = message.getGame().getPlayers();
 
+        GUI.getGameStage().setOnCloseRequest(GUI::closeApp);
 
         playerUsername.setText(Client.getUsername());
         for (Player player : playersUsername) {
@@ -497,6 +500,8 @@ public class BoardController{
         Client.sendMessageToServer(new Disconnection());
         System.exit(0);
     }
+
+
 
     /**
      * This method manages the content of the cells of the board (workers and buildings) and shows the requests during the player's turn

@@ -204,6 +204,11 @@ public interface UI {
      */
     void isWinner(String winner);
 
+    /**
+     * This method shows an alert when an opponent disconnected.
+     */
+    void opponentDisconnected();
+
 }
 
 

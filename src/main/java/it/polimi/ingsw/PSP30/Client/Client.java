@@ -24,8 +24,9 @@ public class Client {
     private static int numPlayers;
     private static String username;
     private static UI ui;
-    private static boolean disconnected;
+    private static boolean disconnected = true;
     private static Thread clientThread;
+    private static final long START_CONNECTION_TIMEOUT = 100000;
 
 
 
@@ -63,6 +64,11 @@ public class Client {
         networkHandler=new NetworkHandler(serverAddress, SOCKET_PORT,Thread.currentThread());
         Thread network= new Thread(networkHandler);
         network.start();
+        try{
+            Thread.sleep(START_CONNECTION_TIMEOUT);
+        }catch (InterruptedException e) {
+            System.out.println("Connection in progress...");
+        }
     }
 
 
@@ -75,7 +81,7 @@ public class Client {
         Thread ThreadGUI = new Thread(gui);
         ThreadGUI.start();
         try{
-            Thread.sleep(1000000000);
+            Thread.sleep(100000000);
         } catch (InterruptedException e){
             System.out.println("");
         }
@@ -84,11 +90,6 @@ public class Client {
             ui.chooseServerAddress();
             System.out.println("");
             startConnection(serverAddress);
-            try{
-                Thread.sleep(150000);
-            }catch (InterruptedException e) {
-                System.out.println("Connection in progress...");
-            }
         }while(disconnected);
 
 
@@ -171,12 +172,15 @@ public class Client {
                         disconnected=true;
                         NetworkHandler.disconnect();
                         break;
+                    case Message.PLAYER_DISCONNECTED_ERROR:
+                        ui.opponentDisconnected();
+                        break;
+
                     default:
                         disconnected = !NetworkHandler.isConnected();
                 }
             }
         }
-        System.exit(12);
     }
 
     /**

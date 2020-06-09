@@ -107,8 +107,8 @@ public class Game implements Serializable {
     public void nextPlayer(){
         Player currentPlayer = getCurrentPlayer();
         int index = 0;
-        while (players[index]!=currentPlayer){++index;} //don't control index to be < num_players in that case a non valid player is playing
-        if (index == numPlayers - 1) setCurrentPlayer(players[0]);
+        while (index < players.length &&players[index]!=currentPlayer){++index;} //don't control index to be < num_players in that case a non valid player is playing
+        if (index == players.length - 1) setCurrentPlayer(players[0]);
         else setCurrentPlayer(players[index+1]);
     }
 

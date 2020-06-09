@@ -7,7 +7,6 @@ import java.net.Socket;
 
 import it.polimi.ingsw.PSP30.Messages.Disconnection;
 import it.polimi.ingsw.PSP30.Messages.Message;
-import it.polimi.ingsw.PSP30.Server.VirtualView;
 import it.polimi.ingsw.PSP30.Utils.QueueOfEvents;
 import it.polimi.ingsw.PSP30.Messages.PingMessage;
 
@@ -39,9 +38,11 @@ public class NetworkHandler implements Runnable {
         input=new ObjectInputStream(socket.getInputStream());
         output=new ObjectOutputStream(socket.getOutputStream());
         setConnected(true);
+        clientThread.interrupt();
     }
 
     public static void sendMessage(Message message) {
+        //noinspection SynchronizeOnNonFinalField
         synchronized (output){
             try {
                 output.flush();
@@ -54,9 +55,8 @@ public class NetworkHandler implements Runnable {
         }
     }
 
-    public QueueOfEvents receive(Message receivedMessage) throws IOException {
+    public void receive(Message receivedMessage) throws IOException {
         if(!isPing(receivedMessage)) incomingMessages.enqueueEvent(receivedMessage);
-        return incomingMessages;
     }
 
     public static void close() throws Exception {
@@ -87,7 +87,7 @@ public class NetworkHandler implements Runnable {
                         try {
                             sendMessage(new PingMessage());
                             //10 Second
-                            int PING_TIMEOUT = 10000;//10 Seconds
+                            int PING_TIMEOUT = 9000;//10 Seconds
                             Thread.sleep(PING_TIMEOUT);
                             if (!pingReceived) missedPings++;
                             if(missedPings > 3){

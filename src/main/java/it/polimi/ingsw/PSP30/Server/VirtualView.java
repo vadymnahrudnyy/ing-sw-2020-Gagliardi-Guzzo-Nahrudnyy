@@ -29,6 +29,7 @@ public class VirtualView implements Runnable {
     private final ObjectInputStream input;
     private final ObjectOutputStream output;
     private final QueueOfEvents incomingMessages;
+    private  Message message;
 
 
     /**
@@ -49,41 +50,31 @@ public class VirtualView implements Runnable {
         virtualViewThread = Thread.currentThread();
         try {
             System.out.println("User " + client.getInetAddress() + " connected");
-            Message message;
+
             try {
-                do {
-                    sendMessage(new NumPlayersRequest());
-                    message = (Message) input.readObject();
-                } while (message.getMessageID() != Message.NUM_PLAYERS_RESPONSE || (((NumPlayersResponse) message).getNumPlayers() != 2 && ((NumPlayersResponse) message).getNumPlayers() != 3));
-                setNumPlayers(((NumPlayersResponse) message).getNumPlayers());
+                askNumPlayers();
+
                 Ping connectionChecker = new Ping(this);
                 pingThread = new Thread(connectionChecker);
                 pingThread.start();
-                do {
-                    do {
-                        sendMessage(new UsernameRequest());
-                        message = (Message) input.readObject();
-                    } while (message.getMessageID() != Message.USERNAME_RESPONSE);
-                    setUsername(((UsernameResponse) message).getUsername());
-                    serverLobby.addPlayerToLobby(numPlayers, this, username, virtualViewThread);
-                    Thread.sleep(100);
-                } while (!isInLobby);
+                System.out.println("Ping Thread for user "+client.getInetAddress()+" created");
+
+                askUsername();
+                Thread.sleep(100);
+
             } catch (SocketException e) {
-                connected = false;
+                setConnected(false);
                 closeConnection();
             } catch (InterruptedException e) {
-                boolean reset = Thread.interrupted();
             }
 
-
-
-            System.out.println("Ping Thread for user "+client.getInetAddress()+" created");
             while (connected) receiveMessage();
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
-        System.out.println(virtualViewThread + " closed");
+        System.out.println(virtualViewThread + " closed --- " + "Virtual view of player: " + username);
     }
+
     protected void setNumPlayers(int value){
         numPlayers = value;
     }
@@ -97,6 +88,38 @@ public class VirtualView implements Runnable {
     }
 
     /**
+     * Method used to ask the player the number of players the client wants to play with.
+     * @throws IOException in case there is an error with the socket.
+     * @throws ClassNotFoundException when failed to cast the received object to Message
+     */
+    private void askNumPlayers () throws IOException, ClassNotFoundException {
+        int selectedNumPlayer;
+        do{
+            sendMessage(new NumPlayersRequest());
+            do message = (Message)input.readObject(); while(message.getMessageID() != Message.NUM_PLAYERS_RESPONSE);
+            selectedNumPlayer = ((NumPlayersResponse)message).getNumPlayers();
+        } while (selectedNumPlayer != 2 && selectedNumPlayer != 3);
+        setNumPlayers(((NumPlayersResponse) message).getNumPlayers());
+    }
+
+    /**
+     * Method used to ask the client his username.
+     * @throws IOException in case there is an error with the socket.
+     * @throws ClassNotFoundException when failed to cast the received object to Message
+     */
+    private void askUsername() throws IOException, ClassNotFoundException, InterruptedException {
+        do {
+            sendMessage(new UsernameRequest());
+            do {
+                message = (Message) input.readObject();
+            } while (message.getMessageID() != Message.USERNAME_RESPONSE);
+            setUsername(((UsernameResponse) message).getUsername());
+            serverLobby.addPlayerToLobby(numPlayers, this, username, virtualViewThread);
+            Thread.sleep(100);
+        } while (!isInLobby);
+    }
+
+    /**
      * Method used to read a message(if there is one) from the input stream  and interrupts the controller thread.
      * In case a socket error occurs, usually meaning the player disconnected, enqueues in the message queue, the disconnection message
      * which will be handled by the controller during the first request of interaction from the player.
@@ -104,15 +127,26 @@ public class VirtualView implements Runnable {
     private void receiveMessage(){
         try{
             try{
-                Message message= (Message) input.readObject();
+                message= (Message) input.readObject();
                 if (message.getMessageID() == Message.PING_MESSAGE) {
                     pingReceived = true;
                     pingThread.interrupt();
                 }
-                else {
-                    incomingMessages.enqueueEvent(message);
-                    associatedGameThread.interrupt();
+                if (message.getMessageID() == Message.DISCONNECTION_MESSAGE){
+                    if (isInLobby){
+                        serverLobby.removePlayerFromLobby(this,username,virtualViewThread);
+                        closeConnection();
+                        return;
+                    }
+                    else if (isInGame){
+                        associatedGame.setDisconnectionDetected();
+                        associatedGameThread.interrupt();
+                        return;
+                    }
                 }
+                incomingMessages.enqueueEvent(message);
+                associatedGameThread.interrupt();
+
             }catch (SocketException e){
                 System.out.println("User "+client.getInetAddress()+" disconnected");
                 if (isInLobby) {
@@ -120,7 +154,7 @@ public class VirtualView implements Runnable {
                     closeConnection();
                 }
                 if (isInGame) {
-                    associatedGame.setDisconnectionDetected(true);
+                    associatedGame.setDisconnectionDetected();
                     associatedGameThread.interrupt();
                     try {
                         Thread.sleep(100000);
@@ -187,16 +221,15 @@ public class VirtualView implements Runnable {
      */
     protected synchronized void closeConnection() {
         try {
-            sendMessage(new Disconnection());
             connected = false;
+            sendMessage(new Disconnection());
             input.close();
             output.close();
             client.close();
 
         } catch (IOException e) {
-            return;
         }
-        connected = false;
+
     }
 
     /**
@@ -240,7 +273,7 @@ public class VirtualView implements Runnable {
      */
     private static class Ping implements Runnable {
         private final VirtualView client;
-        private static final int CONNECTION_TIMEOUT = 10000;//10 seconds
+        private static final int CONNECTION_TIMEOUT = 9000;//10 seconds
         private int missedPing = 0;
 
         public Ping(VirtualView userVirtualView){
@@ -251,12 +284,13 @@ public class VirtualView implements Runnable {
             do{
                 try {
                     client.sendMessage(new PingMessage());
+                    //noinspection BusyWait
                     Thread.sleep(CONNECTION_TIMEOUT);
                     missedPing++;
-                    if (missedPing > 3){
+                    if (missedPing > 2){
                         if(client.isInGame){
                             client.connected = false;
-                            client.associatedGame.setDisconnectionDetected(true);
+                            client.associatedGame.setDisconnectionDetected();
                             client.associatedGameThread.interrupt();
                         }
                         else if (client.isInLobby){

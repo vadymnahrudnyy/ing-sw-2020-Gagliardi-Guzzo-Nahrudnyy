@@ -5,7 +5,6 @@ import it.polimi.ingsw.PSP30.Exception.Server.PlayerDisconnectedException;
 import it.polimi.ingsw.PSP30.Messages.*;
 import it.polimi.ingsw.PSP30.Model.*;
 
-import java.net.SocketException;
 import java.util.ArrayList;
 
 /**
@@ -69,7 +68,6 @@ class GameController implements Runnable {
 
     private void allPlayersDisconnect(){
         for (VirtualView client : virtualViewsList) {
-            client.setConnected(false);
             client.sendMessage(new PlayerDisconnectedError());
             try{
                 Thread.sleep(50);
@@ -77,7 +75,9 @@ class GameController implements Runnable {
             catch (InterruptedException e){
                 System.out.println("Disconnection interrupted");
             }
+
             client.closeConnection();
+            client.setConnected(false);
             client.getVirtualViewThread().interrupt();
         }
     }
@@ -244,7 +244,7 @@ class GameController implements Runnable {
                 currentClient.sendMessage(new NoPossibleMoveError());
                 removePlayerFromGame(currentPlayer);
                 moveMade = true;
-                buildAllowed = false;
+                buildAllowed = moveAllowed = false;
             }
         }
     }
@@ -341,11 +341,15 @@ class GameController implements Runnable {
             if(!(validGodsReceived = correctGodChose(firstVirtualView,gameGods))) firstVirtualView.sendMessage(new InvalidGodError());
         }while(!validGodsReceived);
         notifyGameStatusToAll();
+        God receivedGod;
         for(int Index = 1; Index< currentGame.getNumPlayers();++Index){
-            virtualViewsList[Index].sendMessage(new ChoseGodRequest(gameGods, chosenGods));
-            waitValidMessage(virtualViewsList[Index],new int[]{Message.CHOSE_GOD_RESPONSE});
-            System.out.println("Chosen god: "+((ChoseGodResponse)receivedMessage).getChosenGod());
-            God receivedGod = getGodByName(((ChoseGodResponse)receivedMessage).getChosenGod());
+            do{
+                virtualViewsList[Index].sendMessage(new ChoseGodRequest(gameGods, chosenGods));
+                waitValidMessage(virtualViewsList[Index],new int[]{Message.CHOSE_GOD_RESPONSE});
+                System.out.println("Chosen god: "+((ChoseGodResponse)receivedMessage).getChosenGod());
+                receivedGod= getGodByName(((ChoseGodResponse)receivedMessage).getChosenGod());
+            } while (receivedGod == null || chosenGods.contains(receivedGod));
+
             Player actualPlayer = currentGame.getPlayerByUsername(virtualViewsList[Index].getUsername());
             if (actualPlayer == null) System.out.println("Wanted player doesn't exist");
             else {
@@ -469,7 +473,7 @@ class GameController implements Runnable {
                                         tempX = X + (X - (workerCoordinateX - 1));
                                         tempY = Y + (Y - (workerCoordinateY - 1));
                                         if (tempX >= 0 && tempY >= 0 && tempX < IslandBoard.TABLE_DIMENSION && tempY < IslandBoard.TABLE_DIMENSION) {
-                                            Space tempSpace = currentBoard.getSpace(tempX, tempY);
+                                            Space tempSpace = currentBoard.getSpace(tempX+1, tempY+1);
                                             if ((tempSpace.getWorkerInPlace() == null) && (!tempSpace.getHasDome())) allowedMoves[X][Y] = true;
                                         }
                                         break;
@@ -648,16 +652,18 @@ class GameController implements Runnable {
      * @param winnerUsername Username of the winner.
      */
     private void victory(String winnerUsername){
-        moveAllowed = buildAllowed = running = false;
+
         for (VirtualView player:virtualViewsList) {
             player.sendMessage(new WinnerNotification(winnerUsername));
             try {
-                Thread.sleep(50);
+                Thread.sleep(100);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                //noinspection ResultOfMethodCallIgnored
+                Thread.interrupted();
             }
             player.closeConnection();
         }
+        moveAllowed = buildAllowed = running = false;
     }
     /**
      * Checks in the matrix indicating allowed moves if an action can be performed by the worker
@@ -677,30 +683,49 @@ class GameController implements Runnable {
      * @param playerToRemove player to remove from the game
      */
     protected void removePlayerFromGame(Player playerToRemove) {
+        if (playerToRemove.getGod().getSinglePower(0) == Power.OPPONENTS_NOT_MOVE_UP_POWER) currentGame.setAthenaMovedUp(false); //disable Athena Power
+
         Player[] currentPlayers = currentGame.getPlayers();
-        if (currentGame.getNumPlayers() == 2) {
+        if (currentPlayers.length == 2) {
             if ((currentPlayers = currentGame.getPlayers())[0]==playerToRemove) victory(currentPlayers[1].getUsername());
             else victory(currentPlayers[0].getUsername());
+            return;
         }
-        else {
-            Player[] newPlayersArray = new Player[currentGame.getNumPlayers() - 1];
-            Player tempPlayer;
-            int newPlayersArrayIndex = 0;
-            for (int i = 0; i < currentGame.getNumPlayers(); ++i) {
-                if ((tempPlayer = currentPlayers[i]) != playerToRemove) {
-                    newPlayersArray[newPlayersArrayIndex] = tempPlayer;
-                    ++newPlayersArrayIndex;
-                    if (currentGame.getStarterPlayer() == currentPlayers[i]) {
-                        if (i == 2) currentGame.setStarterPlayer(newPlayersArray[0].getUsername());
-                        else currentGame.setStarterPlayer(currentPlayers[i + 1].getUsername());
-                    }
-                } else {
-                    if (i > 0) currentGame.setCurrentPlayer(currentPlayers[i - 1]);
-                    else currentGame.setCurrentPlayer(currentPlayers[1]);
+
+        Player[] newPlayers = new Player[currentPlayers.length - 1];
+        Player tempPlayer;
+        int index = 0, newIndex = 0;
+        for (; index < currentPlayers.length; index++){
+            if (!playerToRemove.equals(currentPlayers[index])){
+                newPlayers[newIndex] = currentPlayers[index];
+                newIndex++;
+            }
+            else {
+                if (index == 0){
+                    currentGame.setCurrentPlayer(currentPlayers[2]);
+                    currentGame.setStarterPlayer(currentPlayers[1].getUsername());
+                }
+                if (index == 1) {
+                    currentGame.setCurrentPlayer(currentPlayers[index-1]);
+                    currentGame.setStarterPlayer(currentPlayers[index+1].getUsername());
+                }
+                if (index == newPlayers.length){
+                    currentGame.setCurrentPlayer(newPlayers[newPlayers.length-1]);
+                    currentGame.setStarterPlayer(newPlayers[0].getUsername());
                 }
             }
-            currentGame.setPlayers(newPlayersArray);
         }
+        currentGame.setPlayers(newPlayers);
+        removePlayersWorkers(playerToRemove);
+    }
+
+    /**
+     * Method used to remove the worker of a player that has been removed from the game
+     * @param playerToRemove the player removed from the game.
+     */
+    protected void removePlayersWorkers(Player playerToRemove){
+        Worker[] workersToRemove = playerToRemove.getWorkers();
+        for (Worker workerToRemove : workersToRemove) workerToRemove.getWorkerPosition().setWorkerInPlace(null);
     }
     /**
      * Method waitValidMessage
@@ -711,14 +736,12 @@ class GameController implements Runnable {
         boolean receivedValidMessage;
         System.out.println("Waiting for a valid message");
         do {
-            while((receivedMessage = senderVirtualView.dequeueFirstMessage())==null)
-                gameThreadWait();
+            while((receivedMessage = senderVirtualView.dequeueFirstMessage()) == null) gameThreadWait();
             System.out.println("New message received, checking validity");
             receivedValidMessage = checkMessageValidity(receivedMessage,messageIDs);
             if (receivedMessage.getMessageID() == Message.DISCONNECTION_MESSAGE){
                 for (VirtualView player:virtualViewsList) player.closeConnection();
-                running = false;
-            }
+                running = false;}
         } while (!receivedValidMessage);
     }
 
@@ -783,8 +806,8 @@ class GameController implements Runnable {
         return currentGame.getGameBoard();
     }
 
-    protected void setDisconnectionDetected(boolean value){
-        disconnectionDetected = value;
+    protected void setDisconnectionDetected(){
+        disconnectionDetected = true;
     }
     //GOD POWER HANDLERS
 
@@ -859,9 +882,9 @@ class GameController implements Runnable {
      * @param BuildSpace Space the player previously has built in.
      */
     protected void handleHephaestusPower(Space BuildSpace) throws PlayerDisconnectedException {
-        if (BuildSpace.getHeight() < Space.DOME_LEVEL - 1) return;
+        if (BuildSpace.getHeight() >= Space.DOME_LEVEL - 1) return;
         currentClient.sendMessage(new UsePowerRequest());
-        waitValidMessage(currentClient, new int[]{Message.USE_POWER_REQUEST});
+        waitValidMessage(currentClient, new int[]{Message.USE_POWER_RESPONSE});
         if (!((UsePowerResponse)receivedMessage).wantUsePower()) return;
         BuildSpace.incrementHeight();
         notifyGameStatusToAll();
@@ -922,11 +945,16 @@ class GameController implements Runnable {
         //if player does not want to use the power, the method ends.
         if (!((UsePowerResponse)receivedMessage).wantUsePower()) return;
         //sending the block removal request
-        currentClient.sendMessage(new BlockRemovalRequest(allowedRemovals));
-        waitValidMessage(currentClient,new int[] {Message.BLOCK_REMOVAL_RESPONSE});
-        //removing a block from the selected place and then notify the game status to all players.
-        int removeX = ((BlockRemovalResponse)receivedMessage).getRemoveCoordinateX(), removeY = ((BlockRemovalResponse)receivedMessage).getRemoveCoordinateY();
+        int removeX, removeY;
+        do {
+            currentClient.sendMessage(new BlockRemovalRequest(allowedRemovals));
+            waitValidMessage(currentClient, new int[]{Message.BLOCK_REMOVAL_RESPONSE});
+            //removing a block from the selected place and then notify the game status to all players.
+            removeX = ((BlockRemovalResponse) receivedMessage).getRemoveCoordinateX();
+            removeY = ((BlockRemovalResponse) receivedMessage).getRemoveCoordinateY();
+        } while (!allowedRemovals[removeX-1][removeY-1]);
         gameBoard.getSpace(removeX,removeY).decrementHeight();
+
         notifyGameStatusToAll();
     }
 
@@ -972,8 +1000,9 @@ class GameController implements Runnable {
             if (((UsePowerResponse)receivedMessage).wantUsePower()){
                 client.sendMessage(new BuildRequest(allowedBuild));
                 waitValidMessage(client,new int[]{Message.BUILD_RESPONSE});
-                Space toBuildSpace = currentGame.getGameBoard().getSpace(((BuildResponse) receivedMessage).getBuildCoordinateX(),((BuildResponse) receivedMessage).getBuildCoordinateY());
-                blockAddInSpace(toBuildSpace);
+                int buildX = ((BuildResponse) receivedMessage).getBuildCoordinateX(), buildY = ((BuildResponse) receivedMessage).getBuildCoordinateY();
+                if (allowedBuild[buildX-1][buildY-1]) blockAddInSpace(gameBoard.getSpace(buildX,buildY));
+                else client.sendMessage(new InvalidMoveError());
             }
         }
     }

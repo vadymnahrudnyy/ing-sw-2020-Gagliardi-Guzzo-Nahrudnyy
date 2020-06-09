@@ -75,12 +75,21 @@ public class GodsController {
         thirdGod=(ToggleButton) vBox.getChildren().get(2);
         thirdGod.setToggleGroup(toggleGroup);
         singleGodChoiceToggleButtonImage((tempGod = gameGods.get(0)).getName(), firstGod, singleGodBorderPane);
-        if (godAlreadyChosen(tempGod.getName(),chosenGods)) firstGod.setOpacity(0.3);
+        if (godAlreadyChosen(tempGod.getName(),chosenGods)) {
+            firstGod.setOpacity(0.3);
+            firstGod.setDisable(true);
+        }
         singleGodChoiceToggleButtonImage((tempGod = gameGods.get(1)).getName(), secondGod, singleGodBorderPane);
-        if (godAlreadyChosen(tempGod.getName(),chosenGods)) secondGod.setOpacity(0.3);
+        if (godAlreadyChosen(tempGod.getName(),chosenGods)) {
+            secondGod.setOpacity(0.3);
+            secondGod.setDisable(true);
+        }
         if (Client.getNumPlayers() == 3){
             singleGodChoiceToggleButtonImage((tempGod = gameGods.get(2)).getName(), thirdGod, singleGodBorderPane);
-            if (godAlreadyChosen(gameGods.get(2).getName(),chosenGods)) thirdGod.setOpacity(0.3);
+            if (godAlreadyChosen(gameGods.get(2).getName(),chosenGods)) {
+                thirdGod.setOpacity(0.3);
+                thirdGod.setDisable(true);
+            }
         }
         else vBox.getChildren().remove(2);
         GUI.getGameStage().setScene(new Scene(singleGodSelectionPane));

@@ -1,12 +1,15 @@
 package it.polimi.ingsw.PSP30.View.Gui;
 
+import it.polimi.ingsw.PSP30.Messages.Disconnection;
 import it.polimi.ingsw.PSP30.View.GUI;
 import it.polimi.ingsw.PSP30.Client.Client;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
@@ -23,6 +26,8 @@ public class LobbyController {
     @FXML private BorderPane borderPane;
     @FXML private VBox opponentsVBox;
     @FXML private ImageView exitButton;
+
+    private static final int APP_CLOSED_BY_LOBBY_EXIT_BUTTON = 3006;
 
 
     /**
@@ -54,5 +59,11 @@ public class LobbyController {
        }
        GUI.getGameStage().setScene(new Scene(lobbyPane));
        GUI.getGameStage().show();
+    }
+
+    public void lobbyExitButton(MouseEvent event){
+        Client.sendMessageToServer(new Disconnection());
+        Platform.exit();
+        System.exit(APP_CLOSED_BY_LOBBY_EXIT_BUTTON);
     }
 }

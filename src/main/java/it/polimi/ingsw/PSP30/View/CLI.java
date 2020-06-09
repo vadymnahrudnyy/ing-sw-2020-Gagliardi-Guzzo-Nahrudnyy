@@ -453,4 +453,10 @@ public class CLI implements UI {
         System.out.println("Game over! The winner is: " + winner);
     }
 
+    @Override
+    public void opponentDisconnected() {
+        if (Client.getNumPlayers() == 2)System.out.println("Your opponent has left. The game is finished.");
+        else System.out.println("One of your opponents has left the game. The game is finished");
+    }
+
 }
