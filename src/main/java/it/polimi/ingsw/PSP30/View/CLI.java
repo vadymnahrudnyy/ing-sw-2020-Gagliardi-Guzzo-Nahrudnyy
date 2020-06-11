@@ -39,6 +39,7 @@ public class CLI implements UI {
         System.out.println("During your turn you can move: the movement can only be in the boxes directly adjacent to your position.");
         System.out.println("Then you can build, there are 4 types of blocks: level 1, level 2, level 3 and dome 4.");
         System.out.println("It can happen that a dome is built at any level, in that case it will be indicated with a D and flanked by the level below.");
+        System.out.println("If you want to exit the game, press ctrl+c");
         System.out.println("");
     }
 
@@ -160,7 +161,7 @@ public class CLI implements UI {
         for (God god : unavailableList) {
             System.out.print(god.getName() + " ");
         }
-
+        System.out.println();
         System.out.println("You have to choose one and avoid the ones already chosen.");
         input = new Scanner(System.in);
         String chosen = input.nextLine();
@@ -192,7 +193,7 @@ public class CLI implements UI {
         int x = input.nextInt();
         System.out.println("Insert coordinate Y: ");
         int y = input.nextInt();
-        while (((x < 0||y < 0)||(x > IslandBoard.TABLE_DIMENSION || y > IslandBoard.TABLE_DIMENSION))||(!allowedPosition[x-1][y-1])){
+        while (((x <= 0||y <= 0)||(x > IslandBoard.TABLE_DIMENSION || y > IslandBoard.TABLE_DIMENSION))||(!allowedPosition[x-1][y-1])){
             System.out.println("Position is not valid.");
             input = new Scanner(System.in);
             System.out.println("Insert coordinate X: ");
@@ -234,12 +235,13 @@ public class CLI implements UI {
 
     @Override
     public void moveWorker(boolean[][] allowedMoves) {
+        if(Client.changedWorker) return;
         System.out.println("Choose which space you want to move your worker by stating the numerical coordinates x and y.");
         input=new Scanner(System.in);
         int x=input.nextInt();
         int y=input.nextInt();
 
-        while((x<0||y<0)||(x>IslandBoard.TABLE_DIMENSION||y>IslandBoard.TABLE_DIMENSION)||(!allowedMoves[x - 1][y - 1])) {
+        while((x<=0||y<=0)||(x>IslandBoard.TABLE_DIMENSION||y>IslandBoard.TABLE_DIMENSION)||(!allowedMoves[x - 1][y - 1])) {
             System.out.println("Space already occupied! Choose other coordinates!");
             input = new Scanner(System.in);
             x = input.nextInt();
@@ -285,13 +287,16 @@ public class CLI implements UI {
 
     @Override
     public void changeWorker(boolean canChangeWorker){
-
-        if(canChangeWorker && confirmChoice()) {
+        if(!canChangeWorker) Client.changedWorker=false;
+        else if(confirmChoice()) {
             input = new Scanner(System.in);
             int x = input.nextInt();
             int y = input.nextInt();
             NetworkHandler.sendMessage(new SelectWorkerResponse(x, y));
+            Client.changedWorker=true;
         }
+        else
+            Client.changedWorker=false;
     }
 
 
@@ -302,7 +307,7 @@ public class CLI implements UI {
         int x = input.nextInt();
         int y = input.nextInt();
 
-        while(!allowedBuild[x - 1][y - 1]) {
+        while((x<=0||y<=0)||(x>IslandBoard.TABLE_DIMENSION||y>IslandBoard.TABLE_DIMENSION) || (!allowedBuild[x - 1][y - 1])) {
             System.out.println("You can't build here! Choose other coordinates!");
             input = new Scanner(System.in);
             x = input.nextInt();
@@ -333,7 +338,7 @@ public class CLI implements UI {
         int x = input.nextInt();
         int y = input.nextInt();
 
-        while(!allowedToRemove[x - 1][y - 1]) {
+        while((x<=0||y<=0)||(x>IslandBoard.TABLE_DIMENSION||y>IslandBoard.TABLE_DIMENSION) || (!allowedToRemove[x - 1][y - 1])) {
             System.out.println("Removal not allowed! Choose other coordinates.");
             input = new Scanner(System.in);
             x = input.nextInt();

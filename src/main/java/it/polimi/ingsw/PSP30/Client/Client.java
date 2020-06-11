@@ -27,6 +27,7 @@ public class Client {
     private static boolean disconnected = true;
     private static Thread clientThread;
     private static final long START_CONNECTION_TIMEOUT = 100000;
+    public static boolean changedWorker=false;
 
 
 
