@@ -362,7 +362,10 @@ public class GUI implements UI,Runnable{
     public void printPossibleAction(boolean[][] allowed) { }
 
     @Override
-    public void changeWorker(boolean canChangeWorker) { }
+    public void changeWorker(boolean canChangeWorker) {
+        Runnable setChange = () -> boardController.setCanChangeWorker(canChangeWorker);
+        Platform.runLater(setChange);
+    }
 
     @Override
     public void buildTower(boolean[][] allowedBuild) {

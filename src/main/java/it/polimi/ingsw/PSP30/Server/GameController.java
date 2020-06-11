@@ -150,7 +150,7 @@ class GameController implements Runnable {
         else if (currentPlayerHasPower(Power.NOT_MOVE_UP_DOUBLE_BUILD_POWER)){
             allowedMoves = checkPossibleMoves(startSpace.getCoordinateX(),startSpace.getCoordinateY());
             if (workerCanMakeMove(allowedMoves))currentClient.sendMessage(new MoveRequest(allowedMoves,false));
-            else removePlayerFromGame(currentPlayer);
+            else removePlayerFromGame(currentPlayer,currentClient);
         }
         do{
             waitValidMessage(currentClient,new int[]{Message.SELECT_WORKER_RESPONSE,Message.MOVE_RESPONSE});
@@ -242,7 +242,7 @@ class GameController implements Runnable {
             if (workerCanMakeMove(allowedMoves)) currentClient.sendMessage(new OtherWorkerMoveRequest(allowedMoves));
             else {
                 currentClient.sendMessage(new NoPossibleMoveError());
-                removePlayerFromGame(currentPlayer);
+                removePlayerFromGame(currentPlayer,currentClient);
                 moveMade = true;
                 buildAllowed = moveAllowed = false;
             }
@@ -682,9 +682,9 @@ class GameController implements Runnable {
      * so the victory method is called in order to notify the winner.
      * @param playerToRemove player to remove from the game
      */
-    protected void removePlayerFromGame(Player playerToRemove) {
+    protected void removePlayerFromGame(Player playerToRemove,VirtualView clientToRemove) {
         if (playerToRemove.getGod().getSinglePower(0) == Power.OPPONENTS_NOT_MOVE_UP_POWER) currentGame.setAthenaMovedUp(false); //disable Athena Power
-
+        clientToRemove.setInGame(false);
         Player[] currentPlayers = currentGame.getPlayers();
         if (currentPlayers.length == 2) {
             if ((currentPlayers = currentGame.getPlayers())[0]==playerToRemove) victory(currentPlayers[1].getUsername());
@@ -693,7 +693,6 @@ class GameController implements Runnable {
         }
 
         Player[] newPlayers = new Player[currentPlayers.length - 1];
-        Player tempPlayer;
         int index = 0, newIndex = 0;
         for (; index < currentPlayers.length; index++){
             if (!playerToRemove.equals(currentPlayers[index])){

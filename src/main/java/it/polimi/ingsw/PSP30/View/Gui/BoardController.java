@@ -52,7 +52,8 @@ public class BoardController{
     private static final ArrayList<String> selectedGods = new ArrayList<>();
 
     private static boolean[][] allowedMoves;
-    private static boolean workerPositionRequest = false, selectWorkerRequest = false, moveRequest = false, buildRequest = false, removeRequest = false;
+    private static boolean workerPositionRequest = false, selectWorkerRequest = false, moveRequest = false, buildRequest = false;
+    private static boolean removeRequest = false, canChangeWorker = false;
 
     /**
      * This method initializes the Board scene with all the elements of the GameStage
@@ -175,6 +176,7 @@ public class BoardController{
         firstOpponentGod.setStyle("");
         secondOpponentGod.setStyle("");
     }
+
 
     /**
      * This method is used to set the value of moveRequest variable
@@ -347,6 +349,10 @@ public class BoardController{
         return null;
     }
 
+    public void setCanChangeWorker(boolean value){
+        canChangeWorker = value;
+    }
+
     /**
      * This method shows the request to select where to place the indicated worker (during the game setup)
      * @param workerIndex integer index of the worker
@@ -375,6 +381,7 @@ public class BoardController{
         for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
             for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
                 if(allowedMove[X][Y])cell[X][Y].setAllowed();
+                else cell[X][Y].setNotAllowed();
             }
         messagesTag.setText("Select the position you want to move to");
     }
@@ -508,7 +515,7 @@ public class BoardController{
      */
     public static class Cell extends StackPane {
         protected int coordinateX, coordinateY;
-        Pane allowedMovePane = new Pane();
+        protected Pane allowedMovePane = new Pane();
 
         public Cell(int X, int Y, Space space) {
             this.setMaxSize(107,107);
@@ -574,7 +581,9 @@ public class BoardController{
                 }
                 if (moveRequest){
                     moveRequest = false;
-                    Client.sendMessageToServer(new MoveResponse(coordinateX,coordinateY));
+
+                    if (allowedMoves[coordinateX-1][coordinateY-1])Client.sendMessageToServer(new MoveResponse(coordinateX,coordinateY));
+                    else Client.sendMessageToServer(new SelectWorkerResponse(coordinateX,coordinateY));
                 }
                 if (buildRequest){
                     buildRequest = false;
@@ -592,6 +601,13 @@ public class BoardController{
          */
         public void setAllowed(){
             allowedMovePane.setStyle("-fx-background-color: #49eeff; -fx-opacity: 0.5");
+        }
+
+        /**
+         * This method set the cell as not allowed for a move.
+         */
+        public void setNotAllowed(){
+            allowedMovePane.setStyle("-fx-background-color: transparent");
         }
     }
 

@@ -60,7 +60,7 @@ public class VirtualView implements Runnable {
                 System.out.println("Ping Thread for user "+client.getInetAddress()+" created");
 
                 askUsername();
-                Thread.sleep(100);
+                Thread.sleep(500);
 
             } catch (SocketException e) {
                 setConnected(false);
@@ -131,6 +131,7 @@ public class VirtualView implements Runnable {
                 if (message.getMessageID() == Message.PING_MESSAGE) {
                     pingReceived = true;
                     pingThread.interrupt();
+                    return;
                 }
                 if (message.getMessageID() == Message.DISCONNECTION_MESSAGE){
                     if (isInLobby){
@@ -296,6 +297,7 @@ public class VirtualView implements Runnable {
                         else if (client.isInLobby){
                             client.serverLobby.removePlayerFromLobby(client,client.getUsername(),client.virtualViewThread);
                         }
+                        else client.closeConnection();
                     }
                 } catch (InterruptedException e) {
                     if (client.pingReceived) {
