@@ -219,12 +219,14 @@ public class Lobby {
 
 
     protected static class LobbyStatusNotifier implements Runnable{
-        @SuppressWarnings({"InfiniteLoopStatement", "BusyWait"})
+        private static final int LOBBY_NOTIFY_TIMEOUT  = 2000;
         @Override
         public void run() {
+            //noinspection InfiniteLoopStatement
             while(true){
                 try {
-                    Thread.sleep(2000);
+                    //noinspection BusyWait
+                    Thread.sleep(LOBBY_NOTIFY_TIMEOUT);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP30.Server;
 
+import it.polimi.ingsw.PSP30.Messages.Message;
 import org.junit.Test;
 import org.junit.After;
 import org.junit.Before;
@@ -21,7 +22,7 @@ public class LobbyTest {
     ServerSocket testSocket;
 
     private static int TEST_NUM_PLAYERS,testNum;
-    protected static final int TEST_PORT = 50000;
+    protected static final int TEST_PORT = 51000;
     private static final int EMPTY_LOBBY = 0, ONE_PLAYER_IN_LOBBY = 1, TWO_PLAYERS_IN_LOBBY = 2;
 
     @Before
@@ -153,6 +154,7 @@ public class LobbyTest {
         assertEquals(EMPTY_LOBBY,testNum);
     }
 
+    @SuppressWarnings("SynchronizeOnNonFinalField")
     protected static class testClient implements Runnable{
         Socket socket;
         ObjectInputStream input;
@@ -168,5 +170,19 @@ public class LobbyTest {
                 e.printStackTrace();
             }
         }
+
+        protected void sendMessage(Message message){
+            synchronized (output){
+                try {
+                    output.flush();
+                    output.reset();
+                    output.writeObject(message);
+                } catch (IOException e) {
+                    System.out.println("test sendMessage failed");
+                }
+            }
+        }
+
+
     }
 }

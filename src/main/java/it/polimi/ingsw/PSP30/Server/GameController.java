@@ -28,8 +28,8 @@ class GameController implements Runnable {
     private Space startSpace, destSpace;
     private boolean[][] allowedMoves, allowedBuilds;
     private Worker moveWorker;
-    private Player currentPlayer;
-    private VirtualView currentClient;
+    protected Player currentPlayer;
+    protected VirtualView currentClient;
     private final IslandBoard gameBoard;
     private final VirtualView[] virtualViewsList;
 
@@ -224,7 +224,7 @@ class GameController implements Runnable {
                     indexes[1] = j;
                     return indexes;
                 }
-        return indexes;
+        return null;
     }
 
     /**
@@ -393,6 +393,14 @@ class GameController implements Runnable {
         int index=0;
         for (; index<gameGods.size()-1;++index) if (!chosenGods.contains(gameGods.get(index))) return gameGods.get(index);
         return gameGods.get(index);
+    }
+
+    /**
+     * Method used to get the game object of a game. Used for test purposes
+     * @return the Game object used to store the game status.
+     */
+    protected Game getCurrentGame(){
+        return currentGame;
     }
     /**
      * Method used to ask the Challenger the username of the start player.
@@ -652,16 +660,19 @@ class GameController implements Runnable {
      * @param winnerUsername Username of the winner.
      */
     private void victory(String winnerUsername){
-
-        for (VirtualView player:virtualViewsList) {
-            player.sendMessage(new WinnerNotification(winnerUsername));
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                //noinspection ResultOfMethodCallIgnored
-                Thread.interrupted();
-            }
-            player.closeConnection();
+        for (VirtualView player:virtualViewsList) player.sendMessage(new WinnerNotification(winnerUsername));
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            //noinspection ResultOfMethodCallIgnored
+            Thread.interrupted();
+        }
+        for (VirtualView player:virtualViewsList) player.closeConnection();
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            //noinspection ResultOfMethodCallIgnored
+            Thread.interrupted();
         }
         moveAllowed = buildAllowed = running = false;
     }
@@ -980,7 +991,7 @@ class GameController implements Runnable {
     protected void handleHestiaPower() throws PlayerDisconnectedException {
         int workerX = moveWorker.getWorkerPosition().getCoordinateX(), workerY = moveWorker.getWorkerPosition().getCoordinateY();
         allowedBuilds = checkHestiaAllowedBuilds(workerX, workerY);
-        if(workerCanMakeMove(allowedBuilds))secondBuildMake(allowedBuilds,currentClient);
+        if(workerCanMakeMove(allowedBuilds)) secondBuildMake(allowedBuilds,currentClient);
         notifyGameStatusToAll();
     }
 
@@ -1019,7 +1030,8 @@ class GameController implements Runnable {
                 if((X >= 0 && X < IslandBoard.TABLE_DIMENSION) && (Y >= 0 && Y < IslandBoard.TABLE_DIMENSION)){
                     int currentHeight = gameBoard.getSpace(X+1,Y+1).getHeight();
                     boolean hasDome = gameBoard.getSpace(X+1,Y+1).getHasDome();
-                    if((currentHeight != 0)&&(!hasDome)) removals[X][Y] = true;
+                    Worker workerInPlace = gameBoard.getSpace(X+1,Y+1).getWorkerInPlace();
+                    if((currentHeight != 0)&&(!hasDome)&& workerInPlace == null) removals[X][Y] = true;
                 }
             }
         }

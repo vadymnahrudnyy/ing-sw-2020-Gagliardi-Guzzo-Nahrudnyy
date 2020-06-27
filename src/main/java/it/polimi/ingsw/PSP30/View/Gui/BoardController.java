@@ -169,6 +169,14 @@ public class BoardController{
     }
 
     /**
+     *
+     */
+    public static void resetWorkerMovesMarkers(){
+        for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
+            for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++)
+                cell[X][Y].setNotAllowed();
+    }
+    /**
      * This method resets the dropshadow effect when isn't anymore the player's turn
      */
     public void resetCurrentPlayerDropshadow(){
@@ -583,7 +591,10 @@ public class BoardController{
                     moveRequest = false;
 
                     if (allowedMoves[coordinateX-1][coordinateY-1])Client.sendMessageToServer(new MoveResponse(coordinateX,coordinateY));
-                    else Client.sendMessageToServer(new SelectWorkerResponse(coordinateX,coordinateY));
+                    else {
+                        BoardController.resetWorkerMovesMarkers();
+                        Client.sendMessageToServer(new SelectWorkerResponse(coordinateX,coordinateY));
+                    }
                 }
                 if (buildRequest){
                     buildRequest = false;
