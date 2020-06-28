@@ -11,7 +11,7 @@ import it.polimi.ingsw.PSP30.Utils.QueueOfEvents;
 import it.polimi.ingsw.PSP30.Messages.PingMessage;
 
 /**
- * This class behave like the server for client
+ * This class behaves like the server for client.
  * @version 1.0
  */
 public class NetworkHandler implements Runnable {
@@ -33,6 +33,10 @@ public class NetworkHandler implements Runnable {
         clientThread=thread;
     }
 
+    /**
+     * This method establishes the connection and creates ObjectInput and ObjectOutput streams.
+     * @throws Exception is thrown when the connection attempt has failed
+     */
     public void connect() throws Exception {
         socket=new Socket(getServerAddress(),getServerPort());
         input=new ObjectInputStream(socket.getInputStream());
@@ -41,6 +45,10 @@ public class NetworkHandler implements Runnable {
         clientThread.interrupt();
     }
 
+    /**
+     * This method manages the sending of a message.
+     * @param message is the message which has to be sent
+     */
     public static void sendMessage(Message message) {
         //noinspection SynchronizeOnNonFinalField
         synchronized (output){
@@ -55,15 +63,29 @@ public class NetworkHandler implements Runnable {
         }
     }
 
+    /**
+     * This method manages the reception of a message and the consequent queued of it.
+     * @param receivedMessage is the incoming message
+     * @throws IOException if there is a problem in the receipt of the message
+     */
     public void receive(Message receivedMessage) throws IOException {
         if(!isPing(receivedMessage)) incomingMessages.enqueueEvent(receivedMessage);
     }
 
+    /**
+     * This method closes the socket.
+     * @throws Exception when the socket failed to be closed
+     */
     public static void close() throws Exception {
         socket.close();
         setConnected(false);
     }
 
+    /**
+     * This method is executed on a new thread, it starts the connection with the server and when the connection is established it
+     * distinguishes between ping or normal messages. If if a ping message is received, the received ping's flag is set to "true"
+     * and then the ping thread is interrupted, otherwise the message is queued.
+     */
     public void run() {
         try {
             connect();
@@ -125,7 +147,7 @@ public class NetworkHandler implements Runnable {
 
     /**
      * Getter of parameter connected.
-     * @return true if the client is connected to the server or false if it is not connected.
+     * @return true if the client is connected to the server or false if it is not connected
      */
     public static boolean isConnected() {
         return isConnected;
@@ -133,7 +155,7 @@ public class NetworkHandler implements Runnable {
 
     /**
      * Getter of parameter connected.
-     * @param connected is the boolean that indicates if the client is connected to the server or not.
+     * @param connected is the boolean that indicates if the client is connected to the server or not
      */
     public static void setConnected(boolean connected) {
         Client.setDisconnected(!connected);
@@ -150,13 +172,15 @@ public class NetworkHandler implements Runnable {
             e.printStackTrace();
         }
     }
+
     /**
      * Getter of the server address.
-     * @return the address of the server.
+     * @return the address of the server
      */
     public String getServerAddress() {
         return serverAddress;
     }
+
     /**
      * Getter of the server port.
      * @return the port of the server
@@ -178,7 +202,7 @@ public class NetworkHandler implements Runnable {
      * Method that manages the ping message
      * @param message value of the message
      * @return true if the message was a ping
-     * @throws IOException if there are connection problems.
+     * @throws IOException if there are connection problems
      */
     public boolean isPing(Message message) throws IOException {
         if (message.getMessageID()==Message.PING_MESSAGE){

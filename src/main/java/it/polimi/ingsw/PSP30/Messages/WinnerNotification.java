@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP30.Messages;
 
 /**
- * WinnerNotification implements the message used to announce the winner
+ * WinnerNotification implements the message used to announce the winner.
  */
 public class WinnerNotification extends Message{
     private static final long serialVersionUID = 100018L;

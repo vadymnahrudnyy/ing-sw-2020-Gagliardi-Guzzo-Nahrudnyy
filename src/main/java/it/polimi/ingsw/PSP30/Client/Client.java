@@ -59,7 +59,7 @@ public class Client {
 
 
     /**
-     *This method creates a new network handler and creates a new thread
+     * This method creates a new network handler and a new thread.
      */
     public static void startConnection(String serverAddress){
         networkHandler=new NetworkHandler(serverAddress, SOCKET_PORT,Thread.currentThread());
@@ -74,7 +74,7 @@ public class Client {
 
 
     /**
-     *This is the main of the class: it starts the connection and manages all the messages received from the network handler
+     * This is the main method of the class: it starts the connection and manages all the messages received from the network handler.
      */
     public static void main(String[] args) throws Exception {
         clientThread = Thread.currentThread();
@@ -185,7 +185,7 @@ public class Client {
     }
 
     /**
-     * This method manages not valid address error
+     * This method manages not valid address error.
      */
     public static void addressError() {
         ui.errorServerAddress();
@@ -193,7 +193,7 @@ public class Client {
 
 
     /**
-     *This method manages the username request and send to the network handler the player's response
+     * This method manages the username request and send to the network handler the player's response.
      */
     public static void askUsername()  {
         ui.chooseUsername();
@@ -201,7 +201,7 @@ public class Client {
 
 
     /**
-     * This method manages not valid username error
+     * This method manages not valid username error.
      */
     private static void usernameError() {
         ui.usernameError();
@@ -210,7 +210,7 @@ public class Client {
 
 
     /**
-     * This method manages the number of player request and sends to the network handler the player's response
+     * This method manages the number of player request and sends to the network handler the player's response.
      */
     public static void askNumPlayers() {
         ui.chooseNumPlayers();
@@ -219,7 +219,7 @@ public class Client {
 
     /**
      * This method manages the lobby status notification and shows number and status of the current lobby,
-     * in order to inform if it isn't full yet
+     * in order to inform if it isn't full yet.
      */
     private static void lobbyStatusNotification(Message message) {
         ui.printLobbyStatus(((LobbyStatusNotification)message).getSelectedLobby(),((LobbyStatusNotification)message).getSlotsOccupied(),((LobbyStatusNotification)message).getPlayersInLobby());
@@ -227,7 +227,7 @@ public class Client {
 
 
     /**
-     * This method manages the start notification and warns all the players in the lobby the game can start
+     * This method handles the start notification and warns all the players in the lobby the game can start.
      */
     private static void startNotification(Message message) {
         ui.startNotification((GameStartNotification) message);
@@ -236,7 +236,7 @@ public class Client {
 
     /**
      * This method manages the request of choosing a list of gods message only for the first client connected
-     * and send to the network handler the player's response
+     * and send to the network handler the player's response.
      * @param message GodListRequest
      */
     public static void chooseGodsList(Message message) {
@@ -247,7 +247,7 @@ public class Client {
 
     /**
      * This method manages the selection of the first player of the game, he is chosen by the one who have chosen the God's list,
-     * and sends to the network handler the player's response
+     * and sends to the network handler the player's response.
      */
     public static void selectFirstPlayer(Message message) {
         ui.printAllPlayers(((StartPlayerRequest)message).getPlayers());
@@ -256,7 +256,7 @@ public class Client {
 
 
     /**
-     * This method manages not valid first player choice
+     * This method manages not valid first player's choice.
      */
     public static void firstPlayerError() {
         ui.playerError();
@@ -264,7 +264,7 @@ public class Client {
 
 
     /**
-     * This method manages the request of choosing a list of gods message and send to the network handler the player's response
+     * This method handles the request of choosing a list of gods message and sends to the network handler the player's response.
      */
     public static void chooseGod(Message message) {
         ui.chooseGod(((ChoseGodRequest) message).getGods(), ((ChoseGodRequest) message).getUnavailableGods());
@@ -272,7 +272,7 @@ public class Client {
 
 
     /**
-     * This method shows the remaining god to the last player (whom has chosen the GodList of the current game)
+     * This method shows the remaining God to the last player (whom has chosen the GodList of the current game).
      */
     public static void remainingGod(Message message){
         ui.showLastGod(((LastGodNotification) message).getGodsList(), ((LastGodNotification) message).getLastGod());
@@ -280,7 +280,7 @@ public class Client {
 
 
     /**
-     * This method manages not valid god error
+     * This method manages not valid god error.
      */
     public static void godError(){
        ui.godChoiceError();
@@ -288,7 +288,7 @@ public class Client {
 
 
     /**
-     * This method manages the initial placement of the workers
+     * This method manages the initial placement of the workers.
      */
     public static void placeWorker(Message message) {
         ui.placeWorkerInSpace(((WorkerPositionRequest) message).getCurrentWorker(),((WorkerPositionRequest) message).getAllowedPositions());
@@ -296,7 +296,7 @@ public class Client {
 
 
     /**
-     * This method allows the player to choose what worker will be moved
+     * This method allows the player to choose what worker will be moved.
      */
     public static void selectWorker() {
         ui.chooseWorker();
@@ -304,7 +304,7 @@ public class Client {
 
 
     /**
-     * This method manages not valid worker selection
+     * This method handles not valid worker selection.
      */
     public static void workerError() {
         ui.workerChosenError();
@@ -312,7 +312,7 @@ public class Client {
 
 
     /**
-     * This method is used when the worker selected can't be moved, so he is advised to use the other worker and then he chooses the move
+     * This method is used when the worker selected can't be moved, so he is advised to use the other worker and then he chooses the move.
      * @param message OtherWorkerMoveRequest
      */
     private static void otherWorkerMove(Message message) {
@@ -323,7 +323,7 @@ public class Client {
 
 
     /**
-     * This method asks the player if he wants to use the God's power
+     * This method asks the player if he wants to use the God's power.
      */
     private static void usePower() {
         ui.askPowerUsage();
@@ -332,7 +332,7 @@ public class Client {
 
     /**
      * This method gives to the player the chance to change the worker selected (after he has seen the possible moves)
-     *  and allows the player to choose where he wants to move his worker
+     *  and allows the player to choose where he wants to move his worker.
      * @param message MoveRequest
      */
     public static void chooseMove(Message message) {
@@ -343,8 +343,8 @@ public class Client {
 
 
     /**
-     * This method allows the player to choose where he wants to build a tower
-     * @param message BuildRequest
+     * This method allows the player to choose where he wants to build a tower.
+     * @param message of BuildRequest type
      */
     public static void chooseConstruction(Message message) {
         ui.printPossibleAction(((BuildRequest) message).getAllowedMoves());
@@ -353,7 +353,7 @@ public class Client {
 
 
     /**
-     * This method allows the player to choose what block remove
+     * This method allows the player to choose what block remove.
      * @param message BlockRemovalRequest
      */
     private static void removeBlock(Message message) {
@@ -362,7 +362,7 @@ public class Client {
 
 
     /**
-     * This method warns the chosen move is not valid
+     * This method warns the chosen move is not valid.
      */
     private static void invalidMove() {
         ui.invalidMove();
@@ -370,7 +370,7 @@ public class Client {
 
 
     /**
-     * This method warns there aren't more possible moves for the player
+     * This method warns if there aren't more possible moves for the player.
      */
     private static void noMovesAllowed() {
         ui.noPossibleMoves();
@@ -378,7 +378,7 @@ public class Client {
 
 
     /**
-     * This method shows the current (new) status of the Game
+     * This method shows the current (new) status of the Game.
      * @param message GameStatusNotification
      */
     private static void statusNotification(Message message) {
@@ -388,7 +388,7 @@ public class Client {
 
 
     /**
-     * This method announces the name of the winner
+     * This method announces the winner.
      * @param message WinnerNotification
      */
     private static void winnerNotification(Message message) {
@@ -396,7 +396,7 @@ public class Client {
     }
 
     /**
-     * This method manages the transmission of a message from Client to Server
+     * This method handles the transmission of a message from Client to Server.
      * @param message message which has to be sent
      */
      public static void sendMessageToServer(Message message){

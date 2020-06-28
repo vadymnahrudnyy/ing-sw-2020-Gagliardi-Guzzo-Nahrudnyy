@@ -15,7 +15,6 @@ public class QueueOfEvents {
     private Node lastEvent;
 
 
-
     /**
      * This nested class defines the structure of the nodes.
      */
@@ -42,7 +41,7 @@ public class QueueOfEvents {
     }
 
     /**
-     * This methods allows to create a new node to insert in the queue.
+     * This method allows to create a new node to insert in the queue.
      * @param message specifies the message to insert into the queue.
      */
     public synchronized void enqueueEvent(Message message) {
@@ -56,7 +55,7 @@ public class QueueOfEvents {
     }
 
     /**
-     * This methods delete the last inserted node of the queue.
+     * This method deletes the last inserted node of the queue.
      */
     public Message dequeueEvent() throws NoSuchElementException {
         if (isEmpty()) return null;
@@ -69,7 +68,7 @@ public class QueueOfEvents {
 
 
     /**
-     * This methods flush the queue by deleting all the nodes.
+     * This method flushes the queue by deleting all the nodes.
      */
     public void flushQueue() {
         do {

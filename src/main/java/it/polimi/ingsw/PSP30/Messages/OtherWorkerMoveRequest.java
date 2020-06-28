@@ -1,5 +1,8 @@
 package it.polimi.ingsw.PSP30.Messages;
 
+/**
+ * OtherWorkerRequest implements the request of moving the other worker.
+ */
 public class OtherWorkerMoveRequest extends Message {
     private static final long SerialVersionUID = 100030L;
     private final boolean[][] allowedMoves;
