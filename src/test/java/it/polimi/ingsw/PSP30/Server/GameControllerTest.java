@@ -137,19 +137,50 @@ public class GameControllerTest {
 
     @Test
     public void checkPossibleBuilds() {
+        //
     }
 
     @Test
     public void initializeMatrix() {
-
+        boolean[][] testMatrix = testGame.initializeMatrix(true);
+        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; ++i)
+            for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++)
+                assertTrue(testMatrix[i][j]);
+        testMatrix = testGame.initializeMatrix(false);
+        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; ++i)
+            for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++)
+                assertFalse(testMatrix[i][j]);
     }
 
     @Test
     public void testVerifyValidPosition() {
+        boolean[][] testAllowed = testGame.initializeMatrix(false);
+        testAllowed[0][0] = true;
+        assertTrue(testGame.verifyValidPosition(testAllowed,1,1));
+        assertFalse(testGame.verifyValidPosition(testAllowed,1,5));
+        assertFalse(testGame.verifyValidPosition(testAllowed,5,5));
+        assertFalse(testGame.verifyValidPosition(testAllowed,5,1));
+        testAllowed[2][2] = true;
+        assertTrue(testGame.verifyValidPosition(testAllowed,3,3));
+        assertFalse(testGame.verifyValidPosition(testAllowed,1,3));
+        assertFalse(testGame.verifyValidPosition(testAllowed,2,2));
     }
 
     @Test
     public void testWorkerCanMakeMove() {
+        boolean[][] testAllowed = testGame.initializeMatrix(false);
+        assertFalse(testGame.workerCanMakeMove(testAllowed));
+        testAllowed[2][3] = true;
+        assertTrue(testGame.workerCanMakeMove(testAllowed));
+        testAllowed[2][3] = false;
+        assertFalse(testGame.workerCanMakeMove(testAllowed));
+        testAllowed[4][4] = true;
+        assertTrue(testGame.workerCanMakeMove(testAllowed));
+        testAllowed[0][0] = true;
+        assertTrue(testGame.workerCanMakeMove(testAllowed));
+        testAllowed[4][4] = false;
+        assertTrue(testGame.workerCanMakeMove(testAllowed));
+
     }
 
     @Test
@@ -180,10 +211,6 @@ public class GameControllerTest {
 
     @Test
     public void checkHestiaAllowedBuilds() {
-    }
-
-    @Test
-    public void getCurrentBoard() {
     }
 
     @Test

@@ -7,6 +7,7 @@ import java.net.Socket;
 
 import it.polimi.ingsw.PSP30.Messages.Disconnection;
 import it.polimi.ingsw.PSP30.Messages.Message;
+import it.polimi.ingsw.PSP30.Server.Server;
 import it.polimi.ingsw.PSP30.Utils.QueueOfEvents;
 import it.polimi.ingsw.PSP30.Messages.PingMessage;
 
@@ -66,10 +67,14 @@ public class NetworkHandler implements Runnable {
     /**
      * This method manages the reception of a message and the consequent queued of it.
      * @param receivedMessage is the incoming message
-     * @throws IOException if there is a problem in the receipt of the message
      */
-    public void receive(Message receivedMessage) throws IOException {
-        if(!isPing(receivedMessage)) incomingMessages.enqueueEvent(receivedMessage);
+    public void receive(Message receivedMessage) {
+        if (isPing(receivedMessage)) return;
+        incomingMessages.enqueueEvent(receivedMessage);
+        if (receivedMessage.getMessageID() == Message.DISCONNECTION_MESSAGE || receivedMessage.getMessageID() == Message.PLAYER_DISCONNECTED_ERROR) {
+            //clientThread.interrupt();
+            setConnected(false);
+        }
     }
 
     /**
@@ -100,30 +105,23 @@ public class NetworkHandler implements Runnable {
             }
         }
         if(isConnected){
-            Runnable Ping = new Runnable() {
-                @SuppressWarnings("BusyWait")
-                @Override
-                public void run() {
-                    int missedPings = 0;
-                    do{
-                        try {
-                            sendMessage(new PingMessage());
-                            //10 Second
-                            int PING_TIMEOUT = 9000;//10 Seconds
-                            Thread.sleep(PING_TIMEOUT);
-                            if (!pingReceived) missedPings++;
-                            if(missedPings > 3){
-                                incomingMessages.enqueueEvent(new Disconnection());
-                                isConnected = false;
-                            }
-                        } catch (InterruptedException e) {
-                            if (pingReceived){
-                                setPingReceived(false);
-                                missedPings = 0;
-                            }
+            Runnable Ping = () -> {
+                int missedPings = 0;
+                do{
+                    try {
+                        sendMessage(new PingMessage());
+                        Thread.sleep(Server.CONNECTION_TIMEOUT);
+                        if (!pingReceived) missedPings++;
+                        if(missedPings > 2){
+                            disconnect();
                         }
-                    }while(isConnected);
-                }
+                    } catch (InterruptedException e) {
+                        if (pingReceived){
+                            setPingReceived(false);
+                            missedPings = 0;
+                        }
+                    }
+                }while(isConnected);
             };
             pingThread = new Thread(Ping);
             pingThread.start();
@@ -166,6 +164,9 @@ public class NetworkHandler implements Runnable {
      *This class disconnect the client.
      */
     public static void disconnect(){
+
+        incomingMessages.enqueueEvent(new Disconnection());
+        clientThread.interrupt();
         try {
             close();
         } catch (Exception e) {
@@ -202,9 +203,8 @@ public class NetworkHandler implements Runnable {
      * Method that manages the ping message
      * @param message value of the message
      * @return true if the message was a ping
-     * @throws IOException if there are connection problems
      */
-    public boolean isPing(Message message) throws IOException {
+    public boolean isPing(Message message) {
         if (message.getMessageID()==Message.PING_MESSAGE){
             setPingReceived(true);
             pingThread.interrupt();

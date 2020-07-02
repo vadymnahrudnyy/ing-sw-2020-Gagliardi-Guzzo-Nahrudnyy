@@ -1,16 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import java.net.URL?>
-<?import javafx.geometry.Insets?>
-<?import javafx.scene.effect.GaussianBlur?>
-<?import javafx.scene.image.Image?>
-<?import javafx.scene.image.ImageView?>
-<?import javafx.scene.layout.Region?>
-<?import javafx.scene.layout.StackPane?>
-<?import javafx.scene.text.Font?>
-<?import javafx.scene.text.Text?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.effect.*?>
+<?import javafx.scene.image.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
 
-<StackPane prefHeight="450.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.LoginController">
+<StackPane prefHeight="450.0" prefWidth="790.0" xmlns="http://javafx.com/javafx/10.0.2-internal" xmlns:fx="http://javafx.com/fxml/1" fx:controller="it.polimi.ingsw.PSP30.View.Gui.LoginController">
    <stylesheets><URL value="@../Style.css" /></stylesheets>
    <children>
       <ImageView fitWidth="790.0" pickOnBounds="true" preserveRatio="true">
@@ -22,7 +19,7 @@
          </effect>
       </ImageView>
       <Region opacity="0.3" style="-fx-background-color: black;" />
-      <ImageView fx:id="twoPlayers" fitHeight="170.0" fitWidth="250.0" onMouseClicked="#handletwoPlayer" pickOnBounds="true" preserveRatio="true" styleClass="twoPlayerButton" StackPane.alignment="CENTER">
+      <ImageView fx:id="twoPlayers" fitHeight="170.0" fitWidth="250.0" onMouseClicked="#handleTwoPlayerButton" pickOnBounds="true" preserveRatio="true" styleClass="twoPlayerButton" StackPane.alignment="CENTER">
          <StackPane.margin>
             <Insets right="400.0" top="50.0" />
          </StackPane.margin>
@@ -30,7 +27,7 @@
             <Image url="@../Images/Backgrounds/2players.png" />
          </image>
       </ImageView>
-      <ImageView fx:id="threePlayers" fitHeight="200.0" fitWidth="300.0" onMouseClicked="#handlethreePlayer" pickOnBounds="true" preserveRatio="true" styleClass="threePlayerButton" StackPane.alignment="CENTER">
+      <ImageView fx:id="threePlayers" fitHeight="200.0" fitWidth="300.0" onMouseClicked="#handleThreePlayerButton" pickOnBounds="true" preserveRatio="true" styleClass="threePlayerButton" StackPane.alignment="CENTER">
          <StackPane.margin>
             <Insets left="400.0" top="50.0" />
          </StackPane.margin>

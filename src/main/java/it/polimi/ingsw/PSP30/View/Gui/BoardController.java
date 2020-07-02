@@ -12,6 +12,8 @@ import javafx.stage.Stage;
 import javafx.scene.Scene;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
+
 import javafx.geometry.Pos;
 import javafx.scene.layout.*;
 import javafx.fxml.FXMLLoader;
@@ -41,19 +43,19 @@ public class BoardController{
     @FXML ImageView backButton2, backButton1, nextButton1, nextButton2;
     private static Stage rulesStage;
 
-    private static Cell[][] cell = new Cell[5][5];
+    private static final Cell[][] cell = new Cell[5][5];
     private static GridPane gridPane=new GridPane();
     private static Scene boardScene;
 
     private static String firstOpponent;
     private static String secondOpponent;
 
-    private static ToggleGroup toggleGroup=new ToggleGroup();
+    private static final ToggleGroup toggleGroup=new ToggleGroup();
     private static final ArrayList<String> selectedGods = new ArrayList<>();
 
     private static boolean[][] allowedMoves;
     private static boolean workerPositionRequest = false, selectWorkerRequest = false, moveRequest = false, buildRequest = false;
-    private static boolean removeRequest = false, canChangeWorker = false;
+    private static boolean removeRequest = false, canChangeWorker;
 
     /**
      * This method initializes the Board scene with all the elements of the GameStage
@@ -63,7 +65,7 @@ public class BoardController{
         if (GUI.getGameStage() == null) GUI.setGameStage(new Stage());
         GUI.getGameStage().setResizable(false);
         try{
-            mainPane = FXMLLoader.load(BoardController.class.getClassLoader().getResource("Fxml/Board.fxml"));
+            mainPane = FXMLLoader.load(Objects.requireNonNull(BoardController.class.getClassLoader().getResource("Fxml/Board.fxml")));
         }catch (IOException e){
             e.printStackTrace();
         }
@@ -102,17 +104,7 @@ public class BoardController{
             secondOpponentPane.setVisible(false);
             opponentsPane.getChildren().remove(1);
         }
-
-
-        IslandBoard board = message.getGame().getGameBoard();
-
-        for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
-            for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
-                Space currentSpace = board.getSpace(X+1,Y+1);
-                cell[X][Y]=new Cell(X, Y, currentSpace);
-                gridPane.add(cell[X][Y],Y,X);
-            }
-        gridPane.setMaxSize(550,550);
+        buildBoard(message.getGame().getGameBoard());
         mainPane.getChildren().add(gridPane);
         gridPane.setAlignment(Pos.CENTER);
 
@@ -121,6 +113,21 @@ public class BoardController{
         GUI.getGameStage().show();
     }
 
+    /**
+     * Method used to draw the game board on the screen. For every cell the corresponding
+     * parameters are checked and used to set the corresponding images.
+     */
+    protected void buildBoard(IslandBoard board){
+        for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
+            for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
+                Space currentSpace = board.getSpace(X+1,Y+1);
+                cell[X][Y]=new Cell(X, Y, currentSpace);
+                gridPane.add(cell[X][Y],Y,X);
+            }
+        gridPane.setAlignment(Pos.CENTER);
+        gridPane.setMaxSize(550,550);
+
+    }
     /**
      * This method updates the Board scene with all the elements belonging to the current status of the game (workers, buildings and info about the players)
      * @param updatedGame contains the current status of the game
@@ -154,18 +161,11 @@ public class BoardController{
         else if (firstOpponent.equals(currentPlayer.getUsername())) firstOpponentGod.setStyle("-fx-effect: dropshadow(gaussian, #d40027, 30, 0.5, 0, 0)");
         else if (secondOpponent.equals(currentPlayer.getUsername())) secondOpponentGod.setStyle("-fx-effect: dropshadow(gaussian, #d40027, 30, 0.5, 0, 0)");
 
-        GridPane newGridPane = new GridPane();
-        for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
-            for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++){
-                Space currentSpace = currentBoard.getSpace(X+1,Y+1);
-                cell[X][Y] = new Cell(X, Y, currentSpace);
-                newGridPane.add(cell[X][Y],Y,X);
-            }
-        newGridPane.setMaxSize(550,550);
         mainPane.getChildren().remove(gridPane);
-        mainPane.getChildren().add(newGridPane);
-        newGridPane.setAlignment(Pos.CENTER);
-        gridPane = newGridPane;
+        gridPane = new GridPane();
+        buildBoard(currentBoard);
+        mainPane.getChildren().add(gridPane);
+
     }
 
     /**
@@ -199,7 +199,7 @@ public class BoardController{
      * @throws IOException when an error occurred in loading fxml file
      */
     public void showSelectFirstPlayer(Player[] players) throws IOException {
-        selectPlayerMainPane = FXMLLoader.load(BoardController.class.getClassLoader().getResource("Fxml/StartPlayerSelection.fxml"));
+        selectPlayerMainPane = FXMLLoader.load(Objects.requireNonNull(BoardController.class.getClassLoader().getResource("Fxml/StartPlayerSelection.fxml")));
         selectPlayerBorderPane=(BorderPane) selectPlayerMainPane.getChildren().get(1);
         hBox=(HBox) selectPlayerBorderPane.getCenter();
         selectButton=(ImageView) selectPlayerBorderPane.getBottom();
@@ -295,6 +295,7 @@ public class BoardController{
      * @param mouseEvent mouse click over one of the cards
      */
     public void handleFirstPlayerSelection(MouseEvent mouseEvent) {
+        mouseEvent.consume();
         selectButton.setDisable(true);
         if(firstButton.isSelected()) Client.sendMessageToServer(new StartPlayerResponse(firstLabel.getText()));
         else if(secondButton.isSelected()) Client.sendMessageToServer(new StartPlayerResponse(secondLabel.getText()));
@@ -449,7 +450,7 @@ public class BoardController{
      * @throws IOException when an error occurred in loading fxml file
      */
     public void rulesScene1() throws IOException {
-        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard1.fxml"));
+        StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard1.fxml")));
         nextButton1=(ImageView) stackPane.getChildren().get(1);
         nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
@@ -467,7 +468,7 @@ public class BoardController{
      * @throws IOException when an error occurred in loading fxml file
      */
     public void rulesScene2() throws IOException {
-        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard2.fxml"));
+        StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard2.fxml")));
         nextButton2=(ImageView) stackPane.getChildren().get(1);
         backButton2=(ImageView) stackPane.getChildren().get(2);
         nextButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -494,7 +495,7 @@ public class BoardController{
      * @throws IOException when an error occurred in loading fxml file
      */
     public void rulesScene3() throws IOException {
-        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard3.fxml"));
+        StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard3.fxml")));
         backButton1=(ImageView) stackPane.getChildren().get(1);
         backButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
@@ -512,6 +513,7 @@ public class BoardController{
      * @param event mouse click on the exit button
      */
     public void disconnectButton(MouseEvent event){
+        event.consume();
         Client.sendMessageToServer(new Disconnection());
         System.exit(0);
     }
@@ -570,12 +572,8 @@ public class BoardController{
                     }
                 }
             }
-            this.addEventHandler(MouseEvent.MOUSE_ENTERED, e->{
-                selectedCellPane.setStyle("-fx-background-color: #ffad00; -fx-opacity: 0.5");
-            });
-            this.addEventHandler(MouseEvent.MOUSE_EXITED, e->{
-                selectedCellPane.setStyle("-fx-background-color: transparent");
-            });
+            this.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> selectedCellPane.setStyle("-fx-background-color: #ffad00; -fx-opacity: 0.5"));
+            this.addEventHandler(MouseEvent.MOUSE_EXITED, e-> selectedCellPane.setStyle("-fx-background-color: transparent"));
             this.addEventHandler(MouseEvent.MOUSE_CLICKED, e->{
                 System.out.println("click on X: "+coordinateX +"  Y: " + coordinateY);
                 if (workerPositionRequest) {
@@ -589,8 +587,7 @@ public class BoardController{
                 }
                 if (moveRequest){
                     moveRequest = false;
-
-                    if (allowedMoves[coordinateX-1][coordinateY-1])Client.sendMessageToServer(new MoveResponse(coordinateX,coordinateY));
+                    if (allowedMoves[coordinateX-1][coordinateY-1]||!canChangeWorker) Client.sendMessageToServer(new MoveResponse(coordinateX,coordinateY));
                     else {
                         BoardController.resetWorkerMovesMarkers();
                         Client.sendMessageToServer(new SelectWorkerResponse(coordinateX,coordinateY));

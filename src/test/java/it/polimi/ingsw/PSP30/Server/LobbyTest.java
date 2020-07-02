@@ -61,9 +61,9 @@ public class LobbyTest {
     }
     @After
     public void tearDown(){
-        testLobby.removePlayerFromLobby(testView1,testView1.getUsername(),testThread1);
-        testLobby.removePlayerFromLobby(testView2,testView2.getUsername(),testThread2);
-        testLobby.removePlayerFromLobby(testView3,testView3.getUsername(),testThread3);
+        testLobby.removePlayerFromLobby(testView1,testView1.getUsername());
+        testLobby.removePlayerFromLobby(testView2,testView2.getUsername());
+        testLobby.removePlayerFromLobby(testView3,testView3.getUsername());
         try {
             testSocket.close();
         } catch (IOException e) {
@@ -130,7 +130,7 @@ public class LobbyTest {
         testLobby.addPlayerToLobby(testView1.getNumPlayers(),testView1,testView1.getUsername(),testThread1);
         testNum = testLobby.getTwoPlayersLobbySlotsOccupied();
         assertEquals(ONE_PLAYER_IN_LOBBY,testNum);
-        testLobby.removePlayerFromLobby(testView1,testView1.getUsername(),testThread1);
+        testLobby.removePlayerFromLobby(testView1,testView1.getUsername());
         testNum = testLobby.getTwoPlayersLobbySlotsOccupied();
         assertEquals(EMPTY_LOBBY,testNum);
 
@@ -146,10 +146,10 @@ public class LobbyTest {
         testLobby.addPlayerToLobby(testView2.getNumPlayers(),testView2,testView2.getUsername(),testThread2);
         testNum = testLobby.getThreePlayersLobbySlotsOccupied();
         assertEquals(TWO_PLAYERS_IN_LOBBY,testNum);
-        testLobby.removePlayerFromLobby(testView2,testView2.getUsername(),testThread2);
+        testLobby.removePlayerFromLobby(testView2,testView2.getUsername());
         testNum = testLobby.getThreePlayersLobbySlotsOccupied();
         assertEquals(ONE_PLAYER_IN_LOBBY,testNum);
-        testLobby.removePlayerFromLobby(testView1,testView1.getUsername(),testThread1);
+        testLobby.removePlayerFromLobby(testView1,testView1.getUsername());
         testNum = testLobby.getThreePlayersLobbySlotsOccupied();
         assertEquals(EMPTY_LOBBY,testNum);
     }

@@ -20,6 +20,7 @@ import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 /**
  * GUI class implements the UI interface and defines all the features for play with graphic user interface
@@ -34,7 +35,8 @@ public class GUI implements UI,Runnable{
     AlertsController alertsController=new AlertsController();
     GodPowerController godPowerController = new GodPowerController();
 
-    private static final int GAME_WINDOW_CLOSED = 3005;
+    private static final int GAME_WINDOW_CLOSED = 501;
+    private static final int IP_INSERTION_TIMEOUT = 100000; //100 seconds
 
     @FXML ImageView backButton2, backButton1, nextButton1, nextButton2;
 
@@ -81,9 +83,11 @@ public class GUI implements UI,Runnable{
      * @throws IOException when an error occurred in loading fxml file
      */
     public void showRules() throws IOException {
-        rulesStage=new Stage();
-        rulesStage.initModality(Modality.APPLICATION_MODAL);
-        rulesStage.initOwner(primaryStage);
+        if (rulesStage == null){
+            rulesStage=new Stage();
+            rulesStage.initModality(Modality.APPLICATION_MODAL);
+            rulesStage.initOwner(primaryStage);
+        }
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene1.fxml"));
         nextButton1=(ImageView) stackPane.getChildren().get(1);
         nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
@@ -105,18 +109,7 @@ public class GUI implements UI,Runnable{
      * @throws IOException when an error occurred in loading fxml file
      */
     public void rulesScene1(Stage stage) throws IOException {
-        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene1.fxml"));
-        nextButton1=(ImageView) stackPane.getChildren().get(1);
-        nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
-            try {
-                rulesScene2(rulesStage);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        });
-        Scene scene = new Scene(stackPane);
-        stage.setScene(scene);
-        stage.show();
+        showRules();
     }
 
 
@@ -169,7 +162,7 @@ public class GUI implements UI,Runnable{
     public void chooseServerAddress() {
         Platform.runLater(this::showServerAddress);
         try {
-            Client.getClientThread().sleep(12312312);
+            Client.getClientThread().sleep(IP_INSERTION_TIMEOUT);
         } catch (InterruptedException e) {
             System.out.println("Server address inserted" );
         }
@@ -206,7 +199,7 @@ public class GUI implements UI,Runnable{
     public void showUsername(){
         Parent usernameScene = null;
         try {
-            usernameScene = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/UsernameScene.fxml"));
+            usernameScene = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("Fxml/UsernameScene.fxml")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -271,7 +264,7 @@ public class GUI implements UI,Runnable{
     public void showGodList(ArrayList<God> gods) {
         Runnable showGodSelector = () -> {
             try {
-                godsController.showGodSelector(gods);
+                godsController.showGodSelector();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -375,13 +368,13 @@ public class GUI implements UI,Runnable{
 
     @Override
     public void askPowerUsage() {
-        Runnable powerStage = () -> {godPowerController.showScene();};
+        Runnable powerStage = () -> godPowerController.showScene();
         Platform.runLater(powerStage);
     }
 
     @Override
     public void chooseRemoval(boolean[][] allowedToRemove) {
-        Runnable blockRemoval = () -> {boardController.blockRemoveRequest(allowedToRemove);};
+        Runnable blockRemoval = () -> boardController.blockRemoveRequest(allowedToRemove);
         Platform.runLater(blockRemoval);
     }
 
@@ -426,6 +419,12 @@ public class GUI implements UI,Runnable{
     public void opponentDisconnected() {
         Runnable opponentDisconnectedNotification = EndSceneController::opponentDisconnection;
         Platform.runLater(opponentDisconnectedNotification);
+    }
+
+    @Override
+    public void disconnectedFromServer() {
+        Runnable disconnectedFromServerNotification = EndSceneController::disconnectedFromServer;
+        Platform.runLater(disconnectedFromServerNotification);
     }
 
     @Override

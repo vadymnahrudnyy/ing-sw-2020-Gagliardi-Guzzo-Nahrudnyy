@@ -64,7 +64,7 @@ public class CLI implements UI {
     public void chooseUsername() {
         System.out.println("Choose your username! It must be a single word.");
         input=new Scanner(System.in);
-        username= input.nextLine();
+        username= input.nextLine().toUpperCase();
         Client.setUsername(username);
         NetworkHandler.sendMessage(new UsernameResponse(username));
     }
@@ -462,6 +462,11 @@ public class CLI implements UI {
     public void opponentDisconnected() {
         if (Client.getNumPlayers() == 2)System.out.println("Your opponent has left. The game is finished.");
         else System.out.println("One of your opponents has left the game. The game is finished");
+    }
+
+    @Override
+    public void disconnectedFromServer() {
+        System.out.println("Disconnected from server");
     }
 
 }

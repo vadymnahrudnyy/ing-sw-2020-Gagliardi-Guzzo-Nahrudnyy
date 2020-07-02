@@ -11,7 +11,7 @@ import java.util.ArrayList;
  * GameController is a runnable class implementing the game itself. An instance of GameController is used for only one game.
  * Running in a separate thread it allows to handle multiple games without interference.
  * @author Vadym Nahrudnyy
- * @version 2.0
+ * @version 2.1
  */
 class GameController implements Runnable {
 
@@ -51,8 +51,6 @@ class GameController implements Runnable {
         else gameGodList = threePlayerGodsListInitialization();
     }
 
-
-
     @Override
     public void run() {
         try{
@@ -63,21 +61,18 @@ class GameController implements Runnable {
         }catch (PlayerDisconnectedException e){
                 allPlayersDisconnect();
         }
-        System.out.println(Thread.currentThread()+" game finished! It was nice to play with you");
+        System.out.println(Thread.currentThread()+" game finished! Thread terminated");
     }
 
     private void allPlayersDisconnect(){
         for (VirtualView client : virtualViewsList) {
             client.sendMessage(new PlayerDisconnectedError());
             try{
-                Thread.sleep(50);
+                Thread.sleep(100);
             }
-            catch (InterruptedException e){
-                System.out.println("Disconnection interrupted");
-            }
+            catch (InterruptedException ignored){}
 
             client.closeConnection();
-            client.setConnected(false);
             client.getVirtualViewThread().interrupt();
         }
     }
@@ -194,7 +189,6 @@ class GameController implements Runnable {
         else if (currentPlayerHasPower(Power.NON_PERIMETER_DOUBLE_BUILD)) handleHestiaPower();
     }
 
-    //
 
     /**
      * Method used to count the number of moves (move or build) a worker can make given a boolean matrix with allowed moves.
@@ -331,10 +325,10 @@ class GameController implements Runnable {
      * and the first player automatically receives the remained god card.
      */
     private void chooseGods() throws PlayerDisconnectedException {
-        System.out.println("Choosing gods");
+        System.out.println(Thread.currentThread() + " Choosing gods");
         Player firstPlayer = currentGame.getCurrentPlayer();
         VirtualView firstVirtualView = virtualViewsList[0];
-        System.out.println("Sending Gods List to first player");
+        System.out.println(Thread.currentThread() + " Sending Gods List to first player");
         boolean validGodsReceived;
         ArrayList<God> gameGods=new ArrayList<>(),chosenGods = new ArrayList<>();
         do {
@@ -346,12 +340,12 @@ class GameController implements Runnable {
             do{
                 virtualViewsList[Index].sendMessage(new ChoseGodRequest(gameGods, chosenGods));
                 waitValidMessage(virtualViewsList[Index],new int[]{Message.CHOSE_GOD_RESPONSE});
-                System.out.println("Chosen god: "+((ChoseGodResponse)receivedMessage).getChosenGod());
+                System.out.println(Thread.currentThread() + " Chosen god: "+((ChoseGodResponse)receivedMessage).getChosenGod());
                 receivedGod= getGodByName(((ChoseGodResponse)receivedMessage).getChosenGod());
             } while (receivedGod == null || chosenGods.contains(receivedGod));
 
             Player actualPlayer = currentGame.getPlayerByUsername(virtualViewsList[Index].getUsername());
-            if (actualPlayer == null) System.out.println("Wanted player doesn't exist");
+            if (actualPlayer == null) System.out.println(Thread.currentThread() + " Wanted player doesn't exist");
             else {
                 actualPlayer.setGod(receivedGod);
                 chosenGods.add(receivedGod);
@@ -374,7 +368,7 @@ class GameController implements Runnable {
         gameGods.clear();
         firstVirtualView.sendMessage(new GodsListRequest(gameGodList,currentGame.getNumPlayers()));
         waitValidMessage(firstVirtualView,new int[]{Message.GODS_LIST_RESPONSE});
-        System.out.println("Gods List received from first player");
+        System.out.println(Thread.currentThread() + " Gods List received from first player");
         ArrayList<String> gameGodsNames = ((GodsListResponse) receivedMessage).getGods();
         for (String receivedGodName:gameGodsNames){
             God currentGod = getGodByName(receivedGodName);
@@ -556,11 +550,11 @@ class GameController implements Runnable {
      * @return the created matrix.
      */
     protected boolean[][] initializeMatrix(boolean value){
-        boolean[][] allowedPositions = new boolean[IslandBoard.TABLE_DIMENSION][IslandBoard.TABLE_DIMENSION];
+        boolean[][] matrix = new boolean[IslandBoard.TABLE_DIMENSION][IslandBoard.TABLE_DIMENSION];
         for (int coordinateX = 0; coordinateX < IslandBoard.TABLE_DIMENSION; ++coordinateX)
             for (int coordinateY = 0; coordinateY < IslandBoard.TABLE_DIMENSION; ++coordinateY)
-                allowedPositions[coordinateX][coordinateY] = value;
-        return allowedPositions;
+                matrix[coordinateX][coordinateY] = value;
+        return matrix;
     }
     /**
      * checkMessageValidity is a private method used to control if the received message is among
@@ -667,7 +661,13 @@ class GameController implements Runnable {
             //noinspection ResultOfMethodCallIgnored
             Thread.interrupted();
         }
-        for (VirtualView player:virtualViewsList) player.closeConnection();
+        for (VirtualView player:virtualViewsList) {
+            player.closeConnection();
+            try {
+                Thread.sleep(200);
+            } catch (InterruptedException ignored) {
+            }
+        }
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -738,16 +738,16 @@ class GameController implements Runnable {
         for (Worker workerToRemove : workersToRemove) workerToRemove.getWorkerPosition().setWorkerInPlace(null);
     }
     /**
-     * Method waitValidMessage
+     * Method waitValidMessage dequeue the messages waiting for a valid message.
+     * If the message is a disconnection, 
      * @param senderVirtualView virtual view of the client from who the controller needs a message
      * @param messageIDs list of accepted messages.
      */
     private void waitValidMessage(VirtualView senderVirtualView,int[] messageIDs) throws PlayerDisconnectedException {
         boolean receivedValidMessage;
-        System.out.println("Waiting for a valid message");
+
         do {
             while((receivedMessage = senderVirtualView.dequeueFirstMessage()) == null) gameThreadWait();
-            System.out.println("New message received, checking validity");
             receivedValidMessage = checkMessageValidity(receivedMessage,messageIDs);
             if (receivedMessage.getMessageID() == Message.DISCONNECTION_MESSAGE){
                 for (VirtualView player:virtualViewsList) player.closeConnection();
@@ -868,7 +868,7 @@ class GameController implements Runnable {
             }
             else {
                 currentClient.sendMessage(new InvalidMoveError());
-                currentClient.sendMessage(new MoveRequest(allowedMoves,false));
+                //currentClient.sendMessage(new MoveRequest(allowedMoves,false));
             }
         }while(!moveMade);
     }
@@ -917,18 +917,24 @@ class GameController implements Runnable {
         if(!currentPlayerHasPower(Power.NOT_MOVE_UP_DOUBLE_BUILD_POWER)) return;
         //check if at least one worker can build before moving without locking himself. If moves are not possible, the method ends.
         if (!checkPossiblePreBuild()) return;
+        notifyGameStatusToAll();
         currentClient.sendMessage(new UsePowerRequest());
         waitValidMessage(currentClient,new int[]{Message.USE_POWER_RESPONSE});
         //if player does not want to use the power, the method ends.
         if(!((UsePowerResponse)receivedMessage).wantUsePower()) return;
         //The worker for the turn is selected and the the Build request is sent.
-        currentClient.sendMessage(new SelectWorkerRequest());
-        waitValidMessage(currentClient,new int[]{Message.SELECT_WORKER_RESPONSE});
-        moveWorker = getWorkerByCoordinates(((SelectWorkerResponse)receivedMessage).getCoordinateX(),((SelectWorkerResponse)receivedMessage).getCoordinateY());
+        do{
+            currentClient.sendMessage(new SelectWorkerRequest());
+            waitValidMessage(currentClient,new int[]{Message.SELECT_WORKER_RESPONSE});
+            moveWorker = getWorkerByCoordinates(((SelectWorkerResponse)receivedMessage).getCoordinateX(),((SelectWorkerResponse)receivedMessage).getCoordinateY());
+        } while (moveWorker == null || !moveWorker.getOwner().equals(currentPlayer.getUsername()));
+
         startSpace = moveWorker.getWorkerPosition();
         boolean[][] allowedBuild = checkPossibleBuilds(startSpace.getCoordinateX(),startSpace.getCoordinateY());
-        currentClient.sendMessage(new BuildRequest(allowedBuild));
-        waitValidMessage(currentClient,new int[]{Message.BUILD_RESPONSE});
+        do{
+            currentClient.sendMessage(new BuildRequest(allowedBuild));
+            waitValidMessage(currentClient,new int[]{Message.BUILD_RESPONSE});
+        }while(!allowedBuild[(((BuildResponse)receivedMessage).getBuildCoordinateX()-1)][(((BuildResponse)receivedMessage).getBuildCoordinateY()-1)]);
         Space buildSpace = gameBoard.getSpace(((BuildResponse)receivedMessage).getBuildCoordinateX(),((BuildResponse)receivedMessage).getBuildCoordinateY());
         blockAddInSpace(buildSpace);
         notifyGameStatusToAll();
@@ -943,7 +949,7 @@ class GameController implements Runnable {
      */
     protected void handleAresPower() throws PlayerDisconnectedException {
         //if the player has not Ares Power, the method stops immediately.
-        if (!currentPlayerHasPower(Power.BLOCK_REMOVE_POWER)) return;
+        if (!currentPlayerHasPower(Power.BLOCK_REMOVE_POWER)||!currentClient.getInGame()) return;
         //getting the unmoved worker and checking possible moves
         Worker unmovedWorker = getPlayersOtherWorker(currentPlayer,moveWorker);
         int unmovedX = unmovedWorker.getWorkerPosition().getCoordinateX(), unmovedY = unmovedWorker.getWorkerPosition().getCoordinateY();
@@ -1046,8 +1052,8 @@ class GameController implements Runnable {
         for (Worker worker:currentPlayer.getWorkers()) {
             Space workerPosition = worker.getWorkerPosition();
             int workerX = workerPosition.getCoordinateX(), workerY = workerPosition.getCoordinateY();
-            allowedBuilds = checkPossibleBuilds(worker.getWorkerPosition().getCoordinateX(),worker.getWorkerPosition().getCoordinateY());
             allowedMoves = checkPossibleMoves(worker.getWorkerPosition().getCoordinateX(),worker.getWorkerPosition().getCoordinateY());
+            allowedBuilds = checkPossibleBuilds(worker.getWorkerPosition().getCoordinateX(),worker.getWorkerPosition().getCoordinateY());
             int possibleMoves = countPossibleMoves(allowedMoves);
             if (possibleMoves == 0) break;
             if (possibleMoves == 1){

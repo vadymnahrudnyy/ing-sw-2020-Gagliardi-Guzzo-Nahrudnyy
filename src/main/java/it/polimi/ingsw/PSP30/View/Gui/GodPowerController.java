@@ -8,12 +8,12 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * This class creates a stage in order to ask to the player if he wants use the god's power
@@ -29,7 +29,7 @@ public class GodPowerController {
         powerStage.initModality(Modality.APPLICATION_MODAL);
         powerStage.initOwner(GUI.getGameStage());
         try {
-            stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/PowerUsage.fxml"));
+            stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource("Fxml/PowerUsage.fxml")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -40,10 +40,12 @@ public class GodPowerController {
     }
 
     public void usePower(MouseEvent event){
+        event.consume();
         Client.sendMessageToServer(new UsePowerResponse(true));
         powerStage.close();
     }
     public void noPower(MouseEvent event){
+        event.consume();
         Client.sendMessageToServer(new UsePowerResponse(false));
         powerStage.close();
     }

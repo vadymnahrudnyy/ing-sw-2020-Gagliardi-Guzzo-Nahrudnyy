@@ -209,6 +209,8 @@ public interface UI {
      */
     void opponentDisconnected();
 
+    void disconnectedFromServer();
+
 }
 
 

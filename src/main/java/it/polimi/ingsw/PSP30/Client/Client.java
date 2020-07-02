@@ -76,7 +76,7 @@ public class Client {
     /**
      * This is the main method of the class: it starts the connection and manages all the messages received from the network handler.
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
         clientThread = Thread.currentThread();
         GUI gui = new GUI();
         Thread ThreadGUI = new Thread(gui);
@@ -96,91 +96,94 @@ public class Client {
 
 
         while (!disconnected){
-            Thread.sleep(150);
-            Message receivedMessage;
-            if((receivedMessage = NetworkHandler.incomingMessages.dequeueEvent())!=null){
-                switch (receivedMessage.getMessageID()){
-                    case Message.USERNAME_REQUEST:
-                        askUsername();
-                        break;
-                    case Message.NUM_PLAYERS_REQUEST:
-                        askNumPlayers();
-                        break;
-                    case Message.GODS_LIST_REQUEST:
-                        chooseGodsList(receivedMessage);
-                        break;
-                    case Message.CHOSE_GOD_REQUEST:
-                        chooseGod(receivedMessage);
-                        break;
-                    case Message.LAST_GOD_NOTIFICATION:
-                        remainingGod(receivedMessage);
-                        break;
-                    case Message.INVALID_GOD_ERROR:
-                        godError();
-                        break;
-                    case Message.LOBBY_STATUS_NOTIFICATION:
-                        lobbyStatusNotification(receivedMessage);
-                        break;
-                    case Message.GAME_START_NOTIFICATION:
-                        startNotification(receivedMessage);
-                        break;
-                    case Message.START_PLAYER_REQUEST:
-                        selectFirstPlayer(receivedMessage);
-                        break;
-                    case Message.INVALID_STARTER_PLAYER_ERROR:
-                        firstPlayerError();
-                        break;
-                    case Message.WORKER_POSITION_REQUEST:
-                        placeWorker(receivedMessage);
-                        break;
-                    case Message.SELECT_WORKER_REQUEST:
-                        selectWorker();
-                        break;
-                    case Message.INVALID_WORKER_ERROR:
-                        workerError();
-                        break;
-                    case Message.USE_POWER_REQUEST:
-                        usePower();
-                        break;
-                    case Message.MOVE_REQUEST:
-                        chooseMove(receivedMessage);
-                        break;
-                    case Message.BLOCK_REMOVAL_REQUEST:
-                        removeBlock(receivedMessage);
-                        break;
-                    case Message.GAME_STATUS_NOTIFICATION:
-                        statusNotification(receivedMessage);
-                        break;
-                    case Message.BUILD_REQUEST:
-                        chooseConstruction(receivedMessage);
-                        break;
-                    case Message.INVALID_MOVE_ERROR:
-                        invalidMove();
-                        break;
-                    case Message.NO_POSSIBLE_MOVE_ERROR:
-                        noMovesAllowed();
-                        break;
-                    case Message.OTHER_WORKER_MOVE_REQUEST:
-                        otherWorkerMove(receivedMessage);
-                        break;
-                    case Message.USERNAME_TAKEN_ERROR:
-                        usernameError();
-                        break;
-                    case Message.WINNER_NOTIFICATION:
-                        winnerNotification(receivedMessage);
-                        break;
-                    case Message.DISCONNECTION_MESSAGE:
-                        disconnected=true;
-                        NetworkHandler.disconnect();
-                        break;
-                    case Message.PLAYER_DISCONNECTED_ERROR:
-                        ui.opponentDisconnected();
-                        break;
+            try {
+                Thread.sleep(150);
+                Message receivedMessage;
+                if((receivedMessage = NetworkHandler.incomingMessages.dequeueEvent())!=null) {
+                    switch (receivedMessage.getMessageID()) {
+                        case Message.USERNAME_REQUEST:
+                            askUsername();
+                            break;
+                        case Message.NUM_PLAYERS_REQUEST:
+                            askNumPlayers();
+                            break;
+                        case Message.GODS_LIST_REQUEST:
+                            chooseGodsList(receivedMessage);
+                            break;
+                        case Message.CHOSE_GOD_REQUEST:
+                            chooseGod(receivedMessage);
+                            break;
+                        case Message.LAST_GOD_NOTIFICATION:
+                            remainingGod(receivedMessage);
+                            break;
+                        case Message.INVALID_GOD_ERROR:
+                            godError();
+                            break;
+                        case Message.LOBBY_STATUS_NOTIFICATION:
+                            lobbyStatusNotification(receivedMessage);
+                            break;
+                        case Message.GAME_START_NOTIFICATION:
+                            startNotification(receivedMessage);
+                            break;
+                        case Message.START_PLAYER_REQUEST:
+                            selectFirstPlayer(receivedMessage);
+                            break;
+                        case Message.INVALID_STARTER_PLAYER_ERROR:
+                            firstPlayerError();
+                            break;
+                        case Message.WORKER_POSITION_REQUEST:
+                            placeWorker(receivedMessage);
+                            break;
+                        case Message.SELECT_WORKER_REQUEST:
+                            selectWorker();
+                            break;
+                        case Message.INVALID_WORKER_ERROR:
+                            workerError();
+                            break;
+                        case Message.USE_POWER_REQUEST:
+                            usePower();
+                            break;
+                        case Message.MOVE_REQUEST:
+                            chooseMove(receivedMessage);
+                            break;
+                        case Message.BLOCK_REMOVAL_REQUEST:
+                            removeBlock(receivedMessage);
+                            break;
+                        case Message.GAME_STATUS_NOTIFICATION:
+                            statusNotification(receivedMessage);
+                            break;
+                        case Message.BUILD_REQUEST:
+                            chooseConstruction(receivedMessage);
+                            break;
+                        case Message.INVALID_MOVE_ERROR:
+                            invalidMove();
+                            break;
+                        case Message.NO_POSSIBLE_MOVE_ERROR:
+                            noMovesAllowed();
+                            break;
+                        case Message.OTHER_WORKER_MOVE_REQUEST:
+                            otherWorkerMove(receivedMessage);
+                            break;
+                        case Message.USERNAME_TAKEN_ERROR:
+                            usernameError();
+                            break;
+                        case Message.WINNER_NOTIFICATION:
+                            winnerNotification(receivedMessage);
+                            disconnected = true;
+                            break;
+                        case Message.DISCONNECTION_MESSAGE:
+                            ui.disconnectedFromServer();
+                            disconnected = true;
+                            break;
+                        case Message.PLAYER_DISCONNECTED_ERROR:
+                           ui.opponentDisconnected();
+                           break;
 
-                    default:
-                        disconnected = !NetworkHandler.isConnected();
+                        default:
+                         disconnected = !NetworkHandler.isConnected();
+                    }
                 }
-            }
+            }catch (InterruptedException ignored){}
         }
     }
 

@@ -4,12 +4,11 @@ import it.polimi.ingsw.PSP30.View.GUI;
 import javafx.application.*;
 import javafx.fxml.*;
 import javafx.scene.*;
-import javafx.scene.control.Button;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.*;
 
 
 import java.io.IOException;
+import java.util.Objects;
 
 /**
  * This class start the GUI application
@@ -29,7 +28,7 @@ public class StartScene extends Application implements Runnable {
     @Override
     public void start(Stage stage) throws Exception {
 
-        Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("Fxml/Home.fxml"));
+        Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getClassLoader().getResource("Fxml/Home.fxml")));
         Scene scene = new Scene(root);
         stage.setScene(scene);
         stage.setResizable(false);

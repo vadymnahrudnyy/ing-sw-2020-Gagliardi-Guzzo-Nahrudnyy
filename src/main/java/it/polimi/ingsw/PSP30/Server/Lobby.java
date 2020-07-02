@@ -16,8 +16,8 @@ public class Lobby {
     private static boolean threePlayersLobbyReady = false;
     private static final ArrayList<String> twoPlayersLobby = new ArrayList<>();
     private static final ArrayList<String> threePlayersLobby = new ArrayList<>();
-    private static final ArrayList<VirtualView> twoPlayersLobbyVirtualViews = new ArrayList<VirtualView>();
-    private static final ArrayList<VirtualView> threePlayersLobbyVirtualViews = new ArrayList<VirtualView>();
+    private static final ArrayList<VirtualView> twoPlayersLobbyVirtualViews = new ArrayList<>();
+    private static final ArrayList<VirtualView> threePlayersLobbyVirtualViews = new ArrayList<>();
 
     /**
      * Method getTwoPlayersLobby
@@ -60,6 +60,7 @@ public class Lobby {
         twoPlayersLobbyVirtualViews.remove(playerToRemoveVirtualView);
         twoPlayersLobby.remove(playerToRemoveUsername);
         playerToRemoveVirtualView.setInLobby(false);
+        System.out.println(Thread.currentThread() + " Player: " + playerToRemoveUsername +" removed from two players lobby");
     }
     /**
      * Method getThreePlayersLobby
@@ -94,7 +95,7 @@ public class Lobby {
         playerToAddVirtualView.setInLobby(true);
     }
     /**
-     * Method removePlayerFromTwoPlayersLobby removes a player from the list of players waiting for a three players game.
+     * Method removePlayerFromThreePlayersLobby removes a player from the list of players waiting for a three players game.
      * @param playerToRemoveUsername Username of the player to remove.
      * @param playerToRemoveVirtualView Virtual view of the player to remove.
      */
@@ -102,6 +103,7 @@ public class Lobby {
         threePlayersLobby.remove(playerToRemoveUsername);
         threePlayersLobbyVirtualViews.remove(playerToRemoveVirtualView);
         playerToRemoveVirtualView.setInLobby(false);
+        System.out.println(Thread.currentThread() + " Player: " + playerToRemoveUsername +" removed from three players lobby");
     }
     private synchronized boolean getTwoPlayersLobbyReady(){return twoPlayersLobbyReady;}
     private synchronized boolean getThreePlayersLobbyReady(){return threePlayersLobbyReady;}
@@ -143,44 +145,52 @@ public class Lobby {
     /**
      * Method checkReady verifies if the lobbies are ready to start the game.
      */
-    private  synchronized void checkReady(){
+    private synchronized void checkReady(){
         if(getTwoPlayersLobbySlotsOccupied()==2) setTwoPlayersLobbyReady(true);
         if (getThreePlayersLobbySlotsOccupied()==3) setThreePlayersLobbyReady(true);
     }
 
     /**
-     * Check the username of the player and insert it in the lobby.In case the username is already present it sends to the player an error.
+     * Check the username of the player and insert it in the lobby.
+     * In case the username is already present, the insertion is aborted and an error message is sent to the player.
+     * Once a insertion is made successfully, if a game is ready to start, the method starts it in a new thread.
      * @since version 2.1
      * @param desiredNumPlayers Number of players in the game wanted by the player.
      * @param client VirtualView of the player.
      * @param username username of the player.
      */
      protected synchronized void addPlayerToLobby(int desiredNumPlayers,VirtualView client,String username,Thread viewThread){
-        System.out.println("Adding user "+ username +" to lobby");
-            if (desiredNumPlayers == 2){
-                if (!(getTwoPlayersLobby().contains(username))) {
-                    addPlayerToTwoPlayersLobby(username,client);
-                    viewThread.interrupt();
-                    System.out.println(username + " added to lobby");
-                }
-                else {
-                    client.sendMessage(new UsernameTakenError());
-                    System.out.println("A player with username: " + username + " is already waiting in two players lobby");
-                }
-            }
-            else {
-                if (!(getThreePlayersLobby().contains(username))) {
-                    addPlayerToThreePlayersLobby(username,client);
-                    viewThread.interrupt();
-                    System.out.println(username + " added to lobby");
-                }
-                else {
-                    client.sendMessage(new UsernameTakenError());
-                    System.out.println("A player with username: " + username + " is already waiting in three players lobby");
-                }
-            }
+         if (desiredNumPlayers == 2){
+             if (!(getTwoPlayersLobby().contains(username))) {
+                 addPlayerToTwoPlayersLobby(username,client);
+                 viewThread.interrupt();
+                 System.out.println(Thread.currentThread() + " " + username + " added to lobby");
+             }
+             else {
+                 client.sendMessage(new UsernameTakenError());
+                 System.out.println(Thread.currentThread() + " A player with username: " + username + " is already waiting in two players lobby");
+             }
+         }
+         else {
+             if (!(getThreePlayersLobby().contains(username))) {
+                 addPlayerToThreePlayersLobby(username,client);
+                 viewThread.interrupt();
+                 System.out.println(Thread.currentThread() + " " + username + " added to lobby");
+             }
+             else {
+                 client.sendMessage(new UsernameTakenError());
+                 System.out.println(Thread.currentThread() + " A player with username: " + username + " is already waiting in three players lobby");
+             }
+         }
+         checkReady();
+         startGame();
+    }
 
-        checkReady();
+    /**
+     * Method used to start a game when a lobby is full.
+     * @since version 2.2
+     */
+    private synchronized void startGame(){
         GameController newGame;
         Thread newGameThread;
         if (getTwoPlayersLobbyReady()) {
@@ -207,14 +217,15 @@ public class Lobby {
         }
     }
 
-
     /**
-     * Method used to delete a player from a lobby.
+     * Method used to delete a player from a lobby. It checks the lobby the player is in and
+     * then removes it from the lobby using the corresponding method.
      * @since version 2.1
      */
-    protected synchronized void removePlayerFromLobby(VirtualView client, String username,Thread viewThread){
+    protected synchronized void removePlayerFromLobby(VirtualView client, String username){
         if (getTwoPlayersLobby().contains(username))removePlayerFromTwoPlayersLobby(username,client);
         else removePlayerFromThreePlayersLobby(username,client);
+
     }
 
 

@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class GodsController {
@@ -36,15 +37,16 @@ public class GodsController {
     @FXML private ImageView selectSingleGod;
     private static String selectedGod;
 
-    private ToggleGroup toggleGroup=new ToggleGroup();
+    private final ToggleGroup toggleGroup=new ToggleGroup();
+    private static final double godSelectionCenterWidth = 450.0, godSelectionCenterHeight = 900.0;
 
 
     /**
      * This method shows the list of all the Gods usable during the game and allows the first player to choose the Gods he wants for the current match.
      * The number of the cards selected has to be equal to the number of players chosen.
      */
-    public void showGodSelector(ArrayList<God> godList) throws IOException {
-        StackPane godSelectionPane = FXMLLoader.load(GodsController.class.getClassLoader().getResource("Fxml/Gods.fxml"));
+    public void showGodSelector() throws IOException {
+        StackPane godSelectionPane = FXMLLoader.load(Objects.requireNonNull(GodsController.class.getClassLoader().getResource("Fxml/Gods.fxml")));
         if(Client.getNumPlayers() == 3){
             BorderPane godsBorderPane = (BorderPane) godSelectionPane.getChildren().get(1);
             StackPane godIconsStackPane = (StackPane)godsBorderPane.getRight();
@@ -65,7 +67,7 @@ public class GodsController {
     public void showSingleGodSelector(ArrayList<God> gameGods,ArrayList<God> chosenGods) throws IOException {
         God tempGod;
         //buttonsSingleGod = new ArrayList<>();
-        StackPane singleGodSelectionPane = FXMLLoader.load(GodsController.class.getClassLoader().getResource("Fxml/ChooseGod.fxml"));
+        StackPane singleGodSelectionPane = FXMLLoader.load(Objects.requireNonNull(GodsController.class.getClassLoader().getResource("Fxml/ChooseGod.fxml")));
         singleGodBorderPane=(BorderPane) singleGodSelectionPane.getChildren().get(1);
         vBox=(VBox) singleGodBorderPane.getRight();
         firstGod= (ToggleButton) vBox.getChildren().get(0);
@@ -86,7 +88,7 @@ public class GodsController {
         }
         if (Client.getNumPlayers() == 3){
             singleGodChoiceToggleButtonImage((tempGod = gameGods.get(2)).getName(), thirdGod, singleGodBorderPane);
-            if (godAlreadyChosen(gameGods.get(2).getName(),chosenGods)) {
+            if (godAlreadyChosen(tempGod.getName(),chosenGods)) {
                 thirdGod.setOpacity(0.3);
                 thirdGod.setDisable(true);
             }
@@ -103,7 +105,7 @@ public class GodsController {
      * @return true if the selected God has already been chosen by other players, false otherwise
      */
     public boolean godAlreadyChosen(String godName, ArrayList<God> chosen){
-        for (int i= 0; i < chosen.size();i++) if (godName.equals(chosen.get(i).getName())) return true;
+        for (God god : chosen) if (godName.equals(god.getName())) return true;
         return false;
     }
 
@@ -116,205 +118,92 @@ public class GodsController {
      */
     public void singleGodChoiceToggleButtonImage(String godName, ToggleButton button, BorderPane pane){
         selectedGods.add(godName);
+        Image image = null, image2 = null;
+
         switch (godName){
             case "Apollo":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Apollo.png); -fx-background-size: 150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Apo.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Apollo.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Apo.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Apollo.png"));
                 break;
             case "Artemis":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Artemis.png); -fx-background-size: 150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Arte.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Artemis.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Arte.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Artemis.png"));
                 break;
             case "Athena":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Athena.png); -fx-background-size: 150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Athe.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Athena.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Athe.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Athena.png"));
                 break;
             case "Atlas":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Atlas.png); -fx-background-size: 150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Atla.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Atlas.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Atla.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Atlas.png"));
                 break;
             case "Demeter":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Demeter.png); -fx-background-size:150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Demet.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Demeter.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Demet.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Demeter.png"));
                 break;
             case "Hephaestus":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hephaestus.png); -fx-background-size:150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Hepha.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hephaestus.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Hepha.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hephaestus.png"));
                 break;
             case "Minotaur":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Minotaur.png); -fx-background-size: 150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Minot.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Minotaur.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Minot.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Minotaur.png"));
                 break;
             case "Pan":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Pan.png); -fx-background-size: 150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Pa.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Pan.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Pa.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Pan.png"));
                 break;
             case "Prometheus":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Prometheus.png); -fx-background-size: 150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Promet.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Prometheus.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Promet.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Prometheus.png"));
                 break;
             case "Ares":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Ares.png); -fx-background-size: 150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Are.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Ares.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Are.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Ares.png"));
                 break;
             case "Chronus":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Chronus.png); -fx-background-size:150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Chronos.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Chronus.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Chronos.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Chronus.png"));
                 break;
             case "Hera":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hera.png); -fx-background-size:  150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Her.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hera.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Her.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hera.png"));
                 break;
             case "Hestia":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hestia.png); -fx-background-size:150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Hest.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hestia.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Hest.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hestia.png"));
                 break;
             case "Zeus":
                 button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Zeus.png); -fx-background-size:150px;");
-                button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
-                    Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Zeu.png"));
-                    ImageView img=new ImageView(image);
-                    pane.setCenter(img);
-                    Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Zeus.png"));
-                    ImageView img2=new ImageView(image2);
-                    img2.setFitWidth(450.0);
-                    img2.setFitHeight(900.0);
-                    pane.setLeft(img2);
-                });
-                button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
+                image = new Image(getClass().getResourceAsStream("/Images/Gods/Zeu.png"));
+                image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Zeus.png"));
                 break;
         }
 
+        Image finalImage = image2;
+        Image finalImage1 = image;
+        button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-> {
+            ImageView img=new ImageView(finalImage1);
+            pane.setCenter(img);
+            ImageView img2=new ImageView(finalImage);
+            img2.setFitWidth(450.0);
+            img2.setFitHeight(900.0);
+            pane.setLeft(img2);
+        });
+        button.addEventHandler(MouseEvent.MOUSE_EXITED, e-> flushPane(e, pane));
     }
 
     /**
@@ -323,29 +212,23 @@ public class GodsController {
      * @param pane pane in which arrange the buttons
      */
     public void flushPane(MouseEvent event, BorderPane pane) {
+        event.consume();
         pane.setCenter(null);
         pane.setLeft(null);
     }
 
-
     /**
-     * This method shows Artemis card when is selected by the mouse
-     * @param event mouse pointer is positioned over Artemis card
+     * Method used to handle the "On mouse entered" event on a god toggle button during god selection.
+     * @param godSelectionCenter the image will be shown in central position of the screen.
+     * @param godSelectionLeft the image will be shown in left position of the screen.
      */
-    public void showArtemis(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Arte.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Artemis.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
-    }
-
-
-    private void selectedGod() {
-
+    protected void showCard(Image godSelectionCenter, Image godSelectionLeft){
+        ImageView leftImage = new ImageView(godSelectionLeft);
+        ImageView centerImage = new ImageView(godSelectionCenter);
+        leftImage.setFitWidth(godSelectionCenterWidth);
+        leftImage.setFitHeight(godSelectionCenterHeight);
+        borderPane.setLeft(leftImage);
+        borderPane.setCenter(centerImage);
     }
 
     /**
@@ -353,15 +236,21 @@ public class GodsController {
      * @param event mouse pointer is positioned over Apollo card
      */
     public void showApollo(MouseEvent event) {
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Apo.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Apollo.png"));
+        showCard(center,left);
+    }
 
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Apo.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Apollo.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+    /**
+     * This method shows Artemis card when is selected by the mouse
+     * @param event mouse pointer is positioned over Artemis card
+     */
+    public void showArtemis(MouseEvent event) {
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Arte.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Artemis.png"));
+        showCard(center,left);
     }
 
     /**
@@ -369,14 +258,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Athena card
      */
     public void showAthena(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Athe.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Athena.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Athe.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Athena.png"));
+        showCard(center,left);
     }
 
     /**
@@ -384,14 +269,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Atlas card
      */
     public void showAtlas(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Atlas2.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Atlas.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Atlas2.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Atlas.png"));
+        showCard(center,left);
     }
 
     /**
@@ -399,14 +280,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Demeter card
      */
     public void showDemeter(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Demet.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Demeter.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Demet.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Demeter.png"));
+        showCard(center,left);
     }
 
     /**
@@ -414,14 +291,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Hephaestus card
      */
     public void showHephaestus(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Hepha.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hephaestus.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Hepha.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hephaestus.png"));
+        showCard(center,left);
     }
 
     /**
@@ -429,14 +302,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Prometheus card
      */
     public void showPrometheus(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Promet.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Prometheus.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Promet.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Prometheus.png"));
+        showCard(center,left);
     }
 
     /**
@@ -444,14 +313,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Pan card
      */
     public void showPan(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Pa.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Pan.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Pa.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Pan.png"));
+        showCard(center,left);
     }
 
     /**
@@ -459,14 +324,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Ares card
      */
     public void showAres(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Are.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Ares.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Are.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Ares.png"));
+        showCard(center,left);
     }
 
     /**
@@ -474,14 +335,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Chronus card
      */
     public void showChronus(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Chronos.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Chronus.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Chronos.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Chronus.png"));
+        showCard(center,left);
     }
 
     /**
@@ -489,14 +346,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Hestia card
      */
     public void showHestia(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Hest.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hestia.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Hest.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hestia.png"));
+        showCard(center,left);
     }
 
     /**
@@ -504,14 +357,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Hera card
      */
     public void showHera(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Her.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hera.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Her.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hera.png"));
+        showCard(center,left);
     }
 
     /**
@@ -519,14 +368,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Minotaur card
      */
     public void showMinotaur(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Minot.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Minotaur.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Minot.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Minotaur.png"));
+        showCard(center,left);
     }
 
     /**
@@ -534,14 +379,10 @@ public class GodsController {
      * @param event mouse pointer is positioned over Zeus card
      */
     public void showZeus(MouseEvent event) {
-        Image image = new Image(getClass().getResourceAsStream("/Images/Gods/Zeu.png"));
-        ImageView img=new ImageView(image);
-        borderPane.setCenter(img);
-        Image image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Zeus.png"));
-        ImageView img2=new ImageView(image2);
-        img2.setFitWidth(450.0);
-        img2.setFitHeight(900.0);
-        borderPane.setLeft(img2);
+        event.consume();
+        Image center = new Image(getClass().getResourceAsStream("/Images/Gods/Zeu.png"));
+        Image left = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Zeus.png"));
+        showCard(center,left);
     }
 
 
@@ -550,6 +391,7 @@ public class GodsController {
      * @param event mouse pointer is removed from the card
      */
     public void none(MouseEvent event) {
+        event.consume();
         borderPane.setCenter(null);
         borderPane.setLeft(null);
     }

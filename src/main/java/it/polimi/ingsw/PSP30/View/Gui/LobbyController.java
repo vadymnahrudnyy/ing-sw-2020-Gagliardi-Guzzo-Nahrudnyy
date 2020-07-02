@@ -17,6 +17,7 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Objects;
 
 
 public class LobbyController {
@@ -37,7 +38,7 @@ public class LobbyController {
      */
     public void showLobby(ArrayList<String> players) throws IOException {
         String firstOpponentUsername = null, secondOpponentUsername;
-        lobbyPane= FXMLLoader.load(GodsController.class.getClassLoader().getResource("Fxml/Lobby.fxml"));
+        lobbyPane= FXMLLoader.load(Objects.requireNonNull(GodsController.class.getClassLoader().getResource("Fxml/Lobby.fxml")));
         borderPane=(BorderPane) lobbyPane.getChildren().get(1);
         exitButton=(ImageView) borderPane.getBottom();
         playerStackPane=(StackPane) borderPane.getLeft();
@@ -62,6 +63,7 @@ public class LobbyController {
     }
 
     public void lobbyExitButton(MouseEvent event){
+        event.consume();
         Client.sendMessageToServer(new Disconnection());
         Platform.exit();
         System.exit(APP_CLOSED_BY_LOBBY_EXIT_BUTTON);

@@ -17,6 +17,7 @@ public class Server {
     private static ServerSocket server;
     private static boolean running = false;
     private static final int SOCKET_PORT = 50000;
+    public static final int CONNECTION_TIMEOUT = 3000;
 
     private static Thread lobbyStatusNotifierThread;
 
@@ -27,7 +28,7 @@ public class Server {
 
 
     public static void main(String[] args) {
-        System.out.println("Server Started");
+        System.out.println(Thread.currentThread() + " Server Started");
         serverSocketCreation();
         lobbyStatusThreadCreation();
         while (running) acceptPlayersConnections();
@@ -64,9 +65,9 @@ public class Server {
         try{
             server = new ServerSocket(SOCKET_PORT);
             running = true;
-            System.out.println("Server Socket created. Port user: " + SOCKET_PORT);
+            System.out.println(Thread.currentThread() + " Server Socket created. Port: " + SOCKET_PORT);
         } catch (IOException e) {
-        System.out.println("Server initialization failed: Server will shutdown");
+        System.out.println("Server initialization failed: Shutdown");
         }
     }
 
@@ -84,13 +85,13 @@ public class Server {
     protected static void acceptPlayersConnections(){
         try{
             Socket newClient = server.accept();
-            System.out.println("new connection accepted from IP: " + newClient.getInetAddress());
+            System.out.println(Thread.currentThread() + " New connection accepted from IP: " + newClient.getInetAddress());
             VirtualView newVirtualView = new VirtualView(newClient, serverLobby);
             Thread newVirtualViewThread = new Thread(newVirtualView);
             newVirtualViewThread.start();
-            System.out.println("Virtual View for user "+newClient.getInetAddress()+" created");
+            System.out.println(Thread.currentThread() + " Virtual View for user " + newClient.getInetAddress() + " created");
         }catch (IOException e){
-            System.out.println("Connection to the client failed");
+            System.out.println(Thread.currentThread() + " Connection to the client failed");
         }
     }
 
