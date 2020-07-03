@@ -5,7 +5,7 @@ public class AlertsController {
 
 
     /**
-     * Alert showed when the address inserted isn't valid
+     * Alert showed when the address inserted isn't valid.
      */
     public void showServerAddressError(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -16,7 +16,7 @@ public class AlertsController {
     }
 
     /**
-     * Alert showed when the username inserted isn't valid
+     * Alert showed when the username inserted isn't valid.
      */
     public void showUsernameError() {
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -27,7 +27,7 @@ public class AlertsController {
     }
 
     /**
-     * Alert showed when the player isn't the owner of the worker he has selected
+     * Alert showed when the player isn't the owner of the worker he has selected.
      */
     public void showWorkerSelectedError(){
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -38,7 +38,7 @@ public class AlertsController {
     }
 
     /**
-     * Alert showed when the player has selected a worker who has no more moves available
+     * Alert showed when the player has selected a worker who has no more moves available.
      */
     public void showWorkerCannotMoveError(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -49,7 +49,7 @@ public class AlertsController {
     }
 
     /**
-     * Alert showed when both the worker of the player can't move anymore
+     * Alert showed when both the worker of the player can't move anymore.
      */
     public void showNoPossibleMovesError(){
         Alert alert = new Alert(Alert.AlertType.WARNING);
@@ -60,7 +60,7 @@ public class AlertsController {
     }
 
     /**
-     * Alert showed when the selected move isn't allowed
+     * Alert showed when the selected move isn't allowed.
      */
     public void showInvalidMoveError(){
         Alert alert = new Alert(Alert.AlertType.WARNING);

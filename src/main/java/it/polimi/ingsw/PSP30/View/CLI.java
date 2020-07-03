@@ -11,7 +11,7 @@ import it.polimi.ingsw.PSP30.Messages.*;
 import it.polimi.ingsw.PSP30.Model.*;
 
 /**
- * CLI class implements the UI interface and defines all the features for play with command line interface
+ * Implements the UI interface and defines all the features for play with command line interface.
  */
 public class CLI implements UI {
 
@@ -26,12 +26,8 @@ public class CLI implements UI {
     boolean isUsed;
 
 
-    public CLI(){
-    }
-
-
     /**
-     * This method shows all the significant information about the game
+     * Shows all the significant information about the game.
      */
     public void gameInfo() {
         System.out.println("Welcome in Santorini!");
@@ -116,7 +112,6 @@ public class CLI implements UI {
         }
     }
 
-
     @Override
     public void chooseGameGods() {
         ArrayList<String> chosenGods = new ArrayList<>();
@@ -144,7 +139,6 @@ public class CLI implements UI {
         NetworkHandler.sendMessage(new StartPlayerResponse(firstPlayer));
     }
 
-
     @Override
     public void playerError() {
         System.out.println("Attention! The selected player is invalid.");
@@ -168,7 +162,6 @@ public class CLI implements UI {
         NetworkHandler.sendMessage(new ChoseGodResponse(chosen));
     }
 
-
     @Override
     public void godChoiceError() {
         System.out.println("Attention! You did not write the name of the god correctly (the first letter must be capitalized).");
@@ -183,7 +176,6 @@ public class CLI implements UI {
         System.out.println("");
         System.out.println("Players have chosen their deities. Your deity is " + lastGod.getName());
     }
-
 
     @Override
     public void placeWorkerInSpace(int currentWorker, boolean[][] allowedPosition){
@@ -250,12 +242,10 @@ public class CLI implements UI {
         NetworkHandler.sendMessage(new MoveResponse(x, y));
     }
 
-
     @Override
     public void otherWorker() {
         System.out.println("The chosen worker couldn't move, select a move for the other worker: ");
     }
-
 
     @Override
     public void moveOtherWorker(boolean[][] allowedMoves) {
@@ -272,7 +262,6 @@ public class CLI implements UI {
         NetworkHandler.sendMessage(new MoveResponse(x,y));
     }
 
-
     @Override
     public void printPossibleAction(boolean[][] allowed) {
         System.out.println("Possible moves (in coordinates):");
@@ -283,7 +272,6 @@ public class CLI implements UI {
             }
         }
     }
-
 
     @Override
     public void changeWorker(boolean canChangeWorker){
@@ -298,7 +286,6 @@ public class CLI implements UI {
         else
             Client.changedWorker=false;
     }
-
 
     @Override
     public void buildTower(boolean[][] allowedBuild) {
@@ -316,7 +303,6 @@ public class CLI implements UI {
         NetworkHandler.sendMessage(new BuildResponse(x,y));
     }
 
-
     @Override
     public void askPowerUsage() {
         System.out.println("Do you want to use the power of your god? Reply y o n");
@@ -326,7 +312,6 @@ public class CLI implements UI {
 
         NetworkHandler.sendMessage(new UsePowerResponse(isUsed));
     }
-
 
     @Override
     public void noPossibleMoves() { System.out.println("You don’t have a chance to move anymore! I’m sorry, you lost."); }

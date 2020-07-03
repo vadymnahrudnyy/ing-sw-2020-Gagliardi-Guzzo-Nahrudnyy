@@ -23,7 +23,9 @@ import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import it.polimi.ingsw.PSP30.Client.Client;
 
-
+/**
+ * Manages the loading of the Board.fxml file and all the operations done on the board scene.
+ */
 public class BoardController{
 
 
@@ -57,8 +59,8 @@ public class BoardController{
     private static boolean removeRequest = false, canChangeWorker;
 
     /**
-     * This method initializes the Board scene with all the elements of the GameStage
-     * @param message GameStartNotification which contains the current status of the game
+     * Initializes the Board scene with all the elements of the GameStage.
+     * @param message GameStartNotification which contains the current status of the game.
      */
     public void initializeBoard(GameStartNotification message) {
         if (GUI.getGameStage() == null) GUI.setGameStage(new Stage());
@@ -113,7 +115,7 @@ public class BoardController{
     }
 
     /**
-     * Method used to draw the game board on the screen. For every cell the corresponding
+     * Draws the game board on the screen. For every cell the corresponding.
      * parameters are checked and used to set the corresponding images.
      * @param board GameBoard.
      */
@@ -128,9 +130,10 @@ public class BoardController{
         gridPane.setMaxSize(550,550);
 
     }
+
     /**
-     * This method updates the Board scene with all the elements belonging to the current status of the game (workers, buildings and info about the players)
-     * @param updatedGame contains the current status of the game
+     * Updates the board scene with all the elements belonging to the current status of the game (workers, buildings and info about the players).
+     * @param updatedGame contains the current status of the game.
      */
     public void updateGameBoard(Game updatedGame){
         messagesTag.setText("");
@@ -169,15 +172,16 @@ public class BoardController{
     }
 
     /**
-     *
+     * Resets the dropshadow effect of the possible moves of the worker.
      */
     public static void resetWorkerMovesMarkers(){
         for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
             for (int Y = 0; Y < IslandBoard.TABLE_DIMENSION; Y++)
                 cell[X][Y].setNotAllowed();
     }
+
     /**
-     * This method resets the dropshadow effect when isn't anymore the player's turn
+     * Resets the dropshadow effect when isn't anymore the player's turn.
      */
     public void resetCurrentPlayerDropshadow(){
         playerGod.setStyle("");
@@ -185,9 +189,8 @@ public class BoardController{
         secondOpponentGod.setStyle("");
     }
 
-
     /**
-     * This method is used to set the value of moveRequest variable.
+     * Used to set the value of moveRequest variable.
      * @param value New value of moveRequest.
      */
     public void setMoveRequest(boolean value){
@@ -195,7 +198,7 @@ public class BoardController{
     }
 
     /**
-     * This method shows the pane for the choice of the beginning player.
+     * Shows the pane for the choice of the beginning player.
      * @param players array which contains the names of the players.
      * @throws IOException when an error occurred in loading fxml file.
      */
@@ -239,7 +242,7 @@ public class BoardController{
     }
 
     /**
-     * This method manages to show the correct image for every god
+     * Manages to show the correct image for every god
      * @param godName god's name
      * @param button in which the god's image will be added
      */
@@ -292,7 +295,7 @@ public class BoardController{
     }
 
     /**
-     * This method handles the selection of the first player
+     * Handles the selection of the first player
      * @param mouseEvent mouse click over one of the cards
      */
     public void handleFirstPlayerSelection(MouseEvent mouseEvent) {
@@ -305,7 +308,7 @@ public class BoardController{
     }
 
     /**
-     * This method sets the images of the God cards around the board
+     * Sets the images of the God cards around the board
      * @param isOpponent true if the god belongs to the opponent of the current player, otherwise false
      * @param godName god's name
      * @return the path of the god's image to set in the scene
@@ -359,13 +362,17 @@ public class BoardController{
         return null;
     }
 
+    /**
+     * Indicates the possibility to change the selected worker.
+     * @param value return true if the player can select the other worker, otherwise value is false.
+     */
     public void setCanChangeWorker(boolean value){
         canChangeWorker = value;
     }
 
     /**
-     * This method shows the request to select where to place the indicated worker (during the game setup)
-     * @param workerIndex integer index of the worker
+     * Shows the request to select where to place the indicated worker (during the game setup).
+     * @param workerIndex integer index of the worker.
      */
     public void workerPositionRequest(int workerIndex){
         if (workerIndex == 1) messagesTag.setText("Select first worker's position");
@@ -374,7 +381,7 @@ public class BoardController{
     }
 
     /**
-     * This method shows the request to select the worker to move
+     * Shows the request to select the worker to move.
      */
     public void selectWorkerRequest(){
         selectWorkerRequest = true;
@@ -382,8 +389,8 @@ public class BoardController{
     }
 
     /**
-     * This method shows the request to select where to move the worker previously selected
-     * @param allowedMove the boolean matrix of the allowed moves
+     * Shows the request to select where to move the worker previously selected.
+     * @param allowedMove the boolean matrix of the allowed moves.
      */
     public void moveRequest(boolean[][] allowedMove){
         moveRequest = true;
@@ -397,8 +404,8 @@ public class BoardController{
     }
 
     /**
-     * This method shows the request to select where to build
-     * @param allowedMove the boolean matrix of the spaces where the player is allowed to build
+     * Shows the request to select where to build.
+     * @param allowedMove the boolean matrix of the spaces where the player is allowed to build.
      */
     public void buildRequest(boolean[][] allowedMove){
         buildRequest = true;
@@ -411,8 +418,8 @@ public class BoardController{
     }
 
     /**
-     * This method shows the request to select where to remove a building
-     * @param allowedRemovals the boolean matrix of the spaces where the player is allowed to remove a building
+     * Shows the request to select where to remove a building.
+     * @param allowedRemovals the boolean matrix of the spaces where the player is allowed to remove a building.
      */
     public void blockRemoveRequest(boolean[][] allowedRemovals){
         removeRequest = true;
@@ -424,9 +431,9 @@ public class BoardController{
     }
 
     /**
-     * This method shows the "Using God Power" of the Info and Rules page and manages mouse click on next button
-     * @param mouseEvent mouse click on the Info and Rules button
-     * @throws IOException when an error occurred in loading fxml file
+     * Shows the "Using God Power" of the Info and Rules page and manages mouse click on next button.
+     * @param mouseEvent mouse click on the Info and Rules button.
+     * @throws IOException when an error occurred in loading fxml file.
      */
     public void showInfoPane(MouseEvent mouseEvent) throws IOException {
         mouseEvent.consume();
@@ -448,8 +455,8 @@ public class BoardController{
     }
 
     /**
-     * This method shows the "Power Rules" of the Info and Rules page and manages mouse click on next button
-     * @throws IOException when an error occurred in loading fxml file
+     * This method shows the "Power Rules" of the Info and Rules page and manages mouse click on next button.
+     * @throws IOException when an error occurred in loading fxml file.
      */
     public void rulesScene1() throws IOException {
         StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard1.fxml")));
@@ -466,8 +473,8 @@ public class BoardController{
     }
 
     /**
-     * This method shows the glossary of the Info and Rules page and manages mouse click on next and back button
-     * @throws IOException when an error occurred in loading fxml file
+     * This method shows the glossary of the Info and Rules page and manages mouse click on next and back button.
+     * @throws IOException when an error occurred in loading fxml file.
      */
     public void rulesScene2() throws IOException {
         StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard2.fxml")));
@@ -493,8 +500,8 @@ public class BoardController{
     }
 
     /**
-     * This method shows the "How to Play" of the Info and Rules page and manages mouse click on back button
-     * @throws IOException when an error occurred in loading fxml file
+     * Shows the "How to Play" of the Info and Rules page and manages mouse click on back button.
+     * @throws IOException when an error occurred in loading fxml file.
      */
     public void rulesScene3() throws IOException {
         StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard3.fxml")));
@@ -511,8 +518,8 @@ public class BoardController{
     }
 
     /**
-     *
-     * @param event mouse click on the exit button
+     * Sends a disconnection message to the server when the exit button is clicked.
+     * @param event mouse click on the exit button.
      */
     public void disconnectButton(MouseEvent event){
         event.consume();
@@ -520,10 +527,8 @@ public class BoardController{
         System.exit(0);
     }
 
-
-
     /**
-     * This method manages the content of the cells of the board (workers and buildings) and shows the requests during the player's turn
+     * Manages the content of the cells of the board (workers and buildings) and shows the requests during the player's turn.
      */
     public static class Cell extends StackPane {
         protected int coordinateX, coordinateY;
@@ -607,14 +612,14 @@ public class BoardController{
         }
 
         /**
-         * This method sets the color to the cells in which the player can do the action
+         * Sets the color to the cells in which the player can do the action.
          */
         public void setAllowed(){
             allowedMovePane.setStyle("-fx-background-color: #49eeff; -fx-opacity: 0.5");
         }
 
         /**
-         * This method set the cell as not allowed for a move.
+         * Set the cell as not allowed for a move.
          */
         public void setNotAllowed(){
             allowedMovePane.setStyle("-fx-background-color: transparent");

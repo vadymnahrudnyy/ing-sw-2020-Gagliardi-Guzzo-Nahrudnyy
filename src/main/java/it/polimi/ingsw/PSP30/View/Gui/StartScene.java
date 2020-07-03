@@ -11,19 +11,21 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * This class start the GUI application
+ * Starts the GUI application.
  */
 public class StartScene extends Application implements Runnable {
 
-
+    /**
+     * Launches the application.
+     */
     public static void main() {
         launch();
     }
 
     /**
-     * This method load Home.fxml file and shows it into a stage
+     * Loads Home.fxml file and shows it into a stage.
      * @param stage indicates the stage on which the scene will be projected.
-     * @throws IOException throws an exception for method load
+     * @throws IOException throws an exception for method load.
      **/
     @Override
     public void start(Stage stage) throws Exception {
@@ -39,5 +41,4 @@ public class StartScene extends Application implements Runnable {
 
     @Override
     public void run() {}
-
-    }
+}

@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.Objects;
 
 /**
- * This class creates a stage in order to ask to the player if he wants use the god's power
+ * Creates a stage in order to ask to the player if he wants use the god's power.
  */
 public class GodPowerController {
 
@@ -24,6 +24,9 @@ public class GodPowerController {
     @FXML ImageView yesButton, noButton;
     private static Stage powerStage;
 
+    /**
+     * Loads the scene for the selection of the god.
+     */
     public void showScene(){
         powerStage = new Stage();
         powerStage.initModality(Modality.APPLICATION_MODAL);
@@ -39,11 +42,20 @@ public class GodPowerController {
 
     }
 
+    /**
+     * Selects the god when the god card is clicked.
+     * @param event click occurs on the god card.
+     */
     public void usePower(MouseEvent event){
         event.consume();
         Client.sendMessageToServer(new UsePowerResponse(true));
         powerStage.close();
     }
+
+    /**
+     * Deselects an already selected god when the god card is clicked on again.
+     * @param event click occurs on the god card.
+     */
     public void noPower(MouseEvent event){
         event.consume();
         Client.sendMessageToServer(new UsePowerResponse(false));
