@@ -1,0 +1,11 @@
+module:it.polimi.ingsw.PSP30
+it.polimi.ingsw.PSP30.Client
+it.polimi.ingsw.PSP30.Exception.Server
+it.polimi.ingsw.PSP30.Exception.Space
+it.polimi.ingsw.PSP30.Exception.Worker
+it.polimi.ingsw.PSP30.Messages
+it.polimi.ingsw.PSP30.Model
+it.polimi.ingsw.PSP30.Server
+it.polimi.ingsw.PSP30.Utils
+it.polimi.ingsw.PSP30.View
+it.polimi.ingsw.PSP30.View.Gui

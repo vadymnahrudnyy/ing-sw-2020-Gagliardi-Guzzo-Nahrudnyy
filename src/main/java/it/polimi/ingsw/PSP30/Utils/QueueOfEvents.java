@@ -16,7 +16,7 @@ public class QueueOfEvents {
 
 
     /**
-     * This nested class defines the structure of the nodes.
+     * Defines the structure of the nodes.
      */
     private static class Node {
         private Message message;
@@ -24,7 +24,7 @@ public class QueueOfEvents {
     }
 
     /**
-     * This is the constructor which creates an empty queue.
+     * Constructor which creates an empty queue.
      */
     public QueueOfEvents() {
         firstEvent = null;
@@ -33,7 +33,7 @@ public class QueueOfEvents {
     }
 
     /**
-     * This method tells if the queue is empty.
+     * Tells if the queue is empty.
      * @return true if the queue is empty or false if it has at least a node.
      */
     public boolean isEmpty() {
@@ -41,7 +41,7 @@ public class QueueOfEvents {
     }
 
     /**
-     * This method allows to create a new node to insert in the queue.
+     * Allows to create a new node to insert in the queue.
      * @param message specifies the message to insert into the queue.
      */
     public synchronized void enqueueEvent(Message message) {
@@ -55,7 +55,7 @@ public class QueueOfEvents {
     }
 
     /**
-     * This method dequeue the first inserted node in message queue.
+     * Dequeues the first inserted node in message queue.
      * @return the first message of the queue.
      */
     public Message dequeueEvent() throws NoSuchElementException {
@@ -69,7 +69,7 @@ public class QueueOfEvents {
 
 
     /**
-     * This method flushes the queue by deleting all the nodes.
+     * Flushes the queue by deleting all the nodes.
      */
     public void flushQueue() {
         do {
