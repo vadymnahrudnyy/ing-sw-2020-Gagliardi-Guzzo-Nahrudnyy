@@ -20,21 +20,21 @@
          </effect></Region>
       <BorderPane fx:id="singleGodBorderPane" StackPane.alignment="CENTER">
          <right>
-            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="20.0" BorderPane.alignment="TOP_CENTER">
+            <VBox alignment="CENTER_LEFT" prefHeight="200.0" prefWidth="100.0" spacing="10.0" BorderPane.alignment="CENTER">
                <children>
-                  <ToggleButton fx:id="firstGod" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#firstGodSelected" prefHeight="220.0" prefWidth="150.0" styleClass="selectGodButton">
+                  <ToggleButton fx:id="firstGod" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#firstGodSelected" prefHeight="198.0" prefWidth="135.0" styleClass="selectGodButton">
                      <VBox.margin>
-                        <Insets left="25.0" />
+                        <Insets left="33.0" />
                      </VBox.margin>
                   </ToggleButton>
-                  <ToggleButton fx:id="secondGod" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#secondGodSelected" prefHeight="220.0" prefWidth="150.0" styleClass="selectGodButton">
+                  <ToggleButton fx:id="secondGod" layoutX="10.0" layoutY="10.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#secondGodSelected" prefHeight="198.0" prefWidth="135.0" styleClass="selectGodButton">
                      <VBox.margin>
-                        <Insets left="25.0" />
+                        <Insets left="33.0" />
                      </VBox.margin>
                   </ToggleButton>
-                  <ToggleButton fx:id="thirdGod" layoutX="10.0" layoutY="230.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#thirdGodSelected" prefHeight="220.0" prefWidth="150.0" styleClass="selectGodButton">
+                  <ToggleButton fx:id="thirdGod" layoutX="10.0" layoutY="230.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" mnemonicParsing="false" onMouseClicked="#thirdGodSelected" prefHeight="198.0" prefWidth="135.0" styleClass="selectGodButton">
                      <VBox.margin>
-                        <Insets left="25.0" />
+                        <Insets left="33.0" />
                      </VBox.margin>
                   </ToggleButton>
                   <ImageView fx:id="selectSingleGod" fitHeight="150.0" fitWidth="200.0" onMouseClicked="#handleSingleGodSelectionButton" pickOnBounds="true" preserveRatio="true" styleClass="button">
@@ -47,7 +47,7 @@
                   </ImageView>
                </children>
                <BorderPane.margin>
-                  <Insets right="20.0" top="20.0" />
+                  <Insets right="20.0" top="10.0" />
                </BorderPane.margin>
             </VBox>
          </right>

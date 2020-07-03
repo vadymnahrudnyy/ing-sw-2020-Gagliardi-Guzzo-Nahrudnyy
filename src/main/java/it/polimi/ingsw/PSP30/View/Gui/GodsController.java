@@ -122,72 +122,72 @@ public class GodsController {
 
         switch (godName){
             case "Apollo":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Apollo.png); -fx-background-size: 150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Apollo.png); -fx-background-size: 135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Apo.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Apollo.png"));
                 break;
             case "Artemis":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Artemis.png); -fx-background-size: 150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Artemis.png); -fx-background-size: 135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Arte.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Artemis.png"));
                 break;
             case "Athena":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Athena.png); -fx-background-size: 150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Athena.png); -fx-background-size: 135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Athe.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Athena.png"));
                 break;
             case "Atlas":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Atlas.png); -fx-background-size: 150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Atlas.png); -fx-background-size: 135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Atla.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Atlas.png"));
                 break;
             case "Demeter":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Demeter.png); -fx-background-size:150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Demeter.png); -fx-background-size:135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Demet.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Demeter.png"));
                 break;
             case "Hephaestus":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hephaestus.png); -fx-background-size:150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hephaestus.png); -fx-background-size:135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Hepha.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hephaestus.png"));
                 break;
             case "Minotaur":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Minotaur.png); -fx-background-size: 150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Minotaur.png); -fx-background-size: 135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Minot.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Minotaur.png"));
                 break;
             case "Pan":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Pan.png); -fx-background-size: 150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Pan.png); -fx-background-size: 135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Pa.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Pan.png"));
                 break;
             case "Prometheus":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Prometheus.png); -fx-background-size: 150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Prometheus.png); -fx-background-size: 135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Promet.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Prometheus.png"));
                 break;
             case "Ares":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Ares.png); -fx-background-size: 150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Ares.png); -fx-background-size: 135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Are.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Ares.png"));
                 break;
             case "Chronus":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Chronus.png); -fx-background-size:150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Chronus.png); -fx-background-size:135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Chronos.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Chronus.png"));
                 break;
             case "Hera":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hera.png); -fx-background-size:  150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hera.png); -fx-background-size:  135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Her.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hera.png"));
                 break;
             case "Hestia":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hestia.png); -fx-background-size:150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Hestia.png); -fx-background-size:135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Hest.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Hestia.png"));
                 break;
             case "Zeus":
-                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Zeus.png); -fx-background-size:150px;");
+                button.setStyle("-fx-background-image: url(Images/toggleButtonGods/Zeus.png); -fx-background-size:135px;");
                 image = new Image(getClass().getResourceAsStream("/Images/Gods/Zeu.png"));
                 image2 = new Image(getClass().getResourceAsStream("/Images/Backgrounds/Zeus.png"));
                 break;
