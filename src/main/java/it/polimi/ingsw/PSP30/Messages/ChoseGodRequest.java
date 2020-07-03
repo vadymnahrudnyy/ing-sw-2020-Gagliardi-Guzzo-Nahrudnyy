@@ -5,7 +5,7 @@ import it.polimi.ingsw.PSP30.Model.God;
 import java.util.ArrayList;
 
 /**
- * ChoseGodRequest implements the message asking the player the god he will use during the game.
+ * Implements the message asking the player the god he will use during the game.
  * It sends to client 2 lists, one with all gods will be used in the game and the other with already chosen gods.
  */
 public class ChoseGodRequest extends Message {

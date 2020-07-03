@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP30.Messages;
 
 /**
- * Class Disconnection implements the notification message after the disconnection.
+ * Implements disconnection implements the notification message after the disconnection.
  */
 public class Disconnection extends Message {
     private static final long serialVersionUID = 100023L;

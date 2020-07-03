@@ -20,7 +20,7 @@ import org.w3c.dom.Element;
 public class PowerParser {
 
     /**
-     * This method builds a new DOM Document object using the configuration file parsed
+     * Builds a new DOM Document object using the configuration file parsed.
      * @return the DOM document created
      */
     public Document buildPowerDocument() {
@@ -29,8 +29,6 @@ public class PowerParser {
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder pBuilder = factory.newDocumentBuilder();
-            //(InputSource containing the content to be parsed) - returns a new DOM Document object.
-            //return pBuilder.parse("./src/main/resources/configurationfilepower.xml");
             return pBuilder.parse(String.valueOf(this.getClass().getClassLoader().getResource("configurationfilepower.xml")));
 
         } catch(Exception e) {
@@ -41,7 +39,7 @@ public class PowerParser {
     }
 
     /**
-     * This method
+     * Parses the document and creates an ArrayList of powers.
      * @param document is the DOM Document that will be parsed
      * @return an ArrayList of Power objects created parsing the XML file
      */
@@ -90,7 +88,7 @@ public class PowerParser {
 
 
     /**
-     * This method initialize the DOM document and return the ArrayList obtained after the parsing
+     * Initializes the DOM document and return the ArrayList obtained after the parsing.
      * @return an ArrayList of Powers
      */
     public ArrayList<Power> readPowers(){

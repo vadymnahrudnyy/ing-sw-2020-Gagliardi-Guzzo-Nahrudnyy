@@ -1,9 +1,8 @@
 package it.polimi.ingsw.PSP30.Messages;
 
 /**
- * MoveRequest implements the message sending
- * to player the possible moves of the selectedWorker
- * and asking the coordinates of the destination space.
+ * Implements the message sending to player the possible moves of the selectedWorker
+ * and asks the coordinates of the destination space.
  */
 public class MoveRequest extends Message {
     private static final long serialVersionUID = 100015L;

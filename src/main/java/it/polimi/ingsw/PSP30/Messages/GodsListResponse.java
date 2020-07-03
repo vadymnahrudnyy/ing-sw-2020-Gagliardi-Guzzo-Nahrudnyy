@@ -3,8 +3,7 @@ package it.polimi.ingsw.PSP30.Messages;
 import java.util.ArrayList;
 
 /**
- * GodsListResponse send to the server the list
- * of gods the challenger has chosen to play with.
+ * Sends to the server the list of gods the challenger has chosen to play with.
  */
 public class GodsListResponse extends Message {
     private static final long serialVersionUID = 100008L;

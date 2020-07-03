@@ -1,8 +1,7 @@
 package it.polimi.ingsw.PSP30.Messages;
 
 /**
- * SelectWorkerResponse implements the message
- * sending to server the worker the player wants to move.
+ * Implements the message sending to server the worker the player wants to move.
  */
 public class SelectWorkerResponse extends Message {
     private static final long serialVersionUID = 100014L;

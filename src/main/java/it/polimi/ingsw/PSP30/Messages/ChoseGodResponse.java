@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP30.Messages;
 
 /**
- * Class ChoseGodResponse implements the answer to ChoseGodRequest message.
+ * Implements the answer to ChoseGodRequest message.
  */
 public class ChoseGodResponse extends Message {
     private static final long serialVersionUID = 10020L;

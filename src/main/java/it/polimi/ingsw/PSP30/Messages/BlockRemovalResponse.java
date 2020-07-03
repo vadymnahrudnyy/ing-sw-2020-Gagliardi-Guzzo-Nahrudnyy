@@ -2,8 +2,7 @@
 package it.polimi.ingsw.PSP30.Messages;
 
 /**
- * BlockRemovalResponse implements the message sending to server
- * the coordinates of the space from which to remove a block.
+ * Implements the message sending to server the coordinates of the space from which to remove a block.
  */
 public class BlockRemovalResponse extends Message {
     private static final long serialVersionUID = 100033L;

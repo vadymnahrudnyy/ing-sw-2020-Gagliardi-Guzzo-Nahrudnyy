@@ -37,12 +37,16 @@ public class IslandBoard implements Serializable {
 
     /**
      * Getter of matrix parameter.
-     * @return A matrix con Space objects, representing the board.
+     * @return a matrix con Space objects, representing the board.
      */
     public Space[][] getMatrix() {
         return matrix;
     }
 
+    /**
+     * Getter of parameter numberCompleteTowers.
+     * @return the number of complete towers
+     */
     public int getNumberCompleteTowers() {
         return numberCompleteTowers;
     }

@@ -3,8 +3,7 @@ package it.polimi.ingsw.PSP30.Messages;
 import java.util.ArrayList;
 
 /**
- * LobbyStatusNotification sends to the player waiting for a new
- * game the actual status of the lobby.
+ * Sends to the player waiting for a new game the actual status of the lobby.
  */
 public class LobbyStatusNotification extends Message{
     private static final long serialVersionUID = 100005L;

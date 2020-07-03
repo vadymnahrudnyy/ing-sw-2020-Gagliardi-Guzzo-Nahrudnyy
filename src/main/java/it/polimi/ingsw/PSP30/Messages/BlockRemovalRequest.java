@@ -1,7 +1,7 @@
 package it.polimi.ingsw.PSP30.Messages;
 
 /**
- * BlockRemovalRequest class implements the request of removing a block.(Ares power)
+ * Implements the request of removing a block.(Ares power)
  */
 public class BlockRemovalRequest extends Message {
     private static final long serialVersionUID = 100032L;

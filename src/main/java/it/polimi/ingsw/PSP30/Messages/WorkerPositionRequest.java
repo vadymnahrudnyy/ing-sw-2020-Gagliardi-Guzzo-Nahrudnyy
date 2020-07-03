@@ -1,8 +1,7 @@
 package it.polimi.ingsw.PSP30.Messages;
 
 /**
- * WorkerPositionRequest implements the message to ask a player
- * the start position of specified worker among the available ones.
+ * Implements the message to ask a player the start position of specified worker among the available ones.
  */
 public class WorkerPositionRequest extends Message{
     private static final long serialVersionUID = 100011L;

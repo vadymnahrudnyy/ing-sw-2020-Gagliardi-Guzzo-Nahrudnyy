@@ -1,8 +1,7 @@
 package it.polimi.ingsw.PSP30.Messages;
 
 /**
- * MoveResponse implements the message sending to server the
- * coordinates where to move the selectedWorker.
+ * Implements the message sending to server the coordinates where to move the selectedWorker.
  */
 public class MoveResponse extends Message {
     private static final long serialVersionUID = 100016L;

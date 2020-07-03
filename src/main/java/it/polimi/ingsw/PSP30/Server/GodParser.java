@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class GodParser {
 
     /**
-     * This method builds a new DOM Document object using the configuration file parsed
+     * Builds a new DOM Document object using the configuration file parsed.
      * @return the DOM document created
      */
     public Document buildGodDocument() {
@@ -37,7 +37,7 @@ public class GodParser {
     }
 
     /**
-     * This method
+     * Parses the document and creates an ArrayList of gods.
      * @param document is the DOM Document that will be parsed
      * @return an ArrayList of God objects created parsing the XML file
      */
@@ -87,7 +87,7 @@ public class GodParser {
 
 
     /**
-     * This method initialize the DOM document and return the ArrayList obtained after the parsing
+     * Initializes the DOM document and return the ArrayList obtained after the parsing.
      * @return an ArrayList of Gods
      */
     public ArrayList<God> readGods() {
