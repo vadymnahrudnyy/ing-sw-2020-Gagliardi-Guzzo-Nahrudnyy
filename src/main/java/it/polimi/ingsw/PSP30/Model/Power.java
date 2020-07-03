@@ -1,20 +1,17 @@
 package it.polimi.ingsw.PSP30.Model;
 
 /**
+ * Power class describes the usage of the specific power.
  * @author Alessia Guzzo
  */
 
 public class Power {
-    /**
-     * Power class describes the usage of the specific power
-     */
 
     private final int powerID;
     private final Boolean isActive;
     private final Boolean usableOnPlayerTurn;
     private final Boolean validOnOpponentTurn;
     private final TurnPhase turnPhase;
-
 
     public static final int WORKER_POSITION_EXCHANGE_POWER = 1;
     public static final int DOUBLE_MOVE_POWER = 2;
@@ -33,8 +30,8 @@ public class Power {
 
 
     /**
-     * Power object build.
-     * @param powerID ID of the power.
+     * Constructor of Power class.
+     * @param powerID ID of the power
      * @param isActive states if the power have to be activated by the player
      * @param usableOnPlayerTurn indicates if the power can be used during the player's turn
      * @param validOnOpponentTurn flag that states if the power can be activated during the opponent's turn
@@ -49,18 +46,38 @@ public class Power {
         this.turnPhase = turnPhase;
     }
 
+    /**
+     * Getter of the parameter powerID.
+     * @return the value of powerID
+     */
     public int getPowerID() {
         return powerID;
     }
 
+    /**
+     * Getter of the parameter isActive.
+     * @return boolean value of isActive
+     */
     public Boolean getActive() {
         return isActive;
     }
 
+    /**
+     * Getter of the parameter usableOnPlayerTurn.
+     * @return boolean value of usableOnPlayerTurn
+     */
     public Boolean getUsableOnPlayerTurn() { return usableOnPlayerTurn; }
 
+    /**
+     * Getter of the parameter validOnOpponentTurn.
+     * @return boolean value of validOnOpponentTurn
+     */
     public Boolean getValidOnOpponentTurn() { return validOnOpponentTurn; }
 
+    /**
+     * Getter of the parameter turnPhase.
+     * @return the value of turnPhase
+     */
     public TurnPhase getTurnPhase() {
         return turnPhase;
     }

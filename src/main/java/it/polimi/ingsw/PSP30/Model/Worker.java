@@ -5,15 +5,11 @@ import it.polimi.ingsw.PSP30.Exception.Worker.InvalidWorkerPositionException;
 import java.io.Serializable;
 
 /**
+ * This class manages the workers of a player on the board
  * @author Alessia Gagliardi
  * @version 1.1
  */
-
-
 public class Worker implements Serializable {
-    /**
-     * This class manages the workers of a player on the board
-     */
 
     private final String owner;
     private Space workerPosition;
@@ -26,16 +22,13 @@ public class Worker implements Serializable {
     public final static int COLOR_BLUE=3;
 
 
-
     /**
-     * This is the constructor of the class Worker
+     * Constructor of the class Worker
      * @param owner tells who is the player that own that worker.
      * @param gender indicates the gender of the worker ('m'=male and 'f'= female)
      * @param workerPosition tells the position of the worker on the board in that moment.
      * @param color defines which color belongs to the worker
      */
-
-
     public Worker(String owner, char gender, Space workerPosition, int color) {
         this.owner = owner;
         this.wasMoved = false;
@@ -50,7 +43,6 @@ public class Worker implements Serializable {
      * This method allows the worker to change position.
      * @param newPosition tells where the worker should be moved to.
      */
-
     public void changePosition(Space newPosition) {
 
         Space currentPosition = getWorkerPosition();
