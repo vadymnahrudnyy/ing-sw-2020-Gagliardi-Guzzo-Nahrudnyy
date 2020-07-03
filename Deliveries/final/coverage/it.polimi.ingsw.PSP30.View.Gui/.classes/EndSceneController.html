@@ -1,0 +1,153 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: EndSceneController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.View.Gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: EndSceneController (it.polimi.ingsw.PSP30.View.Gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">EndSceneController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 5)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 21)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.View.Gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP30.Client.Client;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP30.View.GUI;
+<i>5</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>6</i>&nbsp;import javafx.scene.Scene;
+<i>7</i>&nbsp;import javafx.scene.control.Alert;
+<i>8</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>9</i>&nbsp;import javafx.scene.layout.StackPane;
+<i>10</i>&nbsp;import java.io.IOException;
+<i>11</i>&nbsp;import java.util.Objects;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; * Shows the end scene, one for the winner player and one for the other.
+<i>15</i>&nbsp; */
+<b class="nc"><i>16</i>&nbsp;public class EndSceneController {</b>
+<i>17</i>&nbsp;    private static final int GAME_FINISH_EXIT_STATUS = 101;
+<i>18</i>&nbsp;    private static final int OPPONENT_DISCONNECTED_EXIT_STATUS = 102;
+<i>19</i>&nbsp;    private static final int DISCONNECTED_FROM_SERVER_EXIT_STATUS = 103;
+<i>20</i>&nbsp;
+<i>21</i>&nbsp;    /**
+<i>22</i>&nbsp;     * Loads the winner or the loser scene.
+<i>23</i>&nbsp;     * @param winner indicates the username of the winning player.
+<i>24</i>&nbsp;     * @throws IOException when an error occurred in loading fxml file
+<i>25</i>&nbsp;     */
+<i>26</i>&nbsp;    public static void winner(String winner) throws IOException {
+<i>27</i>&nbsp;        StackPane pane;
+<b class="nc"><i>28</i>&nbsp;        if(Client.getUsername().equals(winner))</b>
+<b class="nc"><i>29</i>&nbsp;            pane = FXMLLoader.load(Objects.requireNonNull(GodsController.class.getClassLoader().getResource(&quot;Fxml/WinnerPopUp.fxml&quot;)));</b>
+<b class="nc"><i>30</i>&nbsp;        else pane= FXMLLoader.load(Objects.requireNonNull(GodsController.class.getClassLoader().getResource(&quot;Fxml/LoserPopUp.fxml&quot;)));</b>
+<i>31</i>&nbsp;
+<b class="nc"><i>32</i>&nbsp;        GUI.getGameStage().setScene(new Scene(pane));</b>
+<i>33</i>&nbsp;    }
+<i>34</i>&nbsp;
+<i>35</i>&nbsp;    /**
+<i>36</i>&nbsp;     * Closes the game stage when the quit button is clicked.
+<i>37</i>&nbsp;     * @param event mouse is clicked on the quit button.
+<i>38</i>&nbsp;     */
+<i>39</i>&nbsp;    public void endGame(MouseEvent event){
+<b class="nc"><i>40</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>41</i>&nbsp;        GUI.getGameStage().close();</b>
+<b class="nc"><i>42</i>&nbsp;        System.exit(GAME_FINISH_EXIT_STATUS);</b>
+<i>43</i>&nbsp;    }
+<i>44</i>&nbsp;
+<i>45</i>&nbsp;    /**
+<i>46</i>&nbsp;     * Generates an alert when an opponent has disconnected after the end of the game.
+<i>47</i>&nbsp;     */
+<i>48</i>&nbsp;    public static void opponentDisconnection(){
+<b class="nc"><i>49</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.WARNING);</b>
+<b class="nc"><i>50</i>&nbsp;        alert.setTitle(&quot;Opponent disconnected&quot;);</b>
+<b class="nc"><i>51</i>&nbsp;        alert.setHeaderText(null);</b>
+<b class="nc"><i>52</i>&nbsp;        if (Client.getNumPlayers() == 2) alert.setContentText(&quot;Your Opponent has left. The game is finished.&quot;);</b>
+<b class="nc"><i>53</i>&nbsp;        else alert.setContentText(&quot;One of your opponents has left. The game is finished.&quot;);</b>
+<b class="nc"><i>54</i>&nbsp;        alert.showAndWait();</b>
+<b class="nc"><i>55</i>&nbsp;        System.exit(OPPONENT_DISCONNECTED_EXIT_STATUS);</b>
+<i>56</i>&nbsp;    }
+<i>57</i>&nbsp;
+<i>58</i>&nbsp;    /**
+<i>59</i>&nbsp;     * Generates an alert when the player has disconnected after the end of the game.
+<i>60</i>&nbsp;     */
+<i>61</i>&nbsp;    public static void disconnectedFromServer(){
+<b class="nc"><i>62</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.WARNING);</b>
+<b class="nc"><i>63</i>&nbsp;        alert.setTitle(&quot;&quot;);</b>
+<b class="nc"><i>64</i>&nbsp;        alert.setHeaderText(null);</b>
+<b class="nc"><i>65</i>&nbsp;        alert.setContentText(&quot;Disconnected from the server&quot;);</b>
+<b class="nc"><i>66</i>&nbsp;        alert.showAndWait();</b>
+<b class="nc"><i>67</i>&nbsp;        System.exit(DISCONNECTED_FROM_SERVER_EXIT_STATUS);</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;}
+<i>70</i>&nbsp;
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 22:14</div>
+</div>
+</body>
+</html>

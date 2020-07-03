@@ -1,0 +1,767 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GodsController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.View.Gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GodsController (it.polimi.ingsw.PSP30.View.Gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GodsController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 45)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 273)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.View.Gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP30.View.GUI;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP30.Model.God;
+<i>5</i>&nbsp;import it.polimi.ingsw.PSP30.Client.Client;
+<i>6</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.ChoseGodResponse;
+<i>7</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.GodsListResponse;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import javafx.fxml.FXML;
+<i>10</i>&nbsp;import javafx.scene.Scene;
+<i>11</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>12</i>&nbsp;import javafx.scene.image.Image;
+<i>13</i>&nbsp;import javafx.scene.image.ImageView;
+<i>14</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>15</i>&nbsp;import javafx.scene.control.ToggleGroup;
+<i>16</i>&nbsp;import javafx.scene.control.ToggleButton;
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;import java.util.Objects;
+<i>19</i>&nbsp;import java.io.IOException;
+<i>20</i>&nbsp;import java.util.ArrayList;
+<i>21</i>&nbsp;import javafx.scene.layout.*;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;
+<i>24</i>&nbsp;/**
+<i>25</i>&nbsp; * Manages the Gods.fxml scene (choice of the gods by the first player).
+<i>26</i>&nbsp; */
+<b class="nc"><i>27</i>&nbsp;public class GodsController {</b>
+<i>28</i>&nbsp;
+<i>29</i>&nbsp;    @FXML private BorderPane borderPane;
+<i>30</i>&nbsp;    @FXML private ToggleButton apollo, artemis, ares;
+<i>31</i>&nbsp;    @FXML private ToggleButton hestia, hera;
+<i>32</i>&nbsp;    @FXML private ToggleButton demeter, chronus, zeus;
+<i>33</i>&nbsp;    @FXML private ToggleButton hephaestus, athena, atlas;
+<i>34</i>&nbsp;    @FXML private ToggleButton pan, prometheus, minotaur;
+<i>35</i>&nbsp;    @FXML private ImageView godSelectionButton;
+<i>36</i>&nbsp;
+<b class="nc"><i>37</i>&nbsp;    private static final ArrayList&lt;String&gt; selectedGods = new ArrayList&lt;&gt;();</b>
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    @FXML private VBox vBox ;
+<i>40</i>&nbsp;    @FXML private ToggleButton firstGod,secondGod,thirdGod;
+<i>41</i>&nbsp;    @FXML private BorderPane singleGodBorderPane;
+<i>42</i>&nbsp;    @FXML private ImageView selectSingleGod;
+<i>43</i>&nbsp;    private static String selectedGod;
+<i>44</i>&nbsp;
+<b class="nc"><i>45</i>&nbsp;    private final ToggleGroup toggleGroup=new ToggleGroup();</b>
+<i>46</i>&nbsp;    private static final double godSelectionCenterWidth = 450.0, godSelectionCenterHeight = 900.0;
+<i>47</i>&nbsp;
+<i>48</i>&nbsp;
+<i>49</i>&nbsp;    /**
+<i>50</i>&nbsp;     * Shows the list of all the Gods usable during the game and allows the first player to choose the Gods he wants for the current match.
+<i>51</i>&nbsp;     * The number of the cards selected has to be equal to the number of players chosen.
+<i>52</i>&nbsp;     * @throws IOException when an error loading FXML occurs.
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    public void showGodSelector() throws IOException {
+<b class="nc"><i>55</i>&nbsp;        StackPane godSelectionPane = FXMLLoader.load(Objects.requireNonNull(GodsController.class.getClassLoader().getResource(&quot;Fxml/Gods.fxml&quot;)));</b>
+<b class="nc"><i>56</i>&nbsp;        if(Client.getNumPlayers() == 3){</b>
+<b class="nc"><i>57</i>&nbsp;            BorderPane godsBorderPane = (BorderPane) godSelectionPane.getChildren().get(1);</b>
+<b class="nc"><i>58</i>&nbsp;            StackPane godIconsStackPane = (StackPane)godsBorderPane.getRight();</b>
+<b class="nc"><i>59</i>&nbsp;            VBox godsVBox = (VBox) godIconsStackPane.getChildren().get(0);</b>
+<b class="nc"><i>60</i>&nbsp;            HBox CronusHBox = (HBox)godsVBox.getChildren().get(3);</b>
+<b class="nc"><i>61</i>&nbsp;            ToggleButton CronusButton = (ToggleButton)CronusHBox.getChildren().get(1);</b>
+<b class="nc"><i>62</i>&nbsp;            CronusButton.setDisable(true);</b>
+<i>63</i>&nbsp;        }
+<b class="nc"><i>64</i>&nbsp;        GUI.getGameStage().setScene(new Scene(godSelectionPane));</b>
+<i>65</i>&nbsp;    }
+<i>66</i>&nbsp;
+<i>67</i>&nbsp;    /**
+<i>68</i>&nbsp;     * Shows the list of the Gods chosen by the first player and allows the current player to choose what card he wants to use during the match.
+<i>69</i>&nbsp;     * @param gameGods ArrayList of Gods chosen by the first player.
+<i>70</i>&nbsp;     * @param chosenGods ArrayList of Gods already chosen by others players.
+<i>71</i>&nbsp;     * @throws IOException when an error occurred in loading fxml file.
+<i>72</i>&nbsp;     */
+<i>73</i>&nbsp;    public void showSingleGodSelector(ArrayList&lt;God&gt; gameGods,ArrayList&lt;God&gt; chosenGods) throws IOException {
+<i>74</i>&nbsp;        God tempGod;
+<b class="nc"><i>75</i>&nbsp;        StackPane singleGodSelectionPane = FXMLLoader.load(Objects.requireNonNull(GodsController.class.getClassLoader().getResource(&quot;Fxml/ChooseGod.fxml&quot;)));</b>
+<b class="nc"><i>76</i>&nbsp;        singleGodBorderPane=(BorderPane) singleGodSelectionPane.getChildren().get(1);</b>
+<b class="nc"><i>77</i>&nbsp;        vBox=(VBox) singleGodBorderPane.getRight();</b>
+<b class="nc"><i>78</i>&nbsp;        firstGod= (ToggleButton) vBox.getChildren().get(0);</b>
+<b class="nc"><i>79</i>&nbsp;        firstGod.setToggleGroup(toggleGroup);</b>
+<b class="nc"><i>80</i>&nbsp;        secondGod=(ToggleButton) vBox.getChildren().get(1);</b>
+<b class="nc"><i>81</i>&nbsp;        secondGod.setToggleGroup(toggleGroup);</b>
+<b class="nc"><i>82</i>&nbsp;        thirdGod=(ToggleButton) vBox.getChildren().get(2);</b>
+<b class="nc"><i>83</i>&nbsp;        thirdGod.setToggleGroup(toggleGroup);</b>
+<b class="nc"><i>84</i>&nbsp;        singleGodChoiceToggleButtonImage((tempGod = gameGods.get(0)).getName(), firstGod, singleGodBorderPane);</b>
+<b class="nc"><i>85</i>&nbsp;        if (godAlreadyChosen(tempGod.getName(),chosenGods)) {</b>
+<b class="nc"><i>86</i>&nbsp;            firstGod.setOpacity(0.3);</b>
+<b class="nc"><i>87</i>&nbsp;            firstGod.setDisable(true);</b>
+<i>88</i>&nbsp;        }
+<b class="nc"><i>89</i>&nbsp;        singleGodChoiceToggleButtonImage((tempGod = gameGods.get(1)).getName(), secondGod, singleGodBorderPane);</b>
+<b class="nc"><i>90</i>&nbsp;        if (godAlreadyChosen(tempGod.getName(),chosenGods)) {</b>
+<b class="nc"><i>91</i>&nbsp;            secondGod.setOpacity(0.3);</b>
+<b class="nc"><i>92</i>&nbsp;            secondGod.setDisable(true);</b>
+<i>93</i>&nbsp;        }
+<b class="nc"><i>94</i>&nbsp;        if (Client.getNumPlayers() == 3){</b>
+<b class="nc"><i>95</i>&nbsp;            singleGodChoiceToggleButtonImage((tempGod = gameGods.get(2)).getName(), thirdGod, singleGodBorderPane);</b>
+<b class="nc"><i>96</i>&nbsp;            if (godAlreadyChosen(tempGod.getName(),chosenGods)) {</b>
+<b class="nc"><i>97</i>&nbsp;                thirdGod.setOpacity(0.3);</b>
+<b class="nc"><i>98</i>&nbsp;                thirdGod.setDisable(true);</b>
+<i>99</i>&nbsp;            }
+<i>100</i>&nbsp;        }
+<b class="nc"><i>101</i>&nbsp;        else vBox.getChildren().remove(2);</b>
+<b class="nc"><i>102</i>&nbsp;        GUI.getGameStage().setScene(new Scene(singleGodSelectionPane));</b>
+<i>103</i>&nbsp;
+<i>104</i>&nbsp;    }
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    /**
+<i>107</i>&nbsp;     * Checks if the selected God has already been chosen by other players.
+<i>108</i>&nbsp;     * @param godName String that indicates the name of the selected God.
+<i>109</i>&nbsp;     * @param chosen ArrayList of Gods already chosen by others players.
+<i>110</i>&nbsp;     * @return true if the selected God has already been chosen by other players, false otherwise.
+<i>111</i>&nbsp;     */
+<i>112</i>&nbsp;    public boolean godAlreadyChosen(String godName, ArrayList&lt;God&gt; chosen){
+<b class="nc"><i>113</i>&nbsp;        for (God god : chosen) if (godName.equals(god.getName())) return true;</b>
+<b class="nc"><i>114</i>&nbsp;        return false;</b>
+<i>115</i>&nbsp;    }
+<i>116</i>&nbsp;
+<i>117</i>&nbsp;    /**
+<i>118</i>&nbsp;     * Manages the choice of the God card.
+<i>119</i>&nbsp;     * @param godName String that indicates the name of the selected God.
+<i>120</i>&nbsp;     * @param button button that contains the God card.
+<i>121</i>&nbsp;     * @param pane pane in which arrange the buttons.
+<i>122</i>&nbsp;     */
+<i>123</i>&nbsp;    public void singleGodChoiceToggleButtonImage(String godName, ToggleButton button, BorderPane pane){
+<b class="nc"><i>124</i>&nbsp;        selectedGods.add(godName);</b>
+<b class="nc"><i>125</i>&nbsp;        Image image = null, image2 = null;</b>
+<i>126</i>&nbsp;
+<b class="nc"><i>127</i>&nbsp;        switch (godName){</b>
+<i>128</i>&nbsp;            case &quot;Apollo&quot;:
+<b class="nc"><i>129</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Apollo.png); -fx-background-size: 135px;&quot;);</b>
+<b class="nc"><i>130</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Apo.png&quot;));</b>
+<b class="nc"><i>131</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Apollo.png&quot;));</b>
+<b class="nc"><i>132</i>&nbsp;                break;</b>
+<i>133</i>&nbsp;            case &quot;Artemis&quot;:
+<b class="nc"><i>134</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Artemis.png); -fx-background-size: 135px;&quot;);</b>
+<b class="nc"><i>135</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Arte.png&quot;));</b>
+<b class="nc"><i>136</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Artemis.png&quot;));</b>
+<b class="nc"><i>137</i>&nbsp;                break;</b>
+<i>138</i>&nbsp;            case &quot;Athena&quot;:
+<b class="nc"><i>139</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Athena.png); -fx-background-size: 135px;&quot;);</b>
+<b class="nc"><i>140</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Athe.png&quot;));</b>
+<b class="nc"><i>141</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Athena.png&quot;));</b>
+<b class="nc"><i>142</i>&nbsp;                break;</b>
+<i>143</i>&nbsp;            case &quot;Atlas&quot;:
+<b class="nc"><i>144</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Atlas.png); -fx-background-size: 135px;&quot;);</b>
+<b class="nc"><i>145</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Atla.png&quot;));</b>
+<b class="nc"><i>146</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Atlas.png&quot;));</b>
+<b class="nc"><i>147</i>&nbsp;                break;</b>
+<i>148</i>&nbsp;            case &quot;Demeter&quot;:
+<b class="nc"><i>149</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Demeter.png); -fx-background-size:135px;&quot;);</b>
+<b class="nc"><i>150</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Demet.png&quot;));</b>
+<b class="nc"><i>151</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Demeter.png&quot;));</b>
+<b class="nc"><i>152</i>&nbsp;                break;</b>
+<i>153</i>&nbsp;            case &quot;Hephaestus&quot;:
+<b class="nc"><i>154</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Hephaestus.png); -fx-background-size:135px;&quot;);</b>
+<b class="nc"><i>155</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Hepha.png&quot;));</b>
+<b class="nc"><i>156</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Hephaestus.png&quot;));</b>
+<b class="nc"><i>157</i>&nbsp;                break;</b>
+<i>158</i>&nbsp;            case &quot;Minotaur&quot;:
+<b class="nc"><i>159</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Minotaur.png); -fx-background-size: 135px;&quot;);</b>
+<b class="nc"><i>160</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Minot.png&quot;));</b>
+<b class="nc"><i>161</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Minotaur.png&quot;));</b>
+<b class="nc"><i>162</i>&nbsp;                break;</b>
+<i>163</i>&nbsp;            case &quot;Pan&quot;:
+<b class="nc"><i>164</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Pan.png); -fx-background-size: 135px;&quot;);</b>
+<b class="nc"><i>165</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Pa.png&quot;));</b>
+<b class="nc"><i>166</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Pan.png&quot;));</b>
+<b class="nc"><i>167</i>&nbsp;                break;</b>
+<i>168</i>&nbsp;            case &quot;Prometheus&quot;:
+<b class="nc"><i>169</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Prometheus.png); -fx-background-size: 135px;&quot;);</b>
+<b class="nc"><i>170</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Promet.png&quot;));</b>
+<b class="nc"><i>171</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Prometheus.png&quot;));</b>
+<b class="nc"><i>172</i>&nbsp;                break;</b>
+<i>173</i>&nbsp;            case &quot;Ares&quot;:
+<b class="nc"><i>174</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Ares.png); -fx-background-size: 135px;&quot;);</b>
+<b class="nc"><i>175</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Are.png&quot;));</b>
+<b class="nc"><i>176</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Ares.png&quot;));</b>
+<b class="nc"><i>177</i>&nbsp;                break;</b>
+<i>178</i>&nbsp;            case &quot;Chronus&quot;:
+<b class="nc"><i>179</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Chronus.png); -fx-background-size:135px;&quot;);</b>
+<b class="nc"><i>180</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Chronos.png&quot;));</b>
+<b class="nc"><i>181</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Chronus.png&quot;));</b>
+<b class="nc"><i>182</i>&nbsp;                break;</b>
+<i>183</i>&nbsp;            case &quot;Hera&quot;:
+<b class="nc"><i>184</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Hera.png); -fx-background-size:  135px;&quot;);</b>
+<b class="nc"><i>185</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Her.png&quot;));</b>
+<b class="nc"><i>186</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Hera.png&quot;));</b>
+<b class="nc"><i>187</i>&nbsp;                break;</b>
+<i>188</i>&nbsp;            case &quot;Hestia&quot;:
+<b class="nc"><i>189</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Hestia.png); -fx-background-size:135px;&quot;);</b>
+<b class="nc"><i>190</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Hest.png&quot;));</b>
+<b class="nc"><i>191</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Hestia.png&quot;));</b>
+<b class="nc"><i>192</i>&nbsp;                break;</b>
+<i>193</i>&nbsp;            case &quot;Zeus&quot;:
+<b class="nc"><i>194</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Zeus.png); -fx-background-size:135px;&quot;);</b>
+<b class="nc"><i>195</i>&nbsp;                image = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Zeu.png&quot;));</b>
+<b class="nc"><i>196</i>&nbsp;                image2 = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Zeus.png&quot;));</b>
+<i>197</i>&nbsp;                break;
+<i>198</i>&nbsp;        }
+<i>199</i>&nbsp;
+<b class="nc"><i>200</i>&nbsp;        Image finalImage = image2;</b>
+<b class="nc"><i>201</i>&nbsp;        Image finalImage1 = image;</b>
+<b class="nc"><i>202</i>&nbsp;        button.addEventHandler(MouseEvent.MOUSE_ENTERED, e-&gt; {</b>
+<b class="nc"><i>203</i>&nbsp;            ImageView img=new ImageView(finalImage1);</b>
+<b class="nc"><i>204</i>&nbsp;            pane.setCenter(img);</b>
+<b class="nc"><i>205</i>&nbsp;            ImageView img2=new ImageView(finalImage);</b>
+<b class="nc"><i>206</i>&nbsp;            img2.setFitWidth(450.0);</b>
+<b class="nc"><i>207</i>&nbsp;            img2.setFitHeight(900.0);</b>
+<b class="nc"><i>208</i>&nbsp;            pane.setLeft(img2);</b>
+<i>209</i>&nbsp;        });
+<b class="nc"><i>210</i>&nbsp;        button.addEventHandler(MouseEvent.MOUSE_EXITED, e-&gt; flushPane(e, pane));</b>
+<i>211</i>&nbsp;    }
+<i>212</i>&nbsp;
+<i>213</i>&nbsp;    /**
+<i>214</i>&nbsp;     * Does not show the image when the mouse is removed from the button (card).
+<i>215</i>&nbsp;     * @param event mouse pointer is removed from the card.
+<i>216</i>&nbsp;     * @param pane pane in which arrange the buttons.
+<i>217</i>&nbsp;     */
+<i>218</i>&nbsp;    public void flushPane(MouseEvent event, BorderPane pane) {
+<b class="nc"><i>219</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>220</i>&nbsp;        pane.setCenter(null);</b>
+<b class="nc"><i>221</i>&nbsp;        pane.setLeft(null);</b>
+<i>222</i>&nbsp;    }
+<i>223</i>&nbsp;
+<i>224</i>&nbsp;    /**
+<i>225</i>&nbsp;     * Handles the &quot;On mouse entered&quot; event on a god toggle button during god selection.
+<i>226</i>&nbsp;     * @param godSelectionCenter the image will be shown in central position of the screen.
+<i>227</i>&nbsp;     * @param godSelectionLeft the image will be shown in left position of the screen.
+<i>228</i>&nbsp;     */
+<i>229</i>&nbsp;    protected void showCard(Image godSelectionCenter, Image godSelectionLeft){
+<b class="nc"><i>230</i>&nbsp;        ImageView leftImage = new ImageView(godSelectionLeft);</b>
+<b class="nc"><i>231</i>&nbsp;        ImageView centerImage = new ImageView(godSelectionCenter);</b>
+<b class="nc"><i>232</i>&nbsp;        leftImage.setFitWidth(godSelectionCenterWidth);</b>
+<b class="nc"><i>233</i>&nbsp;        leftImage.setFitHeight(godSelectionCenterHeight);</b>
+<b class="nc"><i>234</i>&nbsp;        borderPane.setLeft(leftImage);</b>
+<b class="nc"><i>235</i>&nbsp;        borderPane.setCenter(centerImage);</b>
+<i>236</i>&nbsp;    }
+<i>237</i>&nbsp;
+<i>238</i>&nbsp;    /**
+<i>239</i>&nbsp;     * Shows Apollo card when is selected by the mouse.
+<i>240</i>&nbsp;     * @param event mouse pointer is positioned over Apollo card.
+<i>241</i>&nbsp;     */
+<i>242</i>&nbsp;    public void showApollo(MouseEvent event) {
+<b class="nc"><i>243</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>244</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Apo.png&quot;));</b>
+<b class="nc"><i>245</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Apollo.png&quot;));</b>
+<b class="nc"><i>246</i>&nbsp;        showCard(center,left);</b>
+<i>247</i>&nbsp;    }
+<i>248</i>&nbsp;
+<i>249</i>&nbsp;    /**
+<i>250</i>&nbsp;     * Shows Artemis card when is selected by the mouse.
+<i>251</i>&nbsp;     * @param event mouse pointer is positioned over Artemis card.
+<i>252</i>&nbsp;     */
+<i>253</i>&nbsp;    public void showArtemis(MouseEvent event) {
+<b class="nc"><i>254</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>255</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Arte.png&quot;));</b>
+<b class="nc"><i>256</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Artemis.png&quot;));</b>
+<b class="nc"><i>257</i>&nbsp;        showCard(center,left);</b>
+<i>258</i>&nbsp;    }
+<i>259</i>&nbsp;
+<i>260</i>&nbsp;    /**
+<i>261</i>&nbsp;     * Shows Athena card when is selected by the mouse.
+<i>262</i>&nbsp;     * @param event mouse pointer is positioned over Athena card.
+<i>263</i>&nbsp;     */
+<i>264</i>&nbsp;    public void showAthena(MouseEvent event) {
+<b class="nc"><i>265</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>266</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Athe.png&quot;));</b>
+<b class="nc"><i>267</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Athena.png&quot;));</b>
+<b class="nc"><i>268</i>&nbsp;        showCard(center,left);</b>
+<i>269</i>&nbsp;    }
+<i>270</i>&nbsp;
+<i>271</i>&nbsp;    /**
+<i>272</i>&nbsp;     * Shows Atlas card when is selected by the mouse.
+<i>273</i>&nbsp;     * @param event mouse pointer is positioned over Atlas card.
+<i>274</i>&nbsp;     */
+<i>275</i>&nbsp;    public void showAtlas(MouseEvent event) {
+<b class="nc"><i>276</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>277</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Atlas2.png&quot;));</b>
+<b class="nc"><i>278</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Atlas.png&quot;));</b>
+<b class="nc"><i>279</i>&nbsp;        showCard(center,left);</b>
+<i>280</i>&nbsp;    }
+<i>281</i>&nbsp;
+<i>282</i>&nbsp;    /**
+<i>283</i>&nbsp;     * Shows Demeter card when is selected by the mouse.
+<i>284</i>&nbsp;     * @param event mouse pointer is positioned over Demeter card.
+<i>285</i>&nbsp;     */
+<i>286</i>&nbsp;    public void showDemeter(MouseEvent event) {
+<b class="nc"><i>287</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>288</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Demet.png&quot;));</b>
+<b class="nc"><i>289</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Demeter.png&quot;));</b>
+<b class="nc"><i>290</i>&nbsp;        showCard(center,left);</b>
+<i>291</i>&nbsp;    }
+<i>292</i>&nbsp;
+<i>293</i>&nbsp;    /**
+<i>294</i>&nbsp;     * Shows Hephaestus card when is selected by the mouse.
+<i>295</i>&nbsp;     * @param event mouse pointer is positioned over Hephaestus card.
+<i>296</i>&nbsp;     */
+<i>297</i>&nbsp;    public void showHephaestus(MouseEvent event) {
+<b class="nc"><i>298</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>299</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Hepha.png&quot;));</b>
+<b class="nc"><i>300</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Hephaestus.png&quot;));</b>
+<b class="nc"><i>301</i>&nbsp;        showCard(center,left);</b>
+<i>302</i>&nbsp;    }
+<i>303</i>&nbsp;
+<i>304</i>&nbsp;    /**
+<i>305</i>&nbsp;     * Shows Prometheus card when is selected by the mouse.
+<i>306</i>&nbsp;     * @param event mouse pointer is positioned over Prometheus card.
+<i>307</i>&nbsp;     */
+<i>308</i>&nbsp;    public void showPrometheus(MouseEvent event) {
+<b class="nc"><i>309</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>310</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Promet.png&quot;));</b>
+<b class="nc"><i>311</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Prometheus.png&quot;));</b>
+<b class="nc"><i>312</i>&nbsp;        showCard(center,left);</b>
+<i>313</i>&nbsp;    }
+<i>314</i>&nbsp;
+<i>315</i>&nbsp;    /**
+<i>316</i>&nbsp;     * Shows Pan card when is selected by the mouse.
+<i>317</i>&nbsp;     * @param event mouse pointer is positioned over Pan card.
+<i>318</i>&nbsp;     */
+<i>319</i>&nbsp;    public void showPan(MouseEvent event) {
+<b class="nc"><i>320</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>321</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Pa.png&quot;));</b>
+<b class="nc"><i>322</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Pan.png&quot;));</b>
+<b class="nc"><i>323</i>&nbsp;        showCard(center,left);</b>
+<i>324</i>&nbsp;    }
+<i>325</i>&nbsp;
+<i>326</i>&nbsp;    /**
+<i>327</i>&nbsp;     * Shows Ares card when is selected by the mouse.
+<i>328</i>&nbsp;     * @param event mouse pointer is positioned over Ares card.
+<i>329</i>&nbsp;     */
+<i>330</i>&nbsp;    public void showAres(MouseEvent event) {
+<b class="nc"><i>331</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>332</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Are.png&quot;));</b>
+<b class="nc"><i>333</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Ares.png&quot;));</b>
+<b class="nc"><i>334</i>&nbsp;        showCard(center,left);</b>
+<i>335</i>&nbsp;    }
+<i>336</i>&nbsp;
+<i>337</i>&nbsp;    /**
+<i>338</i>&nbsp;     * Shows Chronus card when is selected by the mouse.
+<i>339</i>&nbsp;     * @param event mouse pointer is positioned over Chronus card.
+<i>340</i>&nbsp;     */
+<i>341</i>&nbsp;    public void showChronus(MouseEvent event) {
+<b class="nc"><i>342</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>343</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Chronos.png&quot;));</b>
+<b class="nc"><i>344</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Chronus.png&quot;));</b>
+<b class="nc"><i>345</i>&nbsp;        showCard(center,left);</b>
+<i>346</i>&nbsp;    }
+<i>347</i>&nbsp;
+<i>348</i>&nbsp;    /**
+<i>349</i>&nbsp;     * Shows Hestia card when is selected by the mouse.
+<i>350</i>&nbsp;     * @param event mouse pointer is positioned over Hestia card.
+<i>351</i>&nbsp;     */
+<i>352</i>&nbsp;    public void showHestia(MouseEvent event) {
+<b class="nc"><i>353</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>354</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Hest.png&quot;));</b>
+<b class="nc"><i>355</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Hestia.png&quot;));</b>
+<b class="nc"><i>356</i>&nbsp;        showCard(center,left);</b>
+<i>357</i>&nbsp;    }
+<i>358</i>&nbsp;
+<i>359</i>&nbsp;    /**
+<i>360</i>&nbsp;     * Shows Hera card when is selected by the mouse.
+<i>361</i>&nbsp;     * @param event mouse pointer is positioned over Hera card.
+<i>362</i>&nbsp;     */
+<i>363</i>&nbsp;    public void showHera(MouseEvent event) {
+<b class="nc"><i>364</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>365</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Her.png&quot;));</b>
+<b class="nc"><i>366</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Hera.png&quot;));</b>
+<b class="nc"><i>367</i>&nbsp;        showCard(center,left);</b>
+<i>368</i>&nbsp;    }
+<i>369</i>&nbsp;
+<i>370</i>&nbsp;    /**
+<i>371</i>&nbsp;     * Shows Minotaur card when is selected by the mouse.
+<i>372</i>&nbsp;     * @param event mouse pointer is positioned over Minotaur card.
+<i>373</i>&nbsp;     */
+<i>374</i>&nbsp;    public void showMinotaur(MouseEvent event) {
+<b class="nc"><i>375</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>376</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Minot.png&quot;));</b>
+<b class="nc"><i>377</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Minotaur.png&quot;));</b>
+<b class="nc"><i>378</i>&nbsp;        showCard(center,left);</b>
+<i>379</i>&nbsp;    }
+<i>380</i>&nbsp;
+<i>381</i>&nbsp;    /**
+<i>382</i>&nbsp;     * Shows Zeus card when is selected by the mouse.
+<i>383</i>&nbsp;     * @param event mouse pointer is positioned over Zeus card.
+<i>384</i>&nbsp;     */
+<i>385</i>&nbsp;    public void showZeus(MouseEvent event) {
+<b class="nc"><i>386</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>387</i>&nbsp;        Image center = new Image(getClass().getResourceAsStream(&quot;/Images/Gods/Zeu.png&quot;));</b>
+<b class="nc"><i>388</i>&nbsp;        Image left = new Image(getClass().getResourceAsStream(&quot;/Images/Backgrounds/Zeus.png&quot;));</b>
+<b class="nc"><i>389</i>&nbsp;        showCard(center,left);</b>
+<i>390</i>&nbsp;    }
+<i>391</i>&nbsp;
+<i>392</i>&nbsp;    /**
+<i>393</i>&nbsp;     * Does not show the image when the mouse is removed from the button (card).
+<i>394</i>&nbsp;     * @param event mouse pointer is removed from the card.
+<i>395</i>&nbsp;     */
+<i>396</i>&nbsp;    public void none(MouseEvent event) {
+<b class="nc"><i>397</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>398</i>&nbsp;        borderPane.setCenter(null);</b>
+<b class="nc"><i>399</i>&nbsp;        borderPane.setLeft(null);</b>
+<i>400</i>&nbsp;    }
+<i>401</i>&nbsp;
+<i>402</i>&nbsp;    /**
+<i>403</i>&nbsp;     * Selects the image when the then button is selected.
+<i>404</i>&nbsp;     * @param event mouse is clicked on the button.
+<i>405</i>&nbsp;     */
+<i>406</i>&nbsp;    public void selected(MouseEvent event) {
+<b class="nc"><i>407</i>&nbsp;        event.consume();</b>
+<i>408</i>&nbsp;    }
+<i>409</i>&nbsp;
+<i>410</i>&nbsp;    /**
+<i>411</i>&nbsp;     * Manages the selection of  Apollo card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>412</i>&nbsp;     * otherwise no more cards can be selected.
+<i>413</i>&nbsp;     * @param event mouse pointer have clicked on Apollo card.
+<i>414</i>&nbsp;     */
+<i>415</i>&nbsp;    public void selectApollo(MouseEvent event){
+<b class="nc"><i>416</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>417</i>&nbsp;        if (apollo.isSelected()){</b>
+<b class="nc"><i>418</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>419</i>&nbsp;                selectedGods.add(&quot;Apollo&quot;);</b>
+<i>420</i>&nbsp;            }
+<b class="nc"><i>421</i>&nbsp;            else apollo.setSelected(false);</b>
+<i>422</i>&nbsp;        }
+<b class="nc"><i>423</i>&nbsp;        else selectedGods.remove(&quot;Apollo&quot;);</b>
+<i>424</i>&nbsp;    }
+<i>425</i>&nbsp;
+<i>426</i>&nbsp;    /**
+<i>427</i>&nbsp;     * Manages the selection of  Artemis card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>428</i>&nbsp;     * otherwise no more cards can be selected.
+<i>429</i>&nbsp;     * @param event mouse pointer have clicked on Artemis card.
+<i>430</i>&nbsp;     */
+<i>431</i>&nbsp;    public void selectArtemis(MouseEvent event){
+<b class="nc"><i>432</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>433</i>&nbsp;        if (artemis.isSelected()){</b>
+<b class="nc"><i>434</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>435</i>&nbsp;                selectedGods.add(&quot;Artemis&quot;);</b>
+<i>436</i>&nbsp;            }
+<b class="nc"><i>437</i>&nbsp;            else artemis.setSelected(false);</b>
+<i>438</i>&nbsp;        }
+<b class="nc"><i>439</i>&nbsp;        else selectedGods.remove(&quot;Artemis&quot;);</b>
+<i>440</i>&nbsp;    }
+<i>441</i>&nbsp;
+<i>442</i>&nbsp;    /**
+<i>443</i>&nbsp;     * Manages the selection of  Athena card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>444</i>&nbsp;     * otherwise no more cards can be selected.
+<i>445</i>&nbsp;     * @param event mouse pointer have clicked on Athena card.
+<i>446</i>&nbsp;     */
+<i>447</i>&nbsp;    public void selectAthena(MouseEvent event){
+<b class="nc"><i>448</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>449</i>&nbsp;        if (athena.isSelected()){</b>
+<b class="nc"><i>450</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>451</i>&nbsp;                selectedGods.add(&quot;Athena&quot;);</b>
+<i>452</i>&nbsp;            }
+<b class="nc"><i>453</i>&nbsp;            else athena.setSelected(false);</b>
+<i>454</i>&nbsp;        }
+<b class="nc"><i>455</i>&nbsp;        else selectedGods.remove(&quot;Athena&quot;);</b>
+<i>456</i>&nbsp;    }
+<i>457</i>&nbsp;
+<i>458</i>&nbsp;    /**
+<i>459</i>&nbsp;     * Manages the selection of Atlas card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>460</i>&nbsp;     * otherwise no more cards can be selected.
+<i>461</i>&nbsp;     * @param event mouse pointer have clicked on Atlas card.
+<i>462</i>&nbsp;     */
+<i>463</i>&nbsp;    public void selectAtlas(MouseEvent event){
+<b class="nc"><i>464</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>465</i>&nbsp;        if (atlas.isSelected()){</b>
+<b class="nc"><i>466</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>467</i>&nbsp;                selectedGods.add(&quot;Atlas&quot;);</b>
+<i>468</i>&nbsp;            }
+<b class="nc"><i>469</i>&nbsp;            else atlas.setSelected(false);</b>
+<i>470</i>&nbsp;        }
+<b class="nc"><i>471</i>&nbsp;        else selectedGods.remove(&quot;Atlas&quot;);</b>
+<i>472</i>&nbsp;    }
+<i>473</i>&nbsp;
+<i>474</i>&nbsp;    /**
+<i>475</i>&nbsp;     * Manages the selection of Demeter card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>476</i>&nbsp;     * otherwise no more cards can be selected.
+<i>477</i>&nbsp;     * @param event mouse pointer have clicked on Demeter card.
+<i>478</i>&nbsp;     */
+<i>479</i>&nbsp;    public void selectDemeter(MouseEvent event){
+<b class="nc"><i>480</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>481</i>&nbsp;        if (demeter.isSelected()){</b>
+<b class="nc"><i>482</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>483</i>&nbsp;                selectedGods.add(&quot;Demeter&quot;);</b>
+<i>484</i>&nbsp;            }
+<b class="nc"><i>485</i>&nbsp;            else demeter.setSelected(false);</b>
+<i>486</i>&nbsp;        }
+<b class="nc"><i>487</i>&nbsp;        else selectedGods.remove(&quot;Demeter&quot;);</b>
+<i>488</i>&nbsp;    }
+<i>489</i>&nbsp;
+<i>490</i>&nbsp;    /**
+<i>491</i>&nbsp;     * Manages the selection of Hephaestus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>492</i>&nbsp;     * otherwise no more cards can be selected.
+<i>493</i>&nbsp;     * @param event mouse pointer have clicked on Hephaestus card.
+<i>494</i>&nbsp;     */
+<i>495</i>&nbsp;    public void selectHephaestus(MouseEvent event){
+<b class="nc"><i>496</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>497</i>&nbsp;        if (hephaestus.isSelected()){</b>
+<b class="nc"><i>498</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>499</i>&nbsp;                selectedGods.add(&quot;Hephaestus&quot;);</b>
+<i>500</i>&nbsp;            }
+<b class="nc"><i>501</i>&nbsp;            else hephaestus.setSelected(false);</b>
+<i>502</i>&nbsp;        }
+<b class="nc"><i>503</i>&nbsp;        else selectedGods.remove(&quot;Hephaestus&quot;);</b>
+<i>504</i>&nbsp;    }
+<i>505</i>&nbsp;
+<i>506</i>&nbsp;    /**
+<i>507</i>&nbsp;     * Manages the selection of Minotaur card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>508</i>&nbsp;     * otherwise no more cards can be selected.
+<i>509</i>&nbsp;     * @param event mouse pointer have clicked on Minotaur card.
+<i>510</i>&nbsp;     */
+<i>511</i>&nbsp;    public void selectMinotaur(MouseEvent event){
+<b class="nc"><i>512</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>513</i>&nbsp;        if (minotaur.isSelected()){</b>
+<b class="nc"><i>514</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>515</i>&nbsp;                selectedGods.add(&quot;Minotaur&quot;);</b>
+<i>516</i>&nbsp;            }
+<b class="nc"><i>517</i>&nbsp;            else minotaur.setSelected(false);</b>
+<i>518</i>&nbsp;        }
+<b class="nc"><i>519</i>&nbsp;        else selectedGods.remove(&quot;Minotaur&quot;);</b>
+<i>520</i>&nbsp;    }
+<i>521</i>&nbsp;
+<i>522</i>&nbsp;    /**
+<i>523</i>&nbsp;     * Manages the selection of Pan card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>524</i>&nbsp;     * otherwise no more cards can be selected.
+<i>525</i>&nbsp;     * @param event mouse pointer have clicked on Pan card.
+<i>526</i>&nbsp;     */
+<i>527</i>&nbsp;    public void selectPan(MouseEvent event){
+<b class="nc"><i>528</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>529</i>&nbsp;        if (pan.isSelected()){</b>
+<b class="nc"><i>530</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>531</i>&nbsp;                selectedGods.add(&quot;Pan&quot;);</b>
+<i>532</i>&nbsp;            }
+<b class="nc"><i>533</i>&nbsp;            else pan.setSelected(false);</b>
+<i>534</i>&nbsp;        }
+<b class="nc"><i>535</i>&nbsp;        else selectedGods.remove(&quot;Pan&quot;);</b>
+<i>536</i>&nbsp;    }
+<i>537</i>&nbsp;
+<i>538</i>&nbsp;    /**
+<i>539</i>&nbsp;     * Manages the selection of Prometheus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>540</i>&nbsp;     * otherwise no more cards can be selected.
+<i>541</i>&nbsp;     * @param event mouse pointer have clicked on Prometheus card.
+<i>542</i>&nbsp;     */
+<i>543</i>&nbsp;    public void selectPrometheus(MouseEvent event){
+<b class="nc"><i>544</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>545</i>&nbsp;        if (prometheus.isSelected()){</b>
+<b class="nc"><i>546</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>547</i>&nbsp;                selectedGods.add(&quot;Prometheus&quot;);</b>
+<i>548</i>&nbsp;            }
+<b class="nc"><i>549</i>&nbsp;            else prometheus.setSelected(false);</b>
+<i>550</i>&nbsp;        }
+<b class="nc"><i>551</i>&nbsp;        else selectedGods.remove(&quot;Prometheus&quot;);</b>
+<i>552</i>&nbsp;    }
+<i>553</i>&nbsp;
+<i>554</i>&nbsp;    /**
+<i>555</i>&nbsp;     * Manages the selection of Ares card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>556</i>&nbsp;     * otherwise no more cards can be selected.
+<i>557</i>&nbsp;     * @param event mouse pointer have clicked on Ares card.
+<i>558</i>&nbsp;     */
+<i>559</i>&nbsp;    public void selectAres(MouseEvent event){
+<b class="nc"><i>560</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>561</i>&nbsp;        if (ares.isSelected()){</b>
+<b class="nc"><i>562</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>563</i>&nbsp;                selectedGods.add(&quot;Ares&quot;);</b>
+<i>564</i>&nbsp;            }
+<b class="nc"><i>565</i>&nbsp;            else ares.setSelected(false);</b>
+<i>566</i>&nbsp;        }
+<b class="nc"><i>567</i>&nbsp;        else selectedGods.remove(&quot;Ares&quot;);</b>
+<i>568</i>&nbsp;    }
+<i>569</i>&nbsp;
+<i>570</i>&nbsp;    /**
+<i>571</i>&nbsp;     * Manages the selection of Chronus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>572</i>&nbsp;     * otherwise no more cards can be selected.
+<i>573</i>&nbsp;     * @param event mouse pointer have clicked on Chronus card.
+<i>574</i>&nbsp;     */
+<i>575</i>&nbsp;    public void selectChronus(MouseEvent event){
+<b class="nc"><i>576</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>577</i>&nbsp;        if (chronus.isSelected()){</b>
+<b class="nc"><i>578</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>579</i>&nbsp;                selectedGods.add(&quot;Chronus&quot;);</b>
+<i>580</i>&nbsp;            }
+<b class="nc"><i>581</i>&nbsp;            else chronus.setSelected(false);</b>
+<i>582</i>&nbsp;        }
+<b class="nc"><i>583</i>&nbsp;        else selectedGods.remove(&quot;Chronus&quot;);</b>
+<i>584</i>&nbsp;    }
+<i>585</i>&nbsp;
+<i>586</i>&nbsp;    /**
+<i>587</i>&nbsp;     * Manages the selection of Hera card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>588</i>&nbsp;     * otherwise no more cards can be selected.
+<i>589</i>&nbsp;     * @param event mouse pointer have clicked on Hera card.
+<i>590</i>&nbsp;     */
+<i>591</i>&nbsp;    public void selectHera(MouseEvent event){
+<b class="nc"><i>592</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>593</i>&nbsp;        if (hera.isSelected()){</b>
+<b class="nc"><i>594</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>595</i>&nbsp;                selectedGods.add(&quot;Hera&quot;);</b>
+<i>596</i>&nbsp;
+<i>597</i>&nbsp;            }
+<b class="nc"><i>598</i>&nbsp;            else hera.setSelected(false);</b>
+<i>599</i>&nbsp;        }
+<b class="nc"><i>600</i>&nbsp;        else selectedGods.remove(&quot;Hera&quot;);</b>
+<i>601</i>&nbsp;    }
+<i>602</i>&nbsp;
+<i>603</i>&nbsp;    /**
+<i>604</i>&nbsp;     * Manages the selection of Hestia card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>605</i>&nbsp;     * otherwise no more cards can be selected.
+<i>606</i>&nbsp;     * @param event mouse pointer have clicked on Hestia card.
+<i>607</i>&nbsp;     */
+<i>608</i>&nbsp;    public void selectHestia(MouseEvent event){
+<b class="nc"><i>609</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>610</i>&nbsp;        if (hestia.isSelected()){</b>
+<b class="nc"><i>611</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>612</i>&nbsp;                selectedGods.add(&quot;Hestia&quot;);</b>
+<i>613</i>&nbsp;            }
+<b class="nc"><i>614</i>&nbsp;            else hestia.setSelected(false);</b>
+<i>615</i>&nbsp;        }
+<b class="nc"><i>616</i>&nbsp;        else selectedGods.remove(&quot;Hestia&quot;);</b>
+<i>617</i>&nbsp;    }
+<i>618</i>&nbsp;
+<i>619</i>&nbsp;    /**
+<i>620</i>&nbsp;     * Manages the selection of Zeus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+<i>621</i>&nbsp;     * otherwise no more cards can be selected.
+<i>622</i>&nbsp;     * @param event mouse pointer have clicked on Zeus card.
+<i>623</i>&nbsp;     */
+<i>624</i>&nbsp;    public void selectZeus(MouseEvent event){
+<b class="nc"><i>625</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>626</i>&nbsp;        if (zeus.isSelected()){</b>
+<b class="nc"><i>627</i>&nbsp;            if (selectedGods.size() &lt; Client.getNumPlayers()) {</b>
+<b class="nc"><i>628</i>&nbsp;                selectedGods.add(&quot;Zeus&quot;);</b>
+<i>629</i>&nbsp;            }
+<b class="nc"><i>630</i>&nbsp;            else zeus.setSelected(false);</b>
+<i>631</i>&nbsp;        }
+<b class="nc"><i>632</i>&nbsp;        else selectedGods.remove(&quot;Zeus&quot;);</b>
+<i>633</i>&nbsp;    }
+<i>634</i>&nbsp;
+<i>635</i>&nbsp;    /**
+<i>636</i>&nbsp;     * Manages the selection of the firstGod card by the mouse.
+<i>637</i>&nbsp;     * @param event MouseClick.
+<i>638</i>&nbsp;     */
+<i>639</i>&nbsp;    public void firstGodSelected(MouseEvent event){
+<b class="nc"><i>640</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>641</i>&nbsp;        if (firstGod.isSelected()) selectedGod = selectedGods.get(0);</b>
+<i>642</i>&nbsp;    }
+<i>643</i>&nbsp;
+<i>644</i>&nbsp;    /**
+<i>645</i>&nbsp;     * Manages the selection of the secondGod card by the mouse.
+<i>646</i>&nbsp;     * @param event MouseClick.
+<i>647</i>&nbsp;     */
+<i>648</i>&nbsp;    public void secondGodSelected(MouseEvent event){
+<b class="nc"><i>649</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>650</i>&nbsp;        if (secondGod.isSelected()) selectedGod = selectedGods.get(1);</b>
+<i>651</i>&nbsp;    }
+<i>652</i>&nbsp;
+<i>653</i>&nbsp;    /**
+<i>654</i>&nbsp;     * Manages the selection of the thirdGod card by the mouse.
+<i>655</i>&nbsp;     * @param event MouseClick.
+<i>656</i>&nbsp;     */
+<i>657</i>&nbsp;    public void thirdGodSelected(MouseEvent event){
+<b class="nc"><i>658</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>659</i>&nbsp;        if (thirdGod.isSelected()) selectedGod=selectedGods.get(2);</b>
+<i>660</i>&nbsp;    }
+<i>661</i>&nbsp;
+<i>662</i>&nbsp;    /**
+<i>663</i>&nbsp;     * Manages the button clicked at the end of the choice of the God by the first player.
+<i>664</i>&nbsp;     * @param event mouse click on the godSelectionButton.
+<i>665</i>&nbsp;     */
+<i>666</i>&nbsp;    public void handleGodSelectionButton(MouseEvent event){
+<b class="nc"><i>667</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>668</i>&nbsp;        if (selectedGods.size() == Client.getNumPlayers()){</b>
+<b class="nc"><i>669</i>&nbsp;            godSelectionButton.setDisable(true);</b>
+<b class="nc"><i>670</i>&nbsp;            Client.sendMessageToServer(new GodsListResponse(selectedGods));</b>
+<i>671</i>&nbsp;        }
+<i>672</i>&nbsp;    }
+<i>673</i>&nbsp;
+<i>674</i>&nbsp;    /**
+<i>675</i>&nbsp;     * Manages the button clicked at the end of the choice of the God by the other players.
+<i>676</i>&nbsp;     * @param event mouse click on the selectSingleGod.
+<i>677</i>&nbsp;     */
+<i>678</i>&nbsp;    public void handleSingleGodSelectionButton (MouseEvent event){
+<b class="nc"><i>679</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>680</i>&nbsp;        selectSingleGod.setDisable(true);</b>
+<b class="nc"><i>681</i>&nbsp;        if(firstGod.isSelected()||secondGod.isSelected()|| thirdGod.isSelected()) Client.sendMessageToServer(new ChoseGodResponse(selectedGod));</b>
+<b class="nc"><i>682</i>&nbsp;        else selectSingleGod.setDisable(false);</b>
+<i>683</i>&nbsp;    }
+<i>684</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 22:14</div>
+</div>
+</body>
+</html>

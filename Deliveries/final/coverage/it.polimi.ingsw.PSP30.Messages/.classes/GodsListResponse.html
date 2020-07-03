@@ -1,0 +1,102 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GodsListResponse</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.Messages</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GodsListResponse (it.polimi.ingsw.PSP30.Messages)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GodsListResponse</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 2)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 4)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.Messages;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.util.ArrayList;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * Sends to the server the list of gods the challenger has chosen to play with.
+<i>7</i>&nbsp; */
+<i>8</i>&nbsp;public class GodsListResponse extends Message {
+<i>9</i>&nbsp;    private static final long serialVersionUID = 100008L;
+<i>10</i>&nbsp;    private ArrayList&lt;String&gt; gods;
+<i>11</i>&nbsp;
+<b class="nc"><i>12</i>&nbsp;    public GodsListResponse(ArrayList&lt;String&gt; selectedGods){</b>
+<b class="nc"><i>13</i>&nbsp;        messageID = GODS_LIST_RESPONSE;</b>
+<b class="nc"><i>14</i>&nbsp;        gods = selectedGods;</b>
+<i>15</i>&nbsp;    }
+<i>16</i>&nbsp;    public ArrayList&lt;String&gt; getGods(){
+<b class="nc"><i>17</i>&nbsp;        return gods;</b>
+<i>18</i>&nbsp;    }
+<i>19</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 22:14</div>
+</div>
+</body>
+</html>

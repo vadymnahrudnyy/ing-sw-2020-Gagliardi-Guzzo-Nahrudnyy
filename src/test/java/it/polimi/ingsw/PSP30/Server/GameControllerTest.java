@@ -48,6 +48,9 @@ public class GameControllerTest {
         } catch (IOException e) {
             System.out.println("Caught: IOException");
         }
+        testView1.setUsername("test1");
+        testView2.setUsername("test2");
+        testView3.setUsername("test3");
         testViewsList = new ArrayList<>();
         testViewsList.add(testView1);
         testViewsList.add(testView2);
@@ -115,29 +118,61 @@ public class GameControllerTest {
     }
 
     @Test
-    public void moveVictoryConditionSatisfied() {
-
-    }
-
-    @Test
-    public void checkWorkerMovedUp() {
-    }
-
-    @Test
-    public void makeMove() {
-    }
-
-    @Test
-    public void isVictoryMove() {
-    }
-
-    @Test
-    public void currentPlayerHasPower() {
-    }
-
-    @Test
     public void checkPossibleBuilds() {
-        //
+        Player testPlayer = testGame.getCurrentGame().getPlayerByUsername(testView1.getUsername());
+        testPlayer.setGod(testGame.getGodByName("Zeus"));
+        Worker[] testWorkers = new Worker[2];
+        testWorkers[0] = new Worker(testPlayer.getUsername(),'s',testGame.getCurrentBoard().getSpace(2,3),1);
+        testWorkers[1] = new Worker(testPlayer.getUsername(),'s',testGame.getCurrentBoard().getSpace(3,3),1);
+        testGame.getCurrentBoard().getSpace(2,3).setWorkerInPlace(testWorkers[0]);
+        testGame.getCurrentBoard().getSpace(3,3).setWorkerInPlace(testWorkers[1]);
+        testPlayer.setWorkers(testWorkers);
+        boolean[][] testAllowedMoves;
+        boolean[][] possibleBuilds;
+
+        testAllowedMoves = testGame.checkPossibleBuilds(3,3);
+        testGame.getCurrentBoard().getSpace(3,4).setHasDome(true);
+        testGame.getCurrentBoard().getSpace(4,4).setHasDome(true);
+        testAllowedMoves[2][3] = false;
+        testAllowedMoves[3][3] = false;
+        possibleBuilds = testGame.checkPossibleBuilds(3,3);
+
+        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++)
+            for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++)
+                assertEquals(testAllowedMoves[i][j],possibleBuilds[i][j]);
+
+        Worker testWorker = new Worker(testView2.getUsername(),'c',testGame.getCurrentBoard().getSpace(4,3),2);
+        testGame.getCurrentBoard().getSpace(4,3).setWorkerInPlace(testWorker);
+        testAllowedMoves[3][2] = false;
+        possibleBuilds = testGame.checkPossibleBuilds(3,3);
+
+        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++)
+            for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++)
+                assertEquals(testAllowedMoves[i][j],possibleBuilds[i][j]);
+
+
+        testGame.getCurrentBoard().getSpace(3,3).setHeight(Space.DOME_LEVEL-1);
+        possibleBuilds = testGame.checkPossibleBuilds(3,3);
+        testAllowedMoves[2][2] = false;
+
+        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++)
+            for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++)
+                assertEquals(testAllowedMoves[i][j],possibleBuilds[i][j]);
+
+            //NO POSSIBLE BUILDS
+        testGame.getCurrentBoard().getSpace(2,2).setHasDome(true);
+        testGame.getCurrentBoard().getSpace(2,3).setHasDome(true);
+        testGame.getCurrentBoard().getSpace(2,4).setHasDome(true);
+        testGame.getCurrentBoard().getSpace(3,2).setHasDome(true);
+        testGame.getCurrentBoard().getSpace(4,2).setHasDome(true);
+        testGame.getCurrentBoard().getSpace(4,3).setHasDome(true);
+        testGame.getCurrentBoard().getSpace(4,4).setHasDome(true);
+        testGame.getCurrentBoard().getSpace(3,4).setHasDome(true);
+        testAllowedMoves = testGame.initializeMatrix(false);
+        possibleBuilds = testGame.checkPossibleBuilds(3,3);
+        for (int i = 0; i < IslandBoard.TABLE_DIMENSION; i++)
+            for (int j = 0; j < IslandBoard.TABLE_DIMENSION; j++)
+                assertEquals(testAllowedMoves[i][j],possibleBuilds[i][j]);
     }
 
     @Test
@@ -185,10 +220,39 @@ public class GameControllerTest {
 
     @Test
     public void removePlayerFromGame() {
+        ArrayList<Player> testPlayers = new ArrayList<>(Arrays.asList(testGame.getCurrentGame().getPlayers()));
+        Player testPlayer = testGame.getCurrentGame().getPlayerByUsername(testView1.getUsername());
+        Player testPlayer2 = testGame.getCurrentGame().getPlayerByUsername(testView2.getUsername());
+        Player testPlayer3 = testGame.getCurrentGame().getPlayerByUsername(testView3.getUsername());
+        testPlayer.setGod(testGame.getGodByName("Athena"));
+        testPlayer2.setGod(testGame.getGodByName("Minotaur"));
+        Worker[] testWorkers = new Worker[2];
+        testWorkers[0] = new Worker(testPlayer.getUsername(),'s',testGame.getCurrentBoard().getSpace(2,3),1);
+        testWorkers[1] = new Worker(testPlayer.getUsername(),'s',testGame.getCurrentBoard().getSpace(3,3),1);
+        testPlayer.setWorkers(testWorkers);
+        testGame.removePlayerFromGame(testPlayer,testView1);
+        assertTrue(testPlayers.contains(testPlayer));
+        testPlayers = new ArrayList<>(Arrays.asList(testGame.getCurrentGame().getPlayers()));
+        assertFalse(testPlayers.contains(testPlayer));
+        assertFalse(testGame.getCurrentGame().hasAthenaMovedUpDuringLastRound());
+        assertTrue(testPlayers.contains(testPlayer2));
+        testGame.removePlayerFromGame(testPlayer2,testView2);
+        testPlayers = new ArrayList<>(Arrays.asList(testGame.getCurrentGame().getPlayers()));
+        //at this point the game is ended, so GameController instance does not exists anymore
+        assertFalse(testView2.getInGame());
     }
 
     @Test
     public void removePlayersWorkers() {
+        Player testPlayer = testGame.getCurrentGame().getPlayerByUsername(testView1.getUsername());
+        Worker[] testWorkers = new Worker[2];
+        testWorkers[0] = new Worker(testPlayer.getUsername(),'s',testGame.getCurrentBoard().getSpace(2,3),1);
+        testWorkers[1] = new Worker(testPlayer.getUsername(),'s',testGame.getCurrentBoard().getSpace(3,3),1);
+        testPlayer.setWorkers(testWorkers);
+        assertNotNull(testPlayer.getWorkers());
+        testGame.removePlayersWorkers(testPlayer);
+        assertNull(testPlayer.getWorkers()[0].getWorkerPosition().getWorkerInPlace());
+        assertNull(testPlayer.getWorkers()[1].getWorkerPosition().getWorkerInPlace());
     }
 
     @Test

@@ -20,7 +20,7 @@ class GameController implements Runnable {
     private Message receivedMessage;
     private boolean moveAllowed,buildAllowed;
     private final ArrayList<God> gameGodList;
-    //private final ArrayList<Power> powerList;
+    private final ArrayList<Power> powerList;
     private boolean running = true;
 
     private boolean disconnectionDetected = false;
@@ -41,7 +41,7 @@ class GameController implements Runnable {
      * @param numPlayers Number of player in the game.
      */
     public GameController(ArrayList<VirtualView> virtualViews, int numPlayers) {
-        //powerList = Server.getPowerList();
+        powerList = Server.getPowerList();
         virtualViewsList = new VirtualView[numPlayers];
         Player[] playersArray = new Player[numPlayers];
         for(int i=0;i<numPlayers;++i) {
@@ -636,7 +636,7 @@ class GameController implements Runnable {
      * @param name Name of the God.
      * @return object of class God taken from the list of gods of the game.
      */
-    private God getGodByName(String name){
+    protected God getGodByName(String name){
         for (God god:gameGodList) if (god.getName().equals(name)) return god;
         return null;
     }

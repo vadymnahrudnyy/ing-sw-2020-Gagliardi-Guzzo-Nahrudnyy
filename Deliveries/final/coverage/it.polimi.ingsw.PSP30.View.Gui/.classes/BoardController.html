@@ -1,0 +1,738 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: BoardController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.View.Gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: BoardController (it.polimi.ingsw.PSP30.View.Gui)</h1>
+
+<table class="coverageStats">
+
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">BoardController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 28)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 249)
+  </span>
+</td>
+</tr>
+  <tr>
+    <td class="name">BoardController$Cell</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 59)
+  </span>
+</td>
+  </tr>
+<tr>
+  <td class="name"><strong>total</strong></td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 34)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 308)
+  </span>
+</td>
+</tr>
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.View.Gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP30.Model.*;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP30.View.GUI;
+<i>5</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.*;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import javafx.fxml.FXML;
+<i>10</i>&nbsp;import javafx.stage.Modality;
+<i>11</i>&nbsp;import javafx.stage.Stage;
+<i>12</i>&nbsp;import javafx.scene.Scene;
+<i>13</i>&nbsp;import java.io.IOException;
+<i>14</i>&nbsp;import java.util.ArrayList;
+<i>15</i>&nbsp;import java.util.Objects;
+<i>16</i>&nbsp;
+<i>17</i>&nbsp;import javafx.geometry.Pos;
+<i>18</i>&nbsp;import javafx.scene.layout.*;
+<i>19</i>&nbsp;import javafx.fxml.FXMLLoader;
+<i>20</i>&nbsp;import javafx.scene.control.*;
+<i>21</i>&nbsp;import javafx.scene.image.Image;
+<i>22</i>&nbsp;import javafx.scene.image.ImageView;
+<i>23</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>24</i>&nbsp;import it.polimi.ingsw.PSP30.Client.Client;
+<i>25</i>&nbsp;
+<i>26</i>&nbsp;/**
+<i>27</i>&nbsp; * Manages the loading of the Board.fxml file and all the operations done on the board scene.
+<i>28</i>&nbsp; */
+<b class="nc"><i>29</i>&nbsp;public class BoardController{</b>
+<i>30</i>&nbsp;
+<i>31</i>&nbsp;
+<i>32</i>&nbsp;    @FXML private StackPane mainPane, playerPane, firstOpponentPane, secondOpponentPane;
+<i>33</i>&nbsp;    @FXML private Label playerUsername, firstOpponentUsername, secondOpponentUsername, messagesTag;
+<i>34</i>&nbsp;    @FXML private ImageView playerGod, secondOpponentGod, firstOpponentGod, exitButton, rulesButton;
+<i>35</i>&nbsp;    @FXML private VBox opponentsPane;
+<i>36</i>&nbsp;
+<i>37</i>&nbsp;    @FXML private StackPane selectPlayerMainPane,firstPlayer, secondPlayer, thirdPlayer ;
+<i>38</i>&nbsp;    @FXML private BorderPane selectPlayerBorderPane;
+<i>39</i>&nbsp;    @FXML private ToggleButton firstButton, secondButton, thirdButton;
+<i>40</i>&nbsp;    @FXML private Label firstLabel, secondLabel, thirdLabel;
+<i>41</i>&nbsp;    @FXML private HBox hBox;
+<i>42</i>&nbsp;    @FXML private ImageView selectButton;
+<i>43</i>&nbsp;
+<i>44</i>&nbsp;    @FXML ImageView backButton2, backButton1, nextButton1, nextButton2;
+<i>45</i>&nbsp;    private static Stage rulesStage;
+<i>46</i>&nbsp;
+<b class="nc"><i>47</i>&nbsp;    private static final Cell[][] cell = new Cell[5][5];</b>
+<b class="nc"><i>48</i>&nbsp;    private static GridPane gridPane=new GridPane();</b>
+<i>49</i>&nbsp;    private static Scene boardScene;
+<i>50</i>&nbsp;
+<i>51</i>&nbsp;    private static String firstOpponent;
+<i>52</i>&nbsp;    private static String secondOpponent;
+<i>53</i>&nbsp;
+<b class="nc"><i>54</i>&nbsp;    private static final ToggleGroup toggleGroup=new ToggleGroup();</b>
+<b class="nc"><i>55</i>&nbsp;    private static final ArrayList&lt;String&gt; selectedGods = new ArrayList&lt;&gt;();</b>
+<i>56</i>&nbsp;
+<i>57</i>&nbsp;    private static boolean[][] allowedMoves;
+<b class="nc"><i>58</i>&nbsp;    private static boolean workerPositionRequest = false, selectWorkerRequest = false, moveRequest = false, buildRequest = false;</b>
+<b class="nc"><i>59</i>&nbsp;    private static boolean removeRequest = false, canChangeWorker;</b>
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;    /**
+<i>62</i>&nbsp;     * Initializes the Board scene with all the elements of the GameStage.
+<i>63</i>&nbsp;     * @param message GameStartNotification which contains the current status of the game.
+<i>64</i>&nbsp;     */
+<i>65</i>&nbsp;    public void initializeBoard(GameStartNotification message) {
+<b class="nc"><i>66</i>&nbsp;        if (GUI.getGameStage() == null) GUI.setGameStage(new Stage());</b>
+<b class="nc"><i>67</i>&nbsp;        GUI.getGameStage().setResizable(false);</b>
+<i>68</i>&nbsp;        try{
+<b class="nc"><i>69</i>&nbsp;            mainPane = FXMLLoader.load(Objects.requireNonNull(BoardController.class.getClassLoader().getResource(&quot;Fxml/Board.fxml&quot;)));</b>
+<b class="nc"><i>70</i>&nbsp;        }catch (IOException e){</b>
+<b class="nc"><i>71</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>72</i>&nbsp;        }</b>
+<i>73</i>&nbsp;
+<b class="nc"><i>74</i>&nbsp;        messagesTag= (Label) mainPane.getChildren().get(6);</b>
+<b class="nc"><i>75</i>&nbsp;        rulesButton=(ImageView) mainPane.getChildren().get(2);</b>
+<b class="nc"><i>76</i>&nbsp;        playerPane= (StackPane) mainPane.getChildren().get(4);</b>
+<b class="nc"><i>77</i>&nbsp;        playerGod=(ImageView) playerPane.getChildren().get(0);</b>
+<b class="nc"><i>78</i>&nbsp;        playerUsername=(Label) playerPane.getChildren().get(3);</b>
+<b class="nc"><i>79</i>&nbsp;        opponentsPane=(VBox) mainPane.getChildren().get(5);</b>
+<b class="nc"><i>80</i>&nbsp;        firstOpponentPane= (StackPane) opponentsPane.getChildren().get(0);</b>
+<b class="nc"><i>81</i>&nbsp;        firstOpponentGod=(ImageView) firstOpponentPane.getChildren().get(0);</b>
+<b class="nc"><i>82</i>&nbsp;        firstOpponentUsername=(Label) firstOpponentPane.getChildren().get(2);</b>
+<b class="nc"><i>83</i>&nbsp;        secondOpponentPane= (StackPane) opponentsPane.getChildren().get(1);</b>
+<b class="nc"><i>84</i>&nbsp;        secondOpponentGod=(ImageView) secondOpponentPane.getChildren().get(0);</b>
+<b class="nc"><i>85</i>&nbsp;        secondOpponentUsername=(Label) secondOpponentPane.getChildren().get(2);</b>
+<b class="nc"><i>86</i>&nbsp;        Player[] playersUsername = message.getGame().getPlayers();</b>
+<i>87</i>&nbsp;
+<b class="nc"><i>88</i>&nbsp;        GUI.getGameStage().setOnCloseRequest(GUI::closeApp);</b>
+<i>89</i>&nbsp;
+<b class="nc"><i>90</i>&nbsp;        playerUsername.setText(Client.getUsername());</b>
+<b class="nc"><i>91</i>&nbsp;        for (Player player : playersUsername) {</b>
+<b class="nc"><i>92</i>&nbsp;            if (!Client.getUsername().equals(player.getUsername())) {</b>
+<b class="nc"><i>93</i>&nbsp;                if (firstOpponent == null) firstOpponent = player.getUsername();</b>
+<b class="nc"><i>94</i>&nbsp;                else secondOpponent = player.getUsername();</b>
+<i>95</i>&nbsp;            }
+<i>96</i>&nbsp;        }
+<b class="nc"><i>97</i>&nbsp;        firstOpponentUsername.setText(firstOpponent);</b>
+<i>98</i>&nbsp;
+<b class="nc"><i>99</i>&nbsp;        playerGod.setVisible(false);</b>
+<b class="nc"><i>100</i>&nbsp;        firstOpponentGod.setVisible(false);</b>
+<b class="nc"><i>101</i>&nbsp;        secondOpponentGod.setVisible(false);</b>
+<i>102</i>&nbsp;
+<b class="nc"><i>103</i>&nbsp;        if(message.getGame().getNumPlayers() == 3) secondOpponentUsername.setText(secondOpponent);</b>
+<i>104</i>&nbsp;        else {
+<b class="nc"><i>105</i>&nbsp;            secondOpponentPane.setVisible(false);</b>
+<b class="nc"><i>106</i>&nbsp;            opponentsPane.getChildren().remove(1);</b>
+<i>107</i>&nbsp;        }
+<b class="nc"><i>108</i>&nbsp;        buildBoard(message.getGame().getGameBoard());</b>
+<b class="nc"><i>109</i>&nbsp;        mainPane.getChildren().add(gridPane);</b>
+<b class="nc"><i>110</i>&nbsp;        gridPane.setAlignment(Pos.CENTER);</b>
+<i>111</i>&nbsp;
+<b class="nc"><i>112</i>&nbsp;        boardScene = new Scene(mainPane);</b>
+<b class="nc"><i>113</i>&nbsp;        GUI.getGameStage().setScene(boardScene);</b>
+<b class="nc"><i>114</i>&nbsp;        GUI.getGameStage().show();</b>
+<i>115</i>&nbsp;    }
+<i>116</i>&nbsp;
+<i>117</i>&nbsp;    /**
+<i>118</i>&nbsp;     * Draws the game board on the screen. For every cell the corresponding.
+<i>119</i>&nbsp;     * parameters are checked and used to set the corresponding images.
+<i>120</i>&nbsp;     * @param board GameBoard.
+<i>121</i>&nbsp;     */
+<i>122</i>&nbsp;    protected void buildBoard(IslandBoard board){
+<b class="nc"><i>123</i>&nbsp;        for(int X = 0; X &lt; IslandBoard.TABLE_DIMENSION;X++)</b>
+<b class="nc"><i>124</i>&nbsp;            for (int Y = 0; Y &lt; IslandBoard.TABLE_DIMENSION; Y++){</b>
+<b class="nc"><i>125</i>&nbsp;                Space currentSpace = board.getSpace(X+1,Y+1);</b>
+<b class="nc"><i>126</i>&nbsp;                cell[X][Y]=new Cell(X, Y, currentSpace);</b>
+<b class="nc"><i>127</i>&nbsp;                gridPane.add(cell[X][Y],Y,X);</b>
+<i>128</i>&nbsp;            }
+<b class="nc"><i>129</i>&nbsp;        gridPane.setAlignment(Pos.CENTER);</b>
+<b class="nc"><i>130</i>&nbsp;        gridPane.setMaxSize(550,550);</b>
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    }
+<i>133</i>&nbsp;
+<i>134</i>&nbsp;    /**
+<i>135</i>&nbsp;     * Updates the board scene with all the elements belonging to the current status of the game (workers, buildings and info about the players).
+<i>136</i>&nbsp;     * @param updatedGame contains the current status of the game.
+<i>137</i>&nbsp;     */
+<i>138</i>&nbsp;    public void updateGameBoard(Game updatedGame){
+<b class="nc"><i>139</i>&nbsp;        messagesTag.setText(&quot;&quot;);</b>
+<b class="nc"><i>140</i>&nbsp;        GUI.getGameStage().setScene(boardScene);</b>
+<b class="nc"><i>141</i>&nbsp;        Player currentPlayer = updatedGame.getCurrentPlayer();</b>
+<b class="nc"><i>142</i>&nbsp;        IslandBoard currentBoard = updatedGame.getGameBoard();</b>
+<b class="nc"><i>143</i>&nbsp;        Player[] gamePlayers = updatedGame.getPlayers();</b>
+<b class="nc"><i>144</i>&nbsp;        for (Player gamePlayer : gamePlayers) {</b>
+<b class="nc"><i>145</i>&nbsp;            God currentGod = gamePlayer.getGod();</b>
+<b class="nc"><i>146</i>&nbsp;            if (currentGod != null){</b>
+<b class="nc"><i>147</i>&nbsp;                if (Client.getUsername().equals(gamePlayer.getUsername())) {</b>
+<b class="nc"><i>148</i>&nbsp;                    playerGod.setImage(new Image(getClass().getResourceAsStream(selectGodImage(false, gamePlayer.getGod().getName()))));</b>
+<b class="nc"><i>149</i>&nbsp;                    playerGod.setVisible(true);</b>
+<i>150</i>&nbsp;                }
+<b class="nc"><i>151</i>&nbsp;                else if (firstOpponent.equals(gamePlayer.getUsername())) {</b>
+<b class="nc"><i>152</i>&nbsp;                    firstOpponentGod.setImage(new Image(getClass().getResourceAsStream(selectGodImage(true, gamePlayer.getGod().getName()))));</b>
+<b class="nc"><i>153</i>&nbsp;                    firstOpponentGod.setVisible(true);</b>
+<i>154</i>&nbsp;                }
+<i>155</i>&nbsp;                else {
+<b class="nc"><i>156</i>&nbsp;                    secondOpponentGod.setImage(new Image(getClass().getResourceAsStream(selectGodImage(true, gamePlayer.getGod().getName()))));</b>
+<b class="nc"><i>157</i>&nbsp;                    secondOpponentGod.setVisible(true);</b>
+<i>158</i>&nbsp;                }
+<i>159</i>&nbsp;            }
+<i>160</i>&nbsp;        }
+<i>161</i>&nbsp;
+<b class="nc"><i>162</i>&nbsp;        resetCurrentPlayerDropshadow();</b>
+<b class="nc"><i>163</i>&nbsp;        if (Client.getUsername().equals(currentPlayer.getUsername())) playerGod.setStyle(&quot;-fx-effect: dropshadow(gaussian, #d40027, 30, 0.5, 0, 0)&quot;);</b>
+<b class="nc"><i>164</i>&nbsp;        else if (firstOpponent.equals(currentPlayer.getUsername())) firstOpponentGod.setStyle(&quot;-fx-effect: dropshadow(gaussian, #d40027, 30, 0.5, 0, 0)&quot;);</b>
+<b class="nc"><i>165</i>&nbsp;        else if (secondOpponent.equals(currentPlayer.getUsername())) secondOpponentGod.setStyle(&quot;-fx-effect: dropshadow(gaussian, #d40027, 30, 0.5, 0, 0)&quot;);</b>
+<i>166</i>&nbsp;
+<b class="nc"><i>167</i>&nbsp;        mainPane.getChildren().remove(gridPane);</b>
+<b class="nc"><i>168</i>&nbsp;        gridPane = new GridPane();</b>
+<b class="nc"><i>169</i>&nbsp;        buildBoard(currentBoard);</b>
+<b class="nc"><i>170</i>&nbsp;        mainPane.getChildren().add(gridPane);</b>
+<i>171</i>&nbsp;
+<i>172</i>&nbsp;    }
+<i>173</i>&nbsp;
+<i>174</i>&nbsp;    /**
+<i>175</i>&nbsp;     * Resets the dropshadow effect of the possible moves of the worker.
+<i>176</i>&nbsp;     */
+<i>177</i>&nbsp;    public static void resetWorkerMovesMarkers(){
+<b class="nc"><i>178</i>&nbsp;        for(int X = 0; X &lt; IslandBoard.TABLE_DIMENSION;X++)</b>
+<b class="nc"><i>179</i>&nbsp;            for (int Y = 0; Y &lt; IslandBoard.TABLE_DIMENSION; Y++)</b>
+<b class="nc"><i>180</i>&nbsp;                cell[X][Y].setNotAllowed();</b>
+<i>181</i>&nbsp;    }
+<i>182</i>&nbsp;
+<i>183</i>&nbsp;    /**
+<i>184</i>&nbsp;     * Resets the dropshadow effect when isn&#39;t anymore the player&#39;s turn.
+<i>185</i>&nbsp;     */
+<i>186</i>&nbsp;    public void resetCurrentPlayerDropshadow(){
+<b class="nc"><i>187</i>&nbsp;        playerGod.setStyle(&quot;&quot;);</b>
+<b class="nc"><i>188</i>&nbsp;        firstOpponentGod.setStyle(&quot;&quot;);</b>
+<b class="nc"><i>189</i>&nbsp;        secondOpponentGod.setStyle(&quot;&quot;);</b>
+<i>190</i>&nbsp;    }
+<i>191</i>&nbsp;
+<i>192</i>&nbsp;    /**
+<i>193</i>&nbsp;     * Used to set the value of moveRequest variable.
+<i>194</i>&nbsp;     * @param value New value of moveRequest.
+<i>195</i>&nbsp;     */
+<i>196</i>&nbsp;    public void setMoveRequest(boolean value){
+<b class="nc"><i>197</i>&nbsp;        moveRequest = value;</b>
+<i>198</i>&nbsp;    }
+<i>199</i>&nbsp;
+<i>200</i>&nbsp;    /**
+<i>201</i>&nbsp;     * Shows the pane for the choice of the beginning player.
+<i>202</i>&nbsp;     * @param players array which contains the names of the players.
+<i>203</i>&nbsp;     * @throws IOException when an error occurred in loading fxml file.
+<i>204</i>&nbsp;     */
+<i>205</i>&nbsp;    public void showSelectFirstPlayer(Player[] players) throws IOException {
+<b class="nc"><i>206</i>&nbsp;        selectPlayerMainPane = FXMLLoader.load(Objects.requireNonNull(BoardController.class.getClassLoader().getResource(&quot;Fxml/StartPlayerSelection.fxml&quot;)));</b>
+<b class="nc"><i>207</i>&nbsp;        selectPlayerBorderPane=(BorderPane) selectPlayerMainPane.getChildren().get(1);</b>
+<b class="nc"><i>208</i>&nbsp;        hBox=(HBox) selectPlayerBorderPane.getCenter();</b>
+<b class="nc"><i>209</i>&nbsp;        selectButton=(ImageView) selectPlayerBorderPane.getBottom();</b>
+<b class="nc"><i>210</i>&nbsp;        firstPlayer=(StackPane) hBox.getChildren().get(0);</b>
+<b class="nc"><i>211</i>&nbsp;        secondPlayer=(StackPane) hBox.getChildren().get(1);</b>
+<b class="nc"><i>212</i>&nbsp;        thirdPlayer=(StackPane) hBox.getChildren().get(2);</b>
+<b class="nc"><i>213</i>&nbsp;        firstButton=(ToggleButton) firstPlayer.getChildren().get(0);</b>
+<b class="nc"><i>214</i>&nbsp;        firstButton.setToggleGroup(toggleGroup);</b>
+<b class="nc"><i>215</i>&nbsp;        firstLabel=(Label) firstPlayer.getChildren().get(1);</b>
+<b class="nc"><i>216</i>&nbsp;        secondButton=(ToggleButton) secondPlayer.getChildren().get(0);</b>
+<b class="nc"><i>217</i>&nbsp;        secondButton.setToggleGroup(toggleGroup);</b>
+<b class="nc"><i>218</i>&nbsp;        secondLabel=(Label) secondPlayer.getChildren().get(1);</b>
+<b class="nc"><i>219</i>&nbsp;        if(Client.getNumPlayers()==3) {</b>
+<b class="nc"><i>220</i>&nbsp;            thirdButton = (ToggleButton) thirdPlayer.getChildren().get(0);</b>
+<b class="nc"><i>221</i>&nbsp;            thirdButton.setToggleGroup(toggleGroup);</b>
+<b class="nc"><i>222</i>&nbsp;            thirdLabel = (Label) thirdPlayer.getChildren().get(1);</b>
+<i>223</i>&nbsp;        }
+<b class="nc"><i>224</i>&nbsp;        else hBox.getChildren().remove(2);</b>
+<b class="nc"><i>225</i>&nbsp;        for(Player currentPlayer : players ){</b>
+<b class="nc"><i>226</i>&nbsp;            if(!Client.getUsername().equals(currentPlayer.getUsername())) {</b>
+<b class="nc"><i>227</i>&nbsp;                if(firstOpponent.equals(currentPlayer.getUsername())) {</b>
+<b class="nc"><i>228</i>&nbsp;                    setToggleButtonImages(currentPlayer.getGod().getName(),secondButton);</b>
+<b class="nc"><i>229</i>&nbsp;                    secondLabel.setText(currentPlayer.getUsername());</b>
+<i>230</i>&nbsp;                }
+<i>231</i>&nbsp;                else {
+<b class="nc"><i>232</i>&nbsp;                    setToggleButtonImages(currentPlayer.getGod().getName(),thirdButton);</b>
+<b class="nc"><i>233</i>&nbsp;                    thirdLabel.setText(currentPlayer.getUsername());</b>
+<i>234</i>&nbsp;                }
+<i>235</i>&nbsp;            }
+<i>236</i>&nbsp;            else{
+<b class="nc"><i>237</i>&nbsp;                setToggleButtonImages(currentPlayer.getGod().getName(),firstButton);</b>
+<b class="nc"><i>238</i>&nbsp;                firstLabel.setText(currentPlayer.getUsername());</b>
+<i>239</i>&nbsp;            }
+<i>240</i>&nbsp;        }
+<b class="nc"><i>241</i>&nbsp;        GUI.getGameStage().setScene(new Scene(selectPlayerMainPane));</b>
+<i>242</i>&nbsp;    }
+<i>243</i>&nbsp;
+<i>244</i>&nbsp;    /**
+<i>245</i>&nbsp;     * Manages to show the correct image for every god
+<i>246</i>&nbsp;     * @param godName god&#39;s name
+<i>247</i>&nbsp;     * @param button in which the god&#39;s image will be added
+<i>248</i>&nbsp;     */
+<i>249</i>&nbsp;    public void setToggleButtonImages(String godName, ToggleButton button){
+<b class="nc"><i>250</i>&nbsp;        selectedGods.add(godName);</b>
+<b class="nc"><i>251</i>&nbsp;        switch (godName) {</b>
+<i>252</i>&nbsp;            case &quot;Apollo&quot;:
+<b class="nc"><i>253</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Apollo.png);&quot;);</b>
+<b class="nc"><i>254</i>&nbsp;                break;</b>
+<i>255</i>&nbsp;            case &quot;Artemis&quot;:
+<b class="nc"><i>256</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Artemis.png);&quot;);</b>
+<b class="nc"><i>257</i>&nbsp;                break;</b>
+<i>258</i>&nbsp;            case &quot;Athena&quot;:
+<b class="nc"><i>259</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Athena.png);&quot;);</b>
+<b class="nc"><i>260</i>&nbsp;                break;</b>
+<i>261</i>&nbsp;            case &quot;Atlas&quot;:
+<b class="nc"><i>262</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Atlas.png);&quot;);</b>
+<b class="nc"><i>263</i>&nbsp;                break;</b>
+<i>264</i>&nbsp;            case &quot;Demeter&quot;:
+<b class="nc"><i>265</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Demeter.png);&quot;);</b>
+<b class="nc"><i>266</i>&nbsp;                break;</b>
+<i>267</i>&nbsp;            case &quot;Hephaestus&quot;:
+<b class="nc"><i>268</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Hephaestus.png);&quot;);</b>
+<b class="nc"><i>269</i>&nbsp;                break;</b>
+<i>270</i>&nbsp;            case &quot;Minotaur&quot;:
+<b class="nc"><i>271</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Minotaur.png);&quot;);</b>
+<b class="nc"><i>272</i>&nbsp;                break;</b>
+<i>273</i>&nbsp;            case &quot;Pan&quot;:
+<b class="nc"><i>274</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Pan.png);&quot;);</b>
+<b class="nc"><i>275</i>&nbsp;                break;</b>
+<i>276</i>&nbsp;            case &quot;Prometheus&quot;:
+<b class="nc"><i>277</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Prometheus.png);&quot;);</b>
+<b class="nc"><i>278</i>&nbsp;                break;</b>
+<i>279</i>&nbsp;            case &quot;Ares&quot;:
+<b class="nc"><i>280</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Ares.png);&quot;);</b>
+<b class="nc"><i>281</i>&nbsp;                break;</b>
+<i>282</i>&nbsp;            case &quot;Chronus&quot;:
+<b class="nc"><i>283</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Chronus.png);&quot;);</b>
+<b class="nc"><i>284</i>&nbsp;                break;</b>
+<i>285</i>&nbsp;            case &quot;Hera&quot;:
+<b class="nc"><i>286</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Hera.png);&quot;);</b>
+<b class="nc"><i>287</i>&nbsp;                break;</b>
+<i>288</i>&nbsp;            case &quot;Hestia&quot;:
+<b class="nc"><i>289</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Hestia.png);&quot;);</b>
+<b class="nc"><i>290</i>&nbsp;                break;</b>
+<i>291</i>&nbsp;            case &quot;Zeus&quot;:
+<b class="nc"><i>292</i>&nbsp;                button.setStyle(&quot;-fx-background-image: url(Images/toggleButtonGods/Zeus.png);&quot;);</b>
+<i>293</i>&nbsp;                break;
+<i>294</i>&nbsp;        }
+<i>295</i>&nbsp;    }
+<i>296</i>&nbsp;
+<i>297</i>&nbsp;    /**
+<i>298</i>&nbsp;     * Handles the selection of the first player
+<i>299</i>&nbsp;     * @param mouseEvent mouse click over one of the cards
+<i>300</i>&nbsp;     */
+<i>301</i>&nbsp;    public void handleFirstPlayerSelection(MouseEvent mouseEvent) {
+<b class="nc"><i>302</i>&nbsp;        mouseEvent.consume();</b>
+<b class="nc"><i>303</i>&nbsp;        selectButton.setDisable(true);</b>
+<b class="nc"><i>304</i>&nbsp;        if(firstButton.isSelected()) Client.sendMessageToServer(new StartPlayerResponse(firstLabel.getText()));</b>
+<b class="nc"><i>305</i>&nbsp;        else if(secondButton.isSelected()) Client.sendMessageToServer(new StartPlayerResponse(secondLabel.getText()));</b>
+<b class="nc"><i>306</i>&nbsp;        else if(thirdButton.isSelected()) Client.sendMessageToServer(new StartPlayerResponse(thirdLabel.getText()));</b>
+<b class="nc"><i>307</i>&nbsp;        else selectButton.setDisable(false);</b>
+<i>308</i>&nbsp;    }
+<i>309</i>&nbsp;
+<i>310</i>&nbsp;    /**
+<i>311</i>&nbsp;     * Sets the images of the God cards around the board
+<i>312</i>&nbsp;     * @param isOpponent true if the god belongs to the opponent of the current player, otherwise false
+<i>313</i>&nbsp;     * @param godName god&#39;s name
+<i>314</i>&nbsp;     * @return the path of the god&#39;s image to set in the scene
+<i>315</i>&nbsp;     */
+<i>316</i>&nbsp;    public String selectGodImage(boolean isOpponent, String godName) {
+<b class="nc"><i>317</i>&nbsp;        switch(godName){</b>
+<i>318</i>&nbsp;            case &quot;Apollo&quot;:
+<b class="nc"><i>319</i>&nbsp;                if (!isOpponent)return (&quot;/Images/toggleButtonGods/Apollo.png&quot;);</b>
+<b class="nc"><i>320</i>&nbsp;                else return (&quot;/Images/SmallGods/Apollo.png&quot;);</b>
+<i>321</i>&nbsp;            case &quot;Artemis&quot;:
+<b class="nc"><i>322</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Artemis.png&quot;);</b>
+<b class="nc"><i>323</i>&nbsp;                else return (&quot;/Images/SmallGods/Artemis.png&quot;);</b>
+<i>324</i>&nbsp;            case &quot;Athena&quot;:
+<b class="nc"><i>325</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Athena.png&quot;);</b>
+<b class="nc"><i>326</i>&nbsp;                else return (&quot;/Images/SmallGods/Athena.png&quot;);</b>
+<i>327</i>&nbsp;            case &quot;Atlas&quot;:
+<b class="nc"><i>328</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Atlas.png&quot;);</b>
+<b class="nc"><i>329</i>&nbsp;                else return (&quot;/Images/SmallGods/Atlas.png&quot;);</b>
+<i>330</i>&nbsp;            case &quot;Chronus&quot;:
+<b class="nc"><i>331</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Chronus.png&quot;);</b>
+<b class="nc"><i>332</i>&nbsp;                else return (&quot;/Images/SmallGods/Chronos.png&quot;);</b>
+<i>333</i>&nbsp;            case &quot;Demeter&quot;:
+<b class="nc"><i>334</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Demeter.png&quot;);</b>
+<b class="nc"><i>335</i>&nbsp;                else return (&quot;/Images/SmallGods/Demeter.png&quot;);</b>
+<i>336</i>&nbsp;            case &quot;Hephaestus&quot;:
+<b class="nc"><i>337</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Hephaestus.png&quot;);</b>
+<b class="nc"><i>338</i>&nbsp;                else return (&quot;/Images/SmallGods/Hephaestus.png&quot;);</b>
+<i>339</i>&nbsp;            case &quot;Hera&quot;:
+<b class="nc"><i>340</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Hera.png&quot;);</b>
+<b class="nc"><i>341</i>&nbsp;                else return (&quot;/Images/SmallGods/Hera.png&quot;);</b>
+<i>342</i>&nbsp;            case &quot;Hestia&quot;:
+<b class="nc"><i>343</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Hestia.png&quot;);</b>
+<b class="nc"><i>344</i>&nbsp;                else return (&quot;/Images/SmallGods/Hestia.png&quot;);</b>
+<i>345</i>&nbsp;            case &quot;Minotaur&quot;:
+<b class="nc"><i>346</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Minotaur.png&quot;);</b>
+<b class="nc"><i>347</i>&nbsp;                else return (&quot;/Images/SmallGods/Minotaur.png&quot;);</b>
+<i>348</i>&nbsp;            case &quot;Pan&quot;:
+<b class="nc"><i>349</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Pan.png&quot;);</b>
+<b class="nc"><i>350</i>&nbsp;                else return (&quot;/Images/SmallGods/Pan.png&quot;);</b>
+<i>351</i>&nbsp;            case &quot;Prometheus&quot;:
+<b class="nc"><i>352</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Prometheus.png&quot;);</b>
+<b class="nc"><i>353</i>&nbsp;                else return (&quot;/Images/SmallGods/Prometheus.png&quot;);</b>
+<i>354</i>&nbsp;            case &quot;Zeus&quot;:
+<b class="nc"><i>355</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Zeus.png&quot;);</b>
+<b class="nc"><i>356</i>&nbsp;                else return (&quot;/Images/SmallGods/Zeus.png&quot;);</b>
+<i>357</i>&nbsp;            case &quot;Ares&quot;:
+<b class="nc"><i>358</i>&nbsp;                if (!isOpponent) return (&quot;/Images/toggleButtonGods/Ares.png&quot;);</b>
+<b class="nc"><i>359</i>&nbsp;                else return (&quot;/Images/SmallGods/Ares.png&quot;);</b>
+<i>360</i>&nbsp;
+<i>361</i>&nbsp;        }
+<b class="nc"><i>362</i>&nbsp;        return null;</b>
+<i>363</i>&nbsp;    }
+<i>364</i>&nbsp;
+<i>365</i>&nbsp;    /**
+<i>366</i>&nbsp;     * Indicates the possibility to change the selected worker.
+<i>367</i>&nbsp;     * @param value return true if the player can select the other worker, otherwise value is false.
+<i>368</i>&nbsp;     */
+<i>369</i>&nbsp;    public void setCanChangeWorker(boolean value){
+<b class="nc"><i>370</i>&nbsp;        canChangeWorker = value;</b>
+<i>371</i>&nbsp;    }
+<i>372</i>&nbsp;
+<i>373</i>&nbsp;    /**
+<i>374</i>&nbsp;     * Shows the request to select where to place the indicated worker (during the game setup).
+<i>375</i>&nbsp;     * @param workerIndex integer index of the worker.
+<i>376</i>&nbsp;     */
+<i>377</i>&nbsp;    public void workerPositionRequest(int workerIndex){
+<b class="nc"><i>378</i>&nbsp;        if (workerIndex == 1) messagesTag.setText(&quot;Select first worker&#39;s position&quot;);</b>
+<b class="nc"><i>379</i>&nbsp;        else messagesTag.setText(&quot;Select second worker&#39;s position&quot;);</b>
+<b class="nc"><i>380</i>&nbsp;        workerPositionRequest = true;</b>
+<i>381</i>&nbsp;    }
+<i>382</i>&nbsp;
+<i>383</i>&nbsp;    /**
+<i>384</i>&nbsp;     * Shows the request to select the worker to move.
+<i>385</i>&nbsp;     */
+<i>386</i>&nbsp;    public void selectWorkerRequest(){
+<b class="nc"><i>387</i>&nbsp;        selectWorkerRequest = true;</b>
+<b class="nc"><i>388</i>&nbsp;        messagesTag.setText(&quot;Select the worker you want to move&quot;);</b>
+<i>389</i>&nbsp;    }
+<i>390</i>&nbsp;
+<i>391</i>&nbsp;    /**
+<i>392</i>&nbsp;     * Shows the request to select where to move the worker previously selected.
+<i>393</i>&nbsp;     * @param allowedMove the boolean matrix of the allowed moves.
+<i>394</i>&nbsp;     */
+<i>395</i>&nbsp;    public void moveRequest(boolean[][] allowedMove){
+<b class="nc"><i>396</i>&nbsp;        moveRequest = true;</b>
+<b class="nc"><i>397</i>&nbsp;        allowedMoves = allowedMove;</b>
+<b class="nc"><i>398</i>&nbsp;        for(int X = 0; X &lt; IslandBoard.TABLE_DIMENSION;X++)</b>
+<b class="nc"><i>399</i>&nbsp;            for (int Y = 0; Y &lt; IslandBoard.TABLE_DIMENSION; Y++){</b>
+<b class="nc"><i>400</i>&nbsp;                if(allowedMove[X][Y])cell[X][Y].setAllowed();</b>
+<b class="nc"><i>401</i>&nbsp;                else cell[X][Y].setNotAllowed();</b>
+<i>402</i>&nbsp;            }
+<b class="nc"><i>403</i>&nbsp;        messagesTag.setText(&quot;Select the position you want to move to&quot;);</b>
+<i>404</i>&nbsp;    }
+<i>405</i>&nbsp;
+<i>406</i>&nbsp;    /**
+<i>407</i>&nbsp;     * Shows the request to select where to build.
+<i>408</i>&nbsp;     * @param allowedMove the boolean matrix of the spaces where the player is allowed to build.
+<i>409</i>&nbsp;     */
+<i>410</i>&nbsp;    public void buildRequest(boolean[][] allowedMove){
+<b class="nc"><i>411</i>&nbsp;        buildRequest = true;</b>
+<b class="nc"><i>412</i>&nbsp;        allowedMoves = allowedMove;</b>
+<b class="nc"><i>413</i>&nbsp;        for(int X = 0; X &lt; IslandBoard.TABLE_DIMENSION;X++)</b>
+<b class="nc"><i>414</i>&nbsp;            for (int Y = 0; Y &lt; IslandBoard.TABLE_DIMENSION; Y++){</b>
+<b class="nc"><i>415</i>&nbsp;                if(allowedMove[X][Y])cell[X][Y].setAllowed();</b>
+<i>416</i>&nbsp;            }
+<b class="nc"><i>417</i>&nbsp;        messagesTag.setText(&quot;Select the space you want to build in&quot;);</b>
+<i>418</i>&nbsp;    }
+<i>419</i>&nbsp;
+<i>420</i>&nbsp;    /**
+<i>421</i>&nbsp;     * Shows the request to select where to remove a building.
+<i>422</i>&nbsp;     * @param allowedRemovals the boolean matrix of the spaces where the player is allowed to remove a building.
+<i>423</i>&nbsp;     */
+<i>424</i>&nbsp;    public void blockRemoveRequest(boolean[][] allowedRemovals){
+<b class="nc"><i>425</i>&nbsp;        removeRequest = true;</b>
+<b class="nc"><i>426</i>&nbsp;        for(int X = 0; X &lt; IslandBoard.TABLE_DIMENSION;X++)</b>
+<b class="nc"><i>427</i>&nbsp;            for (int Y = 0; Y &lt; IslandBoard.TABLE_DIMENSION; Y++){</b>
+<b class="nc"><i>428</i>&nbsp;                if(allowedRemovals[X][Y])cell[X][Y].setAllowed();</b>
+<i>429</i>&nbsp;            }
+<b class="nc"><i>430</i>&nbsp;        messagesTag.setText(&quot;Select the block you want to remove&quot;);</b>
+<i>431</i>&nbsp;    }
+<i>432</i>&nbsp;
+<i>433</i>&nbsp;    /**
+<i>434</i>&nbsp;     * Shows the &quot;Using God Power&quot; of the Info and Rules page and manages mouse click on next button.
+<i>435</i>&nbsp;     * @param mouseEvent mouse click on the Info and Rules button.
+<i>436</i>&nbsp;     * @throws IOException when an error occurred in loading fxml file.
+<i>437</i>&nbsp;     */
+<i>438</i>&nbsp;    public void showInfoPane(MouseEvent mouseEvent) throws IOException {
+<b class="nc"><i>439</i>&nbsp;        mouseEvent.consume();</b>
+<b class="nc"><i>440</i>&nbsp;        rulesStage=new Stage();</b>
+<b class="nc"><i>441</i>&nbsp;        rulesStage.initModality(Modality.APPLICATION_MODAL);</b>
+<b class="nc"><i>442</i>&nbsp;        rulesStage.initOwner(GUI.getGameStage());</b>
+<b class="nc"><i>443</i>&nbsp;        StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource(&quot;Fxml/RulesBoard1.fxml&quot;)));</b>
+<b class="nc"><i>444</i>&nbsp;        nextButton1=(ImageView) stackPane.getChildren().get(1);</b>
+<b class="nc"><i>445</i>&nbsp;        nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -&gt; {</b>
+<i>446</i>&nbsp;            try {
+<b class="nc"><i>447</i>&nbsp;                rulesScene2();</b>
+<b class="nc"><i>448</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>449</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>450</i>&nbsp;            }</b>
+<i>451</i>&nbsp;        });
+<b class="nc"><i>452</i>&nbsp;        Scene scene = new Scene(stackPane);</b>
+<b class="nc"><i>453</i>&nbsp;        rulesStage.setScene(scene);</b>
+<b class="nc"><i>454</i>&nbsp;        rulesStage.show();</b>
+<i>455</i>&nbsp;    }
+<i>456</i>&nbsp;
+<i>457</i>&nbsp;    /**
+<i>458</i>&nbsp;     * This method shows the &quot;Power Rules&quot; of the Info and Rules page and manages mouse click on next button.
+<i>459</i>&nbsp;     * @throws IOException when an error occurred in loading fxml file.
+<i>460</i>&nbsp;     */
+<i>461</i>&nbsp;    public void rulesScene1() throws IOException {
+<b class="nc"><i>462</i>&nbsp;        StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource(&quot;Fxml/RulesBoard1.fxml&quot;)));</b>
+<b class="nc"><i>463</i>&nbsp;        nextButton1=(ImageView) stackPane.getChildren().get(1);</b>
+<b class="nc"><i>464</i>&nbsp;        nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -&gt; {</b>
+<i>465</i>&nbsp;            try {
+<b class="nc"><i>466</i>&nbsp;                rulesScene2();</b>
+<b class="nc"><i>467</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>468</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>469</i>&nbsp;            }</b>
+<i>470</i>&nbsp;        });
+<b class="nc"><i>471</i>&nbsp;        Scene scene = new Scene(stackPane);</b>
+<b class="nc"><i>472</i>&nbsp;        rulesStage.setScene(scene);</b>
+<i>473</i>&nbsp;    }
+<i>474</i>&nbsp;
+<i>475</i>&nbsp;    /**
+<i>476</i>&nbsp;     * This method shows the glossary of the Info and Rules page and manages mouse click on next and back button.
+<i>477</i>&nbsp;     * @throws IOException when an error occurred in loading fxml file.
+<i>478</i>&nbsp;     */
+<i>479</i>&nbsp;    public void rulesScene2() throws IOException {
+<b class="nc"><i>480</i>&nbsp;        StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource(&quot;Fxml/RulesBoard2.fxml&quot;)));</b>
+<b class="nc"><i>481</i>&nbsp;        nextButton2=(ImageView) stackPane.getChildren().get(1);</b>
+<b class="nc"><i>482</i>&nbsp;        backButton2=(ImageView) stackPane.getChildren().get(2);</b>
+<b class="nc"><i>483</i>&nbsp;        nextButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -&gt; {</b>
+<i>484</i>&nbsp;            try {
+<b class="nc"><i>485</i>&nbsp;                rulesScene3();</b>
+<b class="nc"><i>486</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>487</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>488</i>&nbsp;            }</b>
+<i>489</i>&nbsp;        });
+<i>490</i>&nbsp;
+<b class="nc"><i>491</i>&nbsp;        backButton2.addEventHandler(MouseEvent.MOUSE_CLICKED, event -&gt; {</b>
+<i>492</i>&nbsp;            try {
+<b class="nc"><i>493</i>&nbsp;                rulesScene1();</b>
+<i>494</i>&nbsp;            }
+<b class="nc"><i>495</i>&nbsp;            catch (IOException e) {</b>
+<b class="nc"><i>496</i>&nbsp;                e.printStackTrace();</b>
+<i>497</i>&nbsp;            } });
+<b class="nc"><i>498</i>&nbsp;        Scene scene = new Scene(stackPane);</b>
+<b class="nc"><i>499</i>&nbsp;        rulesStage.setScene(scene);</b>
+<i>500</i>&nbsp;    }
+<i>501</i>&nbsp;
+<i>502</i>&nbsp;    /**
+<i>503</i>&nbsp;     * Shows the &quot;How to Play&quot; of the Info and Rules page and manages mouse click on back button.
+<i>504</i>&nbsp;     * @throws IOException when an error occurred in loading fxml file.
+<i>505</i>&nbsp;     */
+<i>506</i>&nbsp;    public void rulesScene3() throws IOException {
+<b class="nc"><i>507</i>&nbsp;        StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource(&quot;Fxml/RulesBoard3.fxml&quot;)));</b>
+<b class="nc"><i>508</i>&nbsp;        backButton1=(ImageView) stackPane.getChildren().get(1);</b>
+<b class="nc"><i>509</i>&nbsp;        backButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -&gt; {</b>
+<i>510</i>&nbsp;            try {
+<b class="nc"><i>511</i>&nbsp;                rulesScene2();</b>
+<b class="nc"><i>512</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>513</i>&nbsp;                e.printStackTrace();</b>
+<b class="nc"><i>514</i>&nbsp;            }</b>
+<i>515</i>&nbsp;        });
+<b class="nc"><i>516</i>&nbsp;        Scene dialogScene = new Scene(stackPane);</b>
+<b class="nc"><i>517</i>&nbsp;        rulesStage.setScene(dialogScene);</b>
+<i>518</i>&nbsp;    }
+<i>519</i>&nbsp;
+<i>520</i>&nbsp;    /**
+<i>521</i>&nbsp;     * Sends a disconnection message to the server when the exit button is clicked.
+<i>522</i>&nbsp;     * @param event mouse click on the exit button.
+<i>523</i>&nbsp;     */
+<i>524</i>&nbsp;    public void disconnectButton(MouseEvent event){
+<b class="nc"><i>525</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>526</i>&nbsp;        Client.sendMessageToServer(new Disconnection());</b>
+<b class="nc"><i>527</i>&nbsp;        System.exit(0);</b>
+<i>528</i>&nbsp;    }
+<i>529</i>&nbsp;
+<i>530</i>&nbsp;    /**
+<i>531</i>&nbsp;     * Manages the content of the cells of the board (workers and buildings) and shows the requests during the player&#39;s turn.
+<i>532</i>&nbsp;     */
+<i>533</i>&nbsp;    public static class Cell extends StackPane {
+<i>534</i>&nbsp;        protected int coordinateX, coordinateY;
+<b class="nc"><i>535</i>&nbsp;        protected Pane allowedMovePane = new Pane();</b>
+<i>536</i>&nbsp;
+<b class="nc"><i>537</i>&nbsp;        public Cell(int X, int Y, Space space) {</b>
+<b class="nc"><i>538</i>&nbsp;            this.setMaxSize(107,107);</b>
+<b class="nc"><i>539</i>&nbsp;            coordinateX = X+1;</b>
+<b class="nc"><i>540</i>&nbsp;            coordinateY = Y+1;</b>
+<b class="nc"><i>541</i>&nbsp;            this.setPrefSize(107, 107);</b>
+<b class="nc"><i>542</i>&nbsp;            Pane buildingPane = new Pane(), workerPane = new Pane(), selectedCellPane = new Pane();</b>
+<b class="nc"><i>543</i>&nbsp;            StackPane cellStack = new StackPane();</b>
+<b class="nc"><i>544</i>&nbsp;            cellStack.getChildren().addAll(buildingPane,workerPane,allowedMovePane,selectedCellPane);</b>
+<b class="nc"><i>545</i>&nbsp;            this.getChildren().add(cellStack);</b>
+<b class="nc"><i>546</i>&nbsp;            int height = space.getHeight();</b>
+<b class="nc"><i>547</i>&nbsp;            if (space.getHasDome()) {</b>
+<b class="nc"><i>548</i>&nbsp;                if (height == 1)buildingPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/OnlyDome.png); -fx-background-size: 107px 107px&quot;);</b>
+<b class="nc"><i>549</i>&nbsp;                else if (height == 2)</b>
+<b class="nc"><i>550</i>&nbsp;                    buildingPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/Height1WithDome.png); -fx-background-size: 107px 107px&quot;);</b>
+<b class="nc"><i>551</i>&nbsp;                else if (height == 3)</b>
+<b class="nc"><i>552</i>&nbsp;                    buildingPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/Height2WithDome.png); -fx-background-size: 107px 107px&quot;);</b>
+<i>553</i>&nbsp;                else
+<b class="nc"><i>554</i>&nbsp;                    buildingPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/CompleteTower.png); -fx-background-size: 107px 107px&quot;);</b>
+<i>555</i>&nbsp;            }
+<i>556</i>&nbsp;            else {
+<b class="nc"><i>557</i>&nbsp;                if (height == 1)</b>
+<b class="nc"><i>558</i>&nbsp;                    buildingPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/Height1.png); -fx-background-size: 107px 107px&quot;);</b>
+<b class="nc"><i>559</i>&nbsp;                else if (height == 2)</b>
+<b class="nc"><i>560</i>&nbsp;                    buildingPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/Height2.png); -fx-background-size: 107px 107px&quot;);</b>
+<b class="nc"><i>561</i>&nbsp;                else if (height == 3)</b>
+<b class="nc"><i>562</i>&nbsp;                    buildingPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/Height3.png); -fx-background-size: 107px 107px&quot;);</b>
+<i>563</i>&nbsp;
+<b class="nc"><i>564</i>&nbsp;                Worker worker = space.getWorkerInPlace();</b>
+<b class="nc"><i>565</i>&nbsp;                if (worker != null) {</b>
+<b class="nc"><i>566</i>&nbsp;                    int Color = worker.getColor();</b>
+<b class="nc"><i>567</i>&nbsp;                    char gender = worker.getGender();</b>
+<b class="nc"><i>568</i>&nbsp;                    if( Color == 1){</b>
+<b class="nc"><i>569</i>&nbsp;                        if (gender == &#39;f&#39;)workerPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/blueFemale.png); -fx-background-size: 107px 107px&quot;);</b>
+<b class="nc"><i>570</i>&nbsp;                        else workerPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/blueMale.png); -fx-background-size: 107px 107px&quot;);</b>
+<i>571</i>&nbsp;                    }
+<b class="nc"><i>572</i>&nbsp;                    else if (Color == 2){</b>
+<b class="nc"><i>573</i>&nbsp;                        if (gender == &#39;f&#39;)workerPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/purpleFemale.png); -fx-background-size: 107px 107px&quot;);</b>
+<b class="nc"><i>574</i>&nbsp;                        else workerPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/purpleMale.png); -fx-background-size: 107px 107px&quot;);</b>
+<i>575</i>&nbsp;                    }
+<i>576</i>&nbsp;                    else {
+<b class="nc"><i>577</i>&nbsp;                        if (gender == &#39;f&#39;)workerPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/yellowFemale.png); -fx-background-size: 107px 107px&quot;);</b>
+<b class="nc"><i>578</i>&nbsp;                        else workerPane.setStyle(&quot;-fx-background-image: url(Images/Backgrounds/yellowMale.png); -fx-background-size: 107px 107px&quot;);</b>
+<i>579</i>&nbsp;                    }
+<i>580</i>&nbsp;                }
+<i>581</i>&nbsp;            }
+<b class="nc"><i>582</i>&nbsp;            this.addEventHandler(MouseEvent.MOUSE_ENTERED, e-&gt; selectedCellPane.setStyle(&quot;-fx-background-color: #ffad00; -fx-opacity: 0.5&quot;));</b>
+<b class="nc"><i>583</i>&nbsp;            this.addEventHandler(MouseEvent.MOUSE_EXITED, e-&gt; selectedCellPane.setStyle(&quot;-fx-background-color: transparent&quot;));</b>
+<b class="nc"><i>584</i>&nbsp;            this.addEventHandler(MouseEvent.MOUSE_CLICKED, e-&gt;{</b>
+<b class="nc"><i>585</i>&nbsp;                System.out.println(&quot;click on X: &quot;+coordinateX +&quot;  Y: &quot; + coordinateY);</b>
+<b class="nc"><i>586</i>&nbsp;                if (workerPositionRequest) {</b>
+<b class="nc"><i>587</i>&nbsp;                    workerPositionRequest = false;</b>
+<i>588</i>&nbsp;
+<b class="nc"><i>589</i>&nbsp;                    Client.sendMessageToServer(new WorkerPositionResponse(coordinateX,coordinateY));</b>
+<i>590</i>&nbsp;                }
+<b class="nc"><i>591</i>&nbsp;                if (selectWorkerRequest){</b>
+<b class="nc"><i>592</i>&nbsp;                    selectWorkerRequest = false;</b>
+<b class="nc"><i>593</i>&nbsp;                    Client.sendMessageToServer(new SelectWorkerResponse(coordinateX,coordinateY));</b>
+<i>594</i>&nbsp;                }
+<b class="nc"><i>595</i>&nbsp;                if (moveRequest){</b>
+<b class="nc"><i>596</i>&nbsp;                    moveRequest = false;</b>
+<b class="nc"><i>597</i>&nbsp;                    if (allowedMoves[coordinateX-1][coordinateY-1]||!canChangeWorker) Client.sendMessageToServer(new MoveResponse(coordinateX,coordinateY));</b>
+<i>598</i>&nbsp;                    else {
+<b class="nc"><i>599</i>&nbsp;                        BoardController.resetWorkerMovesMarkers();</b>
+<b class="nc"><i>600</i>&nbsp;                        Client.sendMessageToServer(new SelectWorkerResponse(coordinateX,coordinateY));</b>
+<i>601</i>&nbsp;                    }
+<i>602</i>&nbsp;                }
+<b class="nc"><i>603</i>&nbsp;                if (buildRequest){</b>
+<b class="nc"><i>604</i>&nbsp;                    buildRequest = false;</b>
+<b class="nc"><i>605</i>&nbsp;                    Client.sendMessageToServer(new BuildResponse(coordinateX,coordinateY));</b>
+<i>606</i>&nbsp;                }
+<b class="nc"><i>607</i>&nbsp;                if (removeRequest){</b>
+<b class="nc"><i>608</i>&nbsp;                    removeRequest = false;</b>
+<b class="nc"><i>609</i>&nbsp;                    Client.sendMessageToServer(new BlockRemovalResponse(coordinateX,coordinateY));</b>
+<i>610</i>&nbsp;                }
+<i>611</i>&nbsp;            });
+<i>612</i>&nbsp;        }
+<i>613</i>&nbsp;
+<i>614</i>&nbsp;        /**
+<i>615</i>&nbsp;         * Sets the color to the cells in which the player can do the action.
+<i>616</i>&nbsp;         */
+<i>617</i>&nbsp;        public void setAllowed(){
+<b class="nc"><i>618</i>&nbsp;            allowedMovePane.setStyle(&quot;-fx-background-color: #49eeff; -fx-opacity: 0.5&quot;);</b>
+<i>619</i>&nbsp;        }
+<i>620</i>&nbsp;
+<i>621</i>&nbsp;        /**
+<i>622</i>&nbsp;         * Set the cell as not allowed for a move.
+<i>623</i>&nbsp;         */
+<i>624</i>&nbsp;        public void setNotAllowed(){
+<b class="nc"><i>625</i>&nbsp;            allowedMovePane.setStyle(&quot;-fx-background-color: transparent&quot;);</b>
+<i>626</i>&nbsp;        }
+<i>627</i>&nbsp;    }
+<i>628</i>&nbsp;
+<i>629</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 22:14</div>
+</div>
+</body>
+</html>

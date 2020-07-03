@@ -1,0 +1,181 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: GodParser</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.Server</a> ]
+</div>
+
+<h1>Coverage Summary for Class: GodParser (it.polimi.ingsw.PSP30.Server)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">GodParser</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (4/ 4)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    91,2%
+  </span>
+  <span class="absValue">
+    (31/ 34)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.Server;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP30.Model.God;
+<i>4</i>&nbsp;import org.w3c.dom.Document;
+<i>5</i>&nbsp;import org.w3c.dom.Element;
+<i>6</i>&nbsp;import org.w3c.dom.Node;
+<i>7</i>&nbsp;import org.w3c.dom.NodeList;
+<i>8</i>&nbsp;
+<i>9</i>&nbsp;import javax.xml.parsers.DocumentBuilder;
+<i>10</i>&nbsp;import javax.xml.parsers.DocumentBuilderFactory;
+<i>11</i>&nbsp;import java.util.ArrayList;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;/**
+<i>14</i>&nbsp; * GodParser class is used for read from the configuration file for gods and create an ArrayList of God
+<i>15</i>&nbsp; */
+<i>16</i>&nbsp;
+<b class="fc"><i>17</i>&nbsp;public class GodParser {</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    /**
+<i>20</i>&nbsp;     * Builds a new DOM Document object using the configuration file parsed.
+<i>21</i>&nbsp;     * @return the DOM document created
+<i>22</i>&nbsp;     */
+<i>23</i>&nbsp;    public Document buildGodDocument() {
+<i>24</i>&nbsp;
+<i>25</i>&nbsp;        try{
+<i>26</i>&nbsp;
+<b class="fc"><i>27</i>&nbsp;            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();</b>
+<b class="fc"><i>28</i>&nbsp;            DocumentBuilder gBuilder = factory.newDocumentBuilder();</b>
+<i>29</i>&nbsp;            //return gBuilder.parse(&quot;./src/main/resources/configurationfilegod.xml&quot;);
+<b class="fc"><i>30</i>&nbsp;            return gBuilder.parse(String.valueOf(this.getClass().getClassLoader().getResource(&quot;configurationfilegod.xml&quot;)));</b>
+<i>31</i>&nbsp;
+<b class="nc"><i>32</i>&nbsp;        } catch(Exception e) {</b>
+<b class="nc"><i>33</i>&nbsp;            e.printStackTrace();</b>
+<i>34</i>&nbsp;        }
+<i>35</i>&nbsp;
+<b class="nc"><i>36</i>&nbsp;        return null;</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * Parses the document and creates an ArrayList of gods.
+<i>41</i>&nbsp;     * @param document is the DOM Document that will be parsed
+<i>42</i>&nbsp;     * @return an ArrayList of God objects created parsing the XML file
+<i>43</i>&nbsp;     */
+<i>44</i>&nbsp;    public static ArrayList&lt;God&gt; parseGod(Document document) {
+<i>45</i>&nbsp;
+<b class="fc"><i>46</i>&nbsp;        document.getDocumentElement().normalize();</b>
+<b class="fc"><i>47</i>&nbsp;        NodeList gList = document.getElementsByTagName(&quot;God&quot;);</b>
+<b class="fc"><i>48</i>&nbsp;        ArrayList&lt;God&gt; godList = new ArrayList&lt;&gt;();</b>
+<i>49</i>&nbsp;
+<b class="fc"><i>50</i>&nbsp;        for (int i = 0; i &lt; gList.getLength(); i++) {</b>
+<i>51</i>&nbsp;
+<b class="fc"><i>52</i>&nbsp;            Node godNode = gList.item(i);</b>
+<i>53</i>&nbsp;
+<b class="fc"><i>54</i>&nbsp;            if (godNode.getNodeType() == Node.ELEMENT_NODE) {</b>
+<i>55</i>&nbsp;
+<b class="fc"><i>56</i>&nbsp;                Element god = (Element) godNode;</b>
+<i>57</i>&nbsp;
+<b class="fc"><i>58</i>&nbsp;                Node node1 = god.getElementsByTagName(&quot;name&quot;).item(0);</b>
+<b class="fc"><i>59</i>&nbsp;                String name = node1.getTextContent();</b>
+<i>60</i>&nbsp;
+<i>61</i>&nbsp;
+<b class="fc"><i>62</i>&nbsp;                Node node2 = god.getElementsByTagName(&quot;numPowers&quot;).item(0);</b>
+<b class="fc"><i>63</i>&nbsp;                String num = node2.getTextContent();</b>
+<b class="fc"><i>64</i>&nbsp;                int numPowers = Integer.parseInt(num);</b>
+<i>65</i>&nbsp;
+<b class="fc"><i>66</i>&nbsp;                Node node3 = god.getElementsByTagName(&quot;playersAllowed&quot;).item(0);</b>
+<b class="fc"><i>67</i>&nbsp;                String allowed = node3.getTextContent();</b>
+<b class="fc"><i>68</i>&nbsp;                int playersAllowed = Integer.parseInt(allowed);</b>
+<i>69</i>&nbsp;
+<b class="fc"><i>70</i>&nbsp;                Node node4 = god.getElementsByTagName(&quot;description&quot;).item(0);</b>
+<b class="fc"><i>71</i>&nbsp;                String description = node4.getTextContent();</b>
+<i>72</i>&nbsp;
+<b class="fc"><i>73</i>&nbsp;                Node node5 = god.getElementsByTagName(&quot;powers&quot;).item(0);</b>
+<b class="fc"><i>74</i>&nbsp;                String allPower = node5.getTextContent();</b>
+<b class="fc"><i>75</i>&nbsp;                int p = Integer.parseInt(allPower.trim());</b>
+<b class="fc"><i>76</i>&nbsp;                int[] powers = new int[1];</b>
+<b class="fc"><i>77</i>&nbsp;                powers[0] = p;</b>
+<i>78</i>&nbsp;
+<i>79</i>&nbsp;                //add currentGod to GodList
+<b class="fc"><i>80</i>&nbsp;                God currentGod = new God(name,numPowers,playersAllowed, description, powers);</b>
+<b class="fc"><i>81</i>&nbsp;                godList.add(currentGod);</b>
+<i>82</i>&nbsp;            }
+<i>83</i>&nbsp;
+<i>84</i>&nbsp;        }
+<b class="fc"><i>85</i>&nbsp;        return godList;</b>
+<i>86</i>&nbsp;    }
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;    /**
+<i>90</i>&nbsp;     * Initializes the DOM document and return the ArrayList obtained after the parsing.
+<i>91</i>&nbsp;     * @return an ArrayList of Gods
+<i>92</i>&nbsp;     */
+<i>93</i>&nbsp;    public ArrayList&lt;God&gt; readGods() {
+<b class="fc"><i>94</i>&nbsp;        Document document = buildGodDocument();</b>
+<b class="fc"><i>95</i>&nbsp;        return GodParser.parseGod(document);</b>
+<i>96</i>&nbsp;    }
+<i>97</i>&nbsp;
+<i>98</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 22:14</div>
+</div>
+</body>
+</html>

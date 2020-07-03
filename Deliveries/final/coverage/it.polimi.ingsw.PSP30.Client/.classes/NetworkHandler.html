@@ -1,0 +1,292 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: NetworkHandler</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.Client</a> ]
+</div>
+
+<h1>Coverage Summary for Class: NetworkHandler (it.polimi.ingsw.PSP30.Client)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">NetworkHandler</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 15)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 73)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.Client;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.IOException;
+<i>4</i>&nbsp;import java.io.ObjectInputStream;
+<i>5</i>&nbsp;import java.io.ObjectOutputStream;
+<i>6</i>&nbsp;import java.net.Socket;
+<i>7</i>&nbsp;
+<i>8</i>&nbsp;import it.polimi.ingsw.PSP30.Server.Server;
+<i>9</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.Message;
+<i>10</i>&nbsp;import it.polimi.ingsw.PSP30.Utils.QueueOfEvents;
+<i>11</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.PingMessage;
+<i>12</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.Disconnection;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;/**
+<i>15</i>&nbsp; * This class is used for communication with the Server.
+<i>16</i>&nbsp; * @version 1.0
+<i>17</i>&nbsp; */
+<i>18</i>&nbsp;public class NetworkHandler implements Runnable {
+<i>19</i>&nbsp;    private static Socket socket;
+<i>20</i>&nbsp;    private static ObjectInputStream input;
+<i>21</i>&nbsp;    private static ObjectOutputStream output;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    private final int serverPort;
+<i>24</i>&nbsp;    private final String serverAddress;
+<b class="nc"><i>25</i>&nbsp;    private boolean pingReceived = false;</b>
+<b class="nc"><i>26</i>&nbsp;    private static boolean isConnected=false;</b>
+<i>27</i>&nbsp;
+<i>28</i>&nbsp;    private Thread pingThread;
+<i>29</i>&nbsp;    private static Thread clientThread;
+<i>30</i>&nbsp;
+<b class="nc"><i>31</i>&nbsp;    protected static final QueueOfEvents incomingMessages= new QueueOfEvents();</b>
+<i>32</i>&nbsp;
+<b class="nc"><i>33</i>&nbsp;    public NetworkHandler(String serverAddress, int serverPort, Thread thread) {</b>
+<b class="nc"><i>34</i>&nbsp;        this.serverAddress = serverAddress;</b>
+<b class="nc"><i>35</i>&nbsp;        this.serverPort = serverPort;</b>
+<b class="nc"><i>36</i>&nbsp;        clientThread=thread;</b>
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * This method is executed on a new thread, it starts the connection with the server and when the connection is established it
+<i>41</i>&nbsp;     * distinguishes between ping or normal messages. If if a ping message is received, the received ping&#39;s flag is set to &quot;true&quot;
+<i>42</i>&nbsp;     * and then the ping thread is interrupted, otherwise the message is queued.
+<i>43</i>&nbsp;     */
+<i>44</i>&nbsp;    public void run() {
+<i>45</i>&nbsp;        try {
+<b class="nc"><i>46</i>&nbsp;            connect();</b>
+<b class="nc"><i>47</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>48</i>&nbsp;            setConnected(false);</b>
+<b class="nc"><i>49</i>&nbsp;            Client.addressError();</b>
+<b class="nc"><i>50</i>&nbsp;            clientThread.interrupt();</b>
+<i>51</i>&nbsp;            try{
+<b class="nc"><i>52</i>&nbsp;                Thread.sleep(10000);</b>
+<b class="nc"><i>53</i>&nbsp;            }catch (InterruptedException ignored){}</b>
+<b class="nc"><i>54</i>&nbsp;        }</b>
+<i>55</i>&nbsp;
+<b class="nc"><i>56</i>&nbsp;        if(isConnected){</b>
+<b class="nc"><i>57</i>&nbsp;            Runnable Ping = () -&gt; {</b>
+<b class="nc"><i>58</i>&nbsp;                int missedPings = 0;</b>
+<i>59</i>&nbsp;                do{
+<i>60</i>&nbsp;                    try {
+<b class="nc"><i>61</i>&nbsp;                        sendMessage(new PingMessage());</b>
+<b class="nc"><i>62</i>&nbsp;                        Thread.sleep(Server.CONNECTION_TIMEOUT);</b>
+<b class="nc"><i>63</i>&nbsp;                        if (!pingReceived) missedPings++;</b>
+<b class="nc"><i>64</i>&nbsp;                        if(missedPings &gt; 2) disconnect();</b>
+<b class="nc"><i>65</i>&nbsp;                    } catch (InterruptedException e) {</b>
+<b class="nc"><i>66</i>&nbsp;                        if (pingReceived){</b>
+<b class="nc"><i>67</i>&nbsp;                            setPingReceived(false);</b>
+<b class="nc"><i>68</i>&nbsp;                            missedPings = 0;</b>
+<i>69</i>&nbsp;                        }
+<b class="nc"><i>70</i>&nbsp;                    }</b>
+<b class="nc"><i>71</i>&nbsp;                }while(isConnected);</b>
+<i>72</i>&nbsp;            };
+<b class="nc"><i>73</i>&nbsp;            pingThread = new Thread(Ping);</b>
+<b class="nc"><i>74</i>&nbsp;            pingThread.start();</b>
+<i>75</i>&nbsp;
+<i>76</i>&nbsp;        }
+<b class="nc"><i>77</i>&nbsp;        while (isConnected){</b>
+<i>78</i>&nbsp;            try {
+<b class="nc"><i>79</i>&nbsp;                Message message= (Message) input.readObject();</b>
+<b class="nc"><i>80</i>&nbsp;                if(message!=null) receive(message);</b>
+<i>81</i>&nbsp;            }
+<b class="nc"><i>82</i>&nbsp;            catch (IOException | ClassNotFoundException e) {//error in communication</b>
+<b class="nc"><i>83</i>&nbsp;                disconnect();</b>
+<b class="nc"><i>84</i>&nbsp;            }</b>
+<i>85</i>&nbsp;        }
+<i>86</i>&nbsp;    }
+<i>87</i>&nbsp;
+<i>88</i>&nbsp;
+<i>89</i>&nbsp;    /**
+<i>90</i>&nbsp;     * Getter of parameter connected.
+<i>91</i>&nbsp;     * @return true if the client is connected to the server or false if it is not connected
+<i>92</i>&nbsp;     */
+<i>93</i>&nbsp;    public static boolean isConnected() {
+<b class="nc"><i>94</i>&nbsp;        return isConnected;</b>
+<i>95</i>&nbsp;    }
+<i>96</i>&nbsp;
+<i>97</i>&nbsp;    /**
+<i>98</i>&nbsp;     * Getter of parameter connected.
+<i>99</i>&nbsp;     * @param connected is the boolean that indicates if the client is connected to the server or not
+<i>100</i>&nbsp;     */
+<i>101</i>&nbsp;    public static void setConnected(boolean connected) {
+<b class="nc"><i>102</i>&nbsp;        Client.setDisconnected(!connected);</b>
+<b class="nc"><i>103</i>&nbsp;        isConnected = connected;</b>
+<i>104</i>&nbsp;    }
+<i>105</i>&nbsp;
+<i>106</i>&nbsp;    /**
+<i>107</i>&nbsp;     * This method establishes the connection and creates ObjectInput and ObjectOutput streams.
+<i>108</i>&nbsp;     * @throws Exception is thrown when the connection attempt has failed
+<i>109</i>&nbsp;     */
+<i>110</i>&nbsp;    public void connect() throws Exception {
+<b class="nc"><i>111</i>&nbsp;        socket=new Socket(getServerAddress(),getServerPort());</b>
+<b class="nc"><i>112</i>&nbsp;        input=new ObjectInputStream(socket.getInputStream());</b>
+<b class="nc"><i>113</i>&nbsp;        output=new ObjectOutputStream(socket.getOutputStream());</b>
+<b class="nc"><i>114</i>&nbsp;        setConnected(true);</b>
+<b class="nc"><i>115</i>&nbsp;        clientThread.interrupt();</b>
+<i>116</i>&nbsp;    }
+<i>117</i>&nbsp;
+<i>118</i>&nbsp;    /**
+<i>119</i>&nbsp;     *This class disconnect the client.
+<i>120</i>&nbsp;     */
+<i>121</i>&nbsp;    public static void disconnect(){
+<i>122</i>&nbsp;
+<b class="nc"><i>123</i>&nbsp;        incomingMessages.enqueueEvent(new Disconnection());</b>
+<b class="nc"><i>124</i>&nbsp;        clientThread.interrupt();</b>
+<i>125</i>&nbsp;        try {
+<b class="nc"><i>126</i>&nbsp;            close();</b>
+<b class="nc"><i>127</i>&nbsp;        } catch (Exception e) {</b>
+<b class="nc"><i>128</i>&nbsp;            e.printStackTrace();</b>
+<b class="nc"><i>129</i>&nbsp;        }</b>
+<i>130</i>&nbsp;    }
+<i>131</i>&nbsp;
+<i>132</i>&nbsp;    /**
+<i>133</i>&nbsp;     * This method manages the sending of a message.
+<i>134</i>&nbsp;     * @param message is the message which has to be sent
+<i>135</i>&nbsp;     */
+<i>136</i>&nbsp;    public static void sendMessage(Message message) {
+<i>137</i>&nbsp;        //noinspection SynchronizeOnNonFinalField
+<b class="nc"><i>138</i>&nbsp;        synchronized (output){</b>
+<i>139</i>&nbsp;            try {
+<b class="nc"><i>140</i>&nbsp;                output.flush();</b>
+<b class="nc"><i>141</i>&nbsp;                output.reset();</b>
+<b class="nc"><i>142</i>&nbsp;                output.writeObject(message);</b>
+<b class="nc"><i>143</i>&nbsp;            } catch (IOException e) {</b>
+<b class="nc"><i>144</i>&nbsp;                isConnected = false;</b>
+<b class="nc"><i>145</i>&nbsp;                disconnect();</b>
+<b class="nc"><i>146</i>&nbsp;            }</b>
+<b class="nc"><i>147</i>&nbsp;        }</b>
+<i>148</i>&nbsp;    }
+<i>149</i>&nbsp;
+<i>150</i>&nbsp;    /**
+<i>151</i>&nbsp;     * This method manages the reception of a message and the consequent queued of it.
+<i>152</i>&nbsp;     * @param receivedMessage is the incoming message
+<i>153</i>&nbsp;     */
+<i>154</i>&nbsp;    public void receive(Message receivedMessage) {
+<b class="nc"><i>155</i>&nbsp;        if (isPing(receivedMessage)) return;</b>
+<b class="nc"><i>156</i>&nbsp;        incomingMessages.enqueueEvent(receivedMessage);</b>
+<b class="nc"><i>157</i>&nbsp;        if (receivedMessage.getMessageID() == Message.DISCONNECTION_MESSAGE || receivedMessage.getMessageID() == Message.PLAYER_DISCONNECTED_ERROR) {</b>
+<i>158</i>&nbsp;            //clientThread.interrupt();
+<b class="nc"><i>159</i>&nbsp;            setConnected(false);</b>
+<i>160</i>&nbsp;        }
+<i>161</i>&nbsp;    }
+<i>162</i>&nbsp;
+<i>163</i>&nbsp;    /**
+<i>164</i>&nbsp;     * This method closes the socket.
+<i>165</i>&nbsp;     * @throws Exception when the socket failed to be closed
+<i>166</i>&nbsp;     */
+<i>167</i>&nbsp;    public static void close() throws Exception {
+<b class="nc"><i>168</i>&nbsp;        socket.close();</b>
+<b class="nc"><i>169</i>&nbsp;        setConnected(false);</b>
+<i>170</i>&nbsp;    }
+<i>171</i>&nbsp;
+<i>172</i>&nbsp;    /**
+<i>173</i>&nbsp;     * Getter of the server address.
+<i>174</i>&nbsp;     * @return the address of the server
+<i>175</i>&nbsp;     */
+<i>176</i>&nbsp;    public String getServerAddress() {
+<b class="nc"><i>177</i>&nbsp;        return serverAddress;</b>
+<i>178</i>&nbsp;    }
+<i>179</i>&nbsp;
+<i>180</i>&nbsp;    /**
+<i>181</i>&nbsp;     * Getter of the server port.
+<i>182</i>&nbsp;     * @return the port of the server
+<i>183</i>&nbsp;     */
+<i>184</i>&nbsp;    public int getServerPort() {
+<b class="nc"><i>185</i>&nbsp;        return serverPort;</b>
+<i>186</i>&nbsp;    }
+<i>187</i>&nbsp;
+<i>188</i>&nbsp;    /**
+<i>189</i>&nbsp;     * Setter parameter ping
+<i>190</i>&nbsp;     * @param ping value of the parameter
+<i>191</i>&nbsp;     */
+<i>192</i>&nbsp;    public void setPingReceived(boolean ping) {
+<b class="nc"><i>193</i>&nbsp;        pingReceived = ping;</b>
+<i>194</i>&nbsp;    }
+<i>195</i>&nbsp;
+<i>196</i>&nbsp;    /**
+<i>197</i>&nbsp;     * Method that manages the ping message
+<i>198</i>&nbsp;     * @param message value of the message
+<i>199</i>&nbsp;     * @return true if the message was a ping
+<i>200</i>&nbsp;     */
+<i>201</i>&nbsp;    public boolean isPing(Message message) {
+<b class="nc"><i>202</i>&nbsp;        if (message.getMessageID()==Message.PING_MESSAGE){</b>
+<b class="nc"><i>203</i>&nbsp;            setPingReceived(true);</b>
+<b class="nc"><i>204</i>&nbsp;            pingThread.interrupt();</b>
+<b class="nc"><i>205</i>&nbsp;            return true;</b>
+<i>206</i>&nbsp;        }
+<b class="nc"><i>207</i>&nbsp;        return false;</b>
+<i>208</i>&nbsp;    }
+<i>209</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 22:14</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,106 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: MoveRequest</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.Messages</a> ]
+</div>
+
+<h1>Coverage Summary for Class: MoveRequest (it.polimi.ingsw.PSP30.Messages)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">MoveRequest</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 3)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 7)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.Messages;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;/**
+<i>4</i>&nbsp; * Implements the message sending to player the possible moves of the selectedWorker
+<i>5</i>&nbsp; * and asks the coordinates of the destination space.
+<i>6</i>&nbsp; */
+<i>7</i>&nbsp;public class MoveRequest extends Message {
+<i>8</i>&nbsp;    private static final long serialVersionUID = 100015L;
+<i>9</i>&nbsp;    private final boolean[][] allowedMoves;
+<i>10</i>&nbsp;    private final boolean canChangeWorker;
+<i>11</i>&nbsp;
+<b class="nc"><i>12</i>&nbsp;    public MoveRequest(boolean[][] movesMatrix,boolean workerChangeAllowed){</b>
+<b class="nc"><i>13</i>&nbsp;        messageID = MOVE_REQUEST;</b>
+<b class="nc"><i>14</i>&nbsp;        allowedMoves = movesMatrix;</b>
+<b class="nc"><i>15</i>&nbsp;        canChangeWorker = workerChangeAllowed;</b>
+<b class="nc"><i>16</i>&nbsp;    }</b>
+<i>17</i>&nbsp;
+<i>18</i>&nbsp;    public boolean[][] getAllowedMoves() {
+<b class="nc"><i>19</i>&nbsp;        return allowedMoves;</b>
+<i>20</i>&nbsp;    }
+<i>21</i>&nbsp;
+<b class="nc"><i>22</i>&nbsp;    public boolean getChangeWorker(){return canChangeWorker;}</b>
+<i>23</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 22:14</div>
+</div>
+</body>
+</html>

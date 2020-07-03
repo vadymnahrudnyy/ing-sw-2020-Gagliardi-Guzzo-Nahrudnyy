@@ -1,0 +1,160 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: God</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.Model</a> ]
+</div>
+
+<h1>Coverage Summary for Class: God (it.polimi.ingsw.PSP30.Model)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">God</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (1/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (6/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    100%
+  </span>
+  <span class="absValue">
+    (12/ 12)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.Model;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import java.io.Serializable;
+<i>4</i>&nbsp;
+<i>5</i>&nbsp;/**
+<i>6</i>&nbsp; * God class creates all the God types with their respective attributes.
+<i>7</i>&nbsp; * @author Alessia Guzzo
+<i>8</i>&nbsp; */
+<i>9</i>&nbsp;
+<i>10</i>&nbsp;public class God implements Serializable {
+<i>11</i>&nbsp;
+<i>12</i>&nbsp;    private static final long serialVersionUID = 50005L;
+<i>13</i>&nbsp;    private final String name;
+<i>14</i>&nbsp;    private final int playersAllowed;
+<i>15</i>&nbsp;    private final String description;
+<i>16</i>&nbsp;    private final int[] powers;
+<i>17</i>&nbsp;    private final int numPowers;
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    public static final int ONLY_THREE_PLAYERS_ALLOWED = 2;
+<i>20</i>&nbsp;    public static final int THREE_AND_FOUR_PLAYERS_ALLOWED = 3;
+<i>21</i>&nbsp;    
+<i>22</i>&nbsp;    /**
+<i>23</i>&nbsp;     * Builds an instance of God class.
+<i>24</i>&nbsp;     * @param name is the God&#39;s name
+<i>25</i>&nbsp;     * @param numPowers states how many powers can be used by the God considered, some have only one power but others have two powers
+<i>26</i>&nbsp;     * @param playersAllowed states the number of players can be used with the God
+<i>27</i>&nbsp;     * @param description string for describe God&#39;s features
+<i>28</i>&nbsp;     * @param powers array that contains God&#39;s power, max two
+<i>29</i>&nbsp;     */
+<b class="fc"><i>30</i>&nbsp;    public God(String name, int numPowers, int playersAllowed, String description, int[] powers) {</b>
+<b class="fc"><i>31</i>&nbsp;        this.name = name;</b>
+<b class="fc"><i>32</i>&nbsp;        this.numPowers= numPowers;</b>
+<b class="fc"><i>33</i>&nbsp;        this.playersAllowed = playersAllowed;</b>
+<b class="fc"><i>34</i>&nbsp;        this.description = description;</b>
+<b class="fc"><i>35</i>&nbsp;        this.powers = powers;</b>
+<b class="fc"><i>36</i>&nbsp;    }</b>
+<i>37</i>&nbsp;
+<i>38</i>&nbsp;    /**
+<i>39</i>&nbsp;     * Setter of the parameter name
+<i>40</i>&nbsp;     * @return god&#39;s name
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    public String getName() {
+<b class="fc"><i>43</i>&nbsp;        return name;</b>
+<i>44</i>&nbsp;    }
+<i>45</i>&nbsp;
+<i>46</i>&nbsp;    /**
+<i>47</i>&nbsp;     * Getter of the parameter playersAllowed
+<i>48</i>&nbsp;     * @return the value playerAllowed
+<i>49</i>&nbsp;     */
+<i>50</i>&nbsp;    public int getPlayersAllowed() {
+<b class="fc"><i>51</i>&nbsp;        return playersAllowed;</b>
+<i>52</i>&nbsp;    }
+<i>53</i>&nbsp;
+<i>54</i>&nbsp;    /**
+<i>55</i>&nbsp;     * Getter of the parameter description
+<i>56</i>&nbsp;     * @return god&#39;s description
+<i>57</i>&nbsp;     */
+<i>58</i>&nbsp;    public String getDescription() {
+<b class="fc"><i>59</i>&nbsp;        return description;</b>
+<i>60</i>&nbsp;    }
+<i>61</i>&nbsp;
+<i>62</i>&nbsp;    /**
+<i>63</i>&nbsp;     * Getter of the parameter powers
+<i>64</i>&nbsp;     * @return the number of powers of the god
+<i>65</i>&nbsp;     */
+<i>66</i>&nbsp;    public int[] getPowers() {
+<b class="fc"><i>67</i>&nbsp;        return powers;</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    /**
+<i>71</i>&nbsp;     * Getter of the parameter powers[]
+<i>72</i>&nbsp;     * @param n number of the god&#39;s power
+<i>73</i>&nbsp;     * @return powers[n] of the god
+<i>74</i>&nbsp;     */
+<b class="fc"><i>75</i>&nbsp;    public int getSinglePower(int n) { return powers[n]; }</b>
+<i>76</i>&nbsp;
+<i>77</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 22:14</div>
+</div>
+</body>
+</html>

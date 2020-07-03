@@ -1,0 +1,167 @@
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html id="htmlId">
+<head>
+  <title>Coverage Report :: LoginController</title>
+  <style type="text/css">
+    @import "../../.css/coverage.css";
+  </style>
+</head>
+
+<body>
+<div class="header"></div>
+
+<div class="content">
+<div class="breadCrumbs">
+    [ <a href="../../index.html">all classes</a> ]
+    [ <a href="../index.html">it.polimi.ingsw.PSP30.View.Gui</a> ]
+</div>
+
+<h1>Coverage Summary for Class: LoginController (it.polimi.ingsw.PSP30.View.Gui)</h1>
+
+<table class="coverageStats">
+<tr>
+  <th class="name">Class</th>
+<th class="coverageStat 
+">
+  Class, %
+</th>
+<th class="coverageStat 
+">
+  Method, %
+</th>
+<th class="coverageStat 
+">
+  Line, %
+</th>
+</tr>
+<tr>
+  <td class="name">LoginController</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 1)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 6)
+  </span>
+</td>
+<td class="coverageStat">
+  <span class="percent">
+    0%
+  </span>
+  <span class="absValue">
+    (0/ 25)
+  </span>
+</td>
+</tr>
+
+</table>
+
+<br/>
+<br/>
+
+
+<div class="sourceCode"><i>1</i>&nbsp;package it.polimi.ingsw.PSP30.View.Gui;
+<i>2</i>&nbsp;
+<i>3</i>&nbsp;import it.polimi.ingsw.PSP30.Client.Client;
+<i>4</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.NumPlayersResponse;
+<i>5</i>&nbsp;import it.polimi.ingsw.PSP30.Messages.UsernameResponse;
+<i>6</i>&nbsp;
+<i>7</i>&nbsp;import javafx.fxml.FXML;
+<i>8</i>&nbsp;import javafx.scene.control.Alert;
+<i>9</i>&nbsp;import javafx.scene.control.TextField;
+<i>10</i>&nbsp;import javafx.scene.image.ImageView;
+<i>11</i>&nbsp;import javafx.scene.input.MouseEvent;
+<i>12</i>&nbsp;
+<i>13</i>&nbsp;
+<i>14</i>&nbsp;/**
+<i>15</i>&nbsp; * Controller for LoginScene.fxml and Home.fxml.
+<i>16</i>&nbsp; */
+<b class="nc"><i>17</i>&nbsp;public class LoginController {</b>
+<i>18</i>&nbsp;
+<i>19</i>&nbsp;    @FXML public ImageView usernameNext;
+<i>20</i>&nbsp;    @FXML public ImageView nextAddress;
+<i>21</i>&nbsp;    @FXML private TextField addressField,usernameField;
+<i>22</i>&nbsp;
+<i>23</i>&nbsp;    /**
+<i>24</i>&nbsp;     * Saves and checks the address in input by the player.
+<i>25</i>&nbsp;     * @param event mouse clicked of the Next button.
+<i>26</i>&nbsp;     */
+<i>27</i>&nbsp;    public void handleAddress(MouseEvent event) {
+<b class="nc"><i>28</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>29</i>&nbsp;        String address=addressField.getText();</b>
+<b class="nc"><i>30</i>&nbsp;        address = address.trim();</b>
+<b class="nc"><i>31</i>&nbsp;        if(address.isEmpty()) showEmptyAddressAlert();</b>
+<i>32</i>&nbsp;        else {
+<b class="nc"><i>33</i>&nbsp;            nextAddress.setDisable(true);</b>
+<b class="nc"><i>34</i>&nbsp;            Client.setServerAddress(address);</b>
+<b class="nc"><i>35</i>&nbsp;            Client.interruptClientThread();</b>
+<i>36</i>&nbsp;        }
+<i>37</i>&nbsp;    }
+<i>38</i>&nbsp;
+<i>39</i>&nbsp;    /**
+<i>40</i>&nbsp;     * Alert for empty address.
+<i>41</i>&nbsp;     */
+<i>42</i>&nbsp;    private void showEmptyAddressAlert() {
+<b class="nc"><i>43</i>&nbsp;        Alert alert = new Alert(Alert.AlertType.INFORMATION);</b>
+<b class="nc"><i>44</i>&nbsp;        alert.setTitle(&quot;Address Null&quot;);</b>
+<b class="nc"><i>45</i>&nbsp;        alert.setHeaderText(null);</b>
+<b class="nc"><i>46</i>&nbsp;        alert.setContentText(&quot;Insert an address first!&quot;);</b>
+<b class="nc"><i>47</i>&nbsp;        alert.showAndWait();</b>
+<i>48</i>&nbsp;    }
+<i>49</i>&nbsp;
+<i>50</i>&nbsp;    /**
+<i>51</i>&nbsp;     * Manages the choice of three players.
+<i>52</i>&nbsp;     * @param event mouse click on the image of the three players.
+<i>53</i>&nbsp;     */
+<i>54</i>&nbsp;    public void handleThreePlayerButton(MouseEvent event) {
+<b class="nc"><i>55</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>56</i>&nbsp;        Client.setNumPlayer(3);</b>
+<b class="nc"><i>57</i>&nbsp;        Client.sendMessageToServer(new NumPlayersResponse(3));</b>
+<i>58</i>&nbsp;    }
+<i>59</i>&nbsp;
+<i>60</i>&nbsp;    /**
+<i>61</i>&nbsp;     * Manages the choice of two players.
+<i>62</i>&nbsp;     * @param event mouse click on the image of the two players.
+<i>63</i>&nbsp;     */
+<i>64</i>&nbsp;    public void handleTwoPlayerButton(MouseEvent event) {
+<b class="nc"><i>65</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>66</i>&nbsp;        Client.setNumPlayer(2);</b>
+<b class="nc"><i>67</i>&nbsp;        Client.sendMessageToServer(new NumPlayersResponse(2));</b>
+<i>68</i>&nbsp;    }
+<i>69</i>&nbsp;
+<i>70</i>&nbsp;    /**
+<i>71</i>&nbsp;     * Manages the insertion of the username.
+<i>72</i>&nbsp;     * @param event mouse click on next button.
+<i>73</i>&nbsp;     */
+<i>74</i>&nbsp;    public void handleUsernameButton(MouseEvent event){
+<b class="nc"><i>75</i>&nbsp;        event.consume();</b>
+<b class="nc"><i>76</i>&nbsp;        String username = usernameField.getText().trim().toUpperCase();</b>
+<b class="nc"><i>77</i>&nbsp;        if(username.isEmpty()) showEmptyAddressAlert();</b>
+<i>78</i>&nbsp;        else {
+<b class="nc"><i>79</i>&nbsp;            Client.setUsername(username);</b>
+<b class="nc"><i>80</i>&nbsp;            Client.sendMessageToServer(new UsernameResponse(username));</b>
+<b class="nc"><i>81</i>&nbsp;            usernameNext.setDisable(true);</b>
+<i>82</i>&nbsp;        }
+<i>83</i>&nbsp;    }
+<i>84</i>&nbsp;}
+</div>
+</div>
+
+<div class="footer">
+    
+    <div style="float:right;">generated on 2020-07-03 22:14</div>
+</div>
+</body>
+</html>
