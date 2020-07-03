@@ -16,7 +16,6 @@ import it.polimi.ingsw.PSP30.Messages.*;
 
 public class Client {
     private static String serverAddress=null;
-    private static QueueOfEvents incomingMessages= new QueueOfEvents();
     public static NetworkHandler networkHandler;
     private static final int SOCKET_PORT = 50000;
     private static Scanner input;
@@ -67,8 +66,7 @@ public class Client {
         network.start();
         try{
             Thread.sleep(START_CONNECTION_TIMEOUT);
-        }catch (InterruptedException e) {
-            System.out.println("Connection in progress...");
+        }catch (InterruptedException ignored) {
         }
     }
 

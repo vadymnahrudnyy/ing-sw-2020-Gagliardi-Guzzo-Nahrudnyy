@@ -1,5 +1,6 @@
 package it.polimi.ingsw.PSP30.Server;
 
+import java.io.File;
 import java.util.ArrayList;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -22,14 +23,15 @@ public class PowerParser {
      * This method builds a new DOM Document object using the configuration file parsed
      * @return the DOM document created
      */
-    public static Document buildPowerDocument() {
+    public Document buildPowerDocument() {
 
         try{
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder pBuilder = factory.newDocumentBuilder();
             //(InputSource containing the content to be parsed) - returns a new DOM Document object.
-            return pBuilder.parse("./src/main/resources/configurationfilepower.xml");
+            //return pBuilder.parse("./src/main/resources/configurationfilepower.xml");
+            return pBuilder.parse(String.valueOf(this.getClass().getClassLoader().getResource("configurationfilepower.xml")));
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -91,8 +93,9 @@ public class PowerParser {
      * This method initialize the DOM document and return the ArrayList obtained after the parsing
      * @return an ArrayList of Powers
      */
-    public static ArrayList<Power> readPowers(){
-        Document pDocument = PowerParser.buildPowerDocument();
+    public ArrayList<Power> readPowers(){
+        PowerParser ba = new PowerParser();
+        Document pDocument = ba.buildPowerDocument();
         return PowerParser.parsePower(pDocument);
     }
 

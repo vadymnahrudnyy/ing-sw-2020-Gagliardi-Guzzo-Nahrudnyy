@@ -20,13 +20,14 @@ public class GodParser {
      * This method builds a new DOM Document object using the configuration file parsed
      * @return the DOM document created
      */
-    public static Document buildGodDocument() {
+    public Document buildGodDocument() {
 
         try{
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder gBuilder = factory.newDocumentBuilder();
-            return gBuilder.parse("./src/main/resources/configurationfilegod.xml");
+            //return gBuilder.parse("./src/main/resources/configurationfilegod.xml");
+            return gBuilder.parse(String.valueOf(this.getClass().getClassLoader().getResource("configurationfilegod.xml")));
 
         } catch(Exception e) {
             e.printStackTrace();
@@ -89,8 +90,8 @@ public class GodParser {
      * This method initialize the DOM document and return the ArrayList obtained after the parsing
      * @return an ArrayList of Gods
      */
-    public static ArrayList<God> readGods() {
-        Document document = GodParser.buildGodDocument();
+    public ArrayList<God> readGods() {
+        Document document = buildGodDocument();
         return GodParser.parseGod(document);
     }
 

@@ -31,7 +31,6 @@ public class VirtualView implements Runnable {
     private final QueueOfEvents incomingMessages;
     private  Message message;
 
-
     /**
      * Constructor of VirtualView class instance.
      * @param clientSocket the socket of the user connected to the server.
@@ -57,6 +56,7 @@ public class VirtualView implements Runnable {
 
             askNumPlayers();
             askUsername();
+
             while (connected) receiveMessage();
         } catch (SocketException e) {
             System.out.println(Thread.currentThread() + " User " + client.getInetAddress() + " disconnected");
@@ -115,8 +115,9 @@ public class VirtualView implements Runnable {
                 receiveMessage();
             } while (message.getMessageID() != Message.USERNAME_RESPONSE);
             setUsername(((UsernameResponse) message).getUsername());
+
             serverLobby.addPlayerToLobby(numPlayers, this, username, virtualViewThread);
-        } while (!isInLobby);
+        } while (!isInLobby && !isInGame);
     }
 
     /**
@@ -161,7 +162,7 @@ public class VirtualView implements Runnable {
                 output.reset();
                 output.writeObject(message);
         } catch (IOException e) {
-                if(connected) System.out.println("error in sending message to " + username);
+                if(connected) System.out.println(Thread.currentThread() + " Error in sending message to " + username);
             }
         }
     }

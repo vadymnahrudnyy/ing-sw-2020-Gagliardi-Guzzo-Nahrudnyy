@@ -182,7 +182,6 @@ public class Lobby {
                  System.out.println(Thread.currentThread() + " A player with username: " + username + " is already waiting in three players lobby");
              }
          }
-         checkReady();
          startGame();
     }
 
@@ -191,6 +190,7 @@ public class Lobby {
      * @since version 2.2
      */
     private synchronized void startGame(){
+        checkReady();
         GameController newGame;
         Thread newGameThread;
         if (getTwoPlayersLobbyReady()) {

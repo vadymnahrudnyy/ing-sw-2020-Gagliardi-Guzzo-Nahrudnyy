@@ -23,8 +23,8 @@ public class Server {
 
     private static final Lobby serverLobby = new Lobby ();
 
-    private static final ArrayList<God> godsList = GodParser.readGods();
-    private static final ArrayList<Power> powerList = PowerParser.readPowers();
+    private static final ArrayList<God> godsList = new GodParser().readGods();
+    private static final ArrayList<Power> powerList = new PowerParser().readPowers();
 
 
     public static void main(String[] args) {
