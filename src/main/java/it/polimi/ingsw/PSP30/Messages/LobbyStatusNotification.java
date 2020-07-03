@@ -13,8 +13,9 @@ public class LobbyStatusNotification extends Message{
     private final ArrayList<String> playersInLobby;
     /**
      * Builder of a new LobbyStatus message
-     * @param Lobby indicates in which lobby the player is
-     * @param SlotOccupation indicates the actual slots occupied in the selected lobby
+     * @param Lobby Indicates in which lobby the player is.
+     * @param SlotOccupation Indicates the actual slots occupied in the selected lobby.
+     * @param players Usernames of the players in the lobby.
      */
     public LobbyStatusNotification(int Lobby,int SlotOccupation, ArrayList<String> players){
         playersInLobby=players;

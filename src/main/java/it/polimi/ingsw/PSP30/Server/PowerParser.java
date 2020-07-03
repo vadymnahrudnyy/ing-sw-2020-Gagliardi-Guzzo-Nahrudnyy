@@ -94,8 +94,8 @@ public class PowerParser {
      * @return an ArrayList of Powers
      */
     public ArrayList<Power> readPowers(){
-        PowerParser ba = new PowerParser();
-        Document pDocument = ba.buildPowerDocument();
+        PowerParser parser = new PowerParser();
+        Document pDocument = parser.buildPowerDocument();
         return PowerParser.parsePower(pDocument);
     }
 

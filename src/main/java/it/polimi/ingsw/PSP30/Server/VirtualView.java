@@ -33,7 +33,9 @@ public class VirtualView implements Runnable {
 
     /**
      * Constructor of VirtualView class instance.
-     * @param clientSocket the socket of the user connected to the server.
+     * @param clientSocket The socket of the user connected to the server.
+     * @param lobby Server Lobby
+     * @throws IOException When an error occurs in creating the socket or input-output streams.
      */
     public VirtualView(Socket clientSocket,Lobby lobby) throws IOException {
         serverLobby = lobby;
@@ -124,6 +126,7 @@ public class VirtualView implements Runnable {
      * Method used to read a message(if there is one) from the input stream  and interrupts the controller thread.
      * In case a socket error occurs, usually meaning the player disconnected, enqueues in the message queue, the disconnection message
      * which will be handled by the controller during the first request of interaction from the player.
+     * @throws SocketException When Socket error occurs.
      */
     private void receiveMessage() throws SocketException {
         try{

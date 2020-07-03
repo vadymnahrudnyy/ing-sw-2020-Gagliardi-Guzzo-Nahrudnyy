@@ -1,22 +1,25 @@
 package it.polimi.ingsw.PSP30.View.Gui;
 
+import it.polimi.ingsw.PSP30.View.GUI;
+import it.polimi.ingsw.PSP30.Model.God;
 import it.polimi.ingsw.PSP30.Client.Client;
 import it.polimi.ingsw.PSP30.Messages.ChoseGodResponse;
 import it.polimi.ingsw.PSP30.Messages.GodsListResponse;
-import it.polimi.ingsw.PSP30.Model.God;
-import it.polimi.ingsw.PSP30.View.GUI;
+
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.ToggleButton;
-import javafx.scene.control.ToggleGroup;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.*;
+import javafx.scene.control.ToggleGroup;
+import javafx.scene.control.ToggleButton;
+
+import java.util.Objects;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Objects;
+import javafx.scene.layout.*;
+
 
 
 public class GodsController {
@@ -44,6 +47,7 @@ public class GodsController {
     /**
      * This method shows the list of all the Gods usable during the game and allows the first player to choose the Gods he wants for the current match.
      * The number of the cards selected has to be equal to the number of players chosen.
+     * @throws IOException when an error loading FXML occurs.
      */
     public void showGodSelector() throws IOException {
         StackPane godSelectionPane = FXMLLoader.load(Objects.requireNonNull(GodsController.class.getClassLoader().getResource("Fxml/Gods.fxml")));
@@ -66,7 +70,6 @@ public class GodsController {
      */
     public void showSingleGodSelector(ArrayList<God> gameGods,ArrayList<God> chosenGods) throws IOException {
         God tempGod;
-        //buttonsSingleGod = new ArrayList<>();
         StackPane singleGodSelectionPane = FXMLLoader.load(Objects.requireNonNull(GodsController.class.getClassLoader().getResource("Fxml/ChooseGod.fxml")));
         singleGodBorderPane=(BorderPane) singleGodSelectionPane.getChildren().get(1);
         vBox=(VBox) singleGodBorderPane.getRight();
@@ -397,7 +400,7 @@ public class GodsController {
     }
 
     public void selected(MouseEvent event) {
-
+        event.consume();
     }
 
     /**
@@ -406,6 +409,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Apollo card
      */
     public void selectApollo(MouseEvent event){
+        event.consume();
         if (apollo.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Apollo");
@@ -421,6 +425,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Artemis card
      */
     public void selectArtemis(MouseEvent event){
+        event.consume();
         if (artemis.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Artemis");
@@ -436,6 +441,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Athena card
      */
     public void selectAthena(MouseEvent event){
+        event.consume();
         if (athena.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Athena");
@@ -451,6 +457,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Atlas card
      */
     public void selectAtlas(MouseEvent event){
+        event.consume();
         if (atlas.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Atlas");
@@ -466,6 +473,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Demeter card
      */
     public void selectDemeter(MouseEvent event){
+        event.consume();
         if (demeter.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Demeter");
@@ -481,6 +489,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Hephaestus card
      */
     public void selectHephaestus(MouseEvent event){
+        event.consume();
         if (hephaestus.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Hephaestus");
@@ -496,6 +505,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Minotaur card
      */
     public void selectMinotaur(MouseEvent event){
+        event.consume();
         if (minotaur.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Minotaur");
@@ -511,6 +521,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Pan card
      */
     public void selectPan(MouseEvent event){
+        event.consume();
         if (pan.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Pan");
@@ -526,6 +537,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Prometheus card
      */
     public void selectPrometheus(MouseEvent event){
+        event.consume();
         if (prometheus.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Prometheus");
@@ -541,6 +553,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Ares card
      */
     public void selectAres(MouseEvent event){
+        event.consume();
         if (ares.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Ares");
@@ -556,6 +569,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Chronus card
      */
     public void selectChronus(MouseEvent event){
+        event.consume();
         if (chronus.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Chronus");
@@ -571,6 +585,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Hera card
      */
     public void selectHera(MouseEvent event){
+        event.consume();
         if (hera.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Hera");
@@ -587,6 +602,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Hestia card
      */
     public void selectHestia(MouseEvent event){
+        event.consume();
         if (hestia.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Hestia");
@@ -602,6 +618,7 @@ public class GodsController {
      * @param event mouse pointer have clicked on Zeus card
      */
     public void selectZeus(MouseEvent event){
+        event.consume();
         if (zeus.isSelected()){
             if (selectedGods.size() < Client.getNumPlayers()) {
                 selectedGods.add("Zeus");
@@ -612,23 +629,29 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of the firstGod card by the mouse
+     * This method manages the selection of the firstGod card by the mouse.
+     * @param event MouseClick.
      */
     public void firstGodSelected(MouseEvent event){
+        event.consume();
         if (firstGod.isSelected()) selectedGod = selectedGods.get(0);
     }
 
     /**
-     * This method manages the selection of the secondGod card by the mouse
+     * This method manages the selection of the secondGod card by the mouse.
+     * @param event MouseClick.
      */
     public void secondGodSelected(MouseEvent event){
+        event.consume();
         if (secondGod.isSelected()) selectedGod = selectedGods.get(1);
     }
 
     /**
      * This method manages the selection of the thirdGod card by the mouse
+     * @param event MouseClick.
      */
     public void thirdGodSelected(MouseEvent event){
+        event.consume();
         if (thirdGod.isSelected()) selectedGod=selectedGods.get(2);
     }
 
@@ -638,6 +661,7 @@ public class GodsController {
      * @param event mouse click on the godSelectionButton
      */
     public void handleGodSelectionButton(MouseEvent event){
+        event.consume();
         if (selectedGods.size() == Client.getNumPlayers()){
             godSelectionButton.setDisable(true);
             Client.sendMessageToServer(new GodsListResponse(selectedGods));
@@ -649,6 +673,7 @@ public class GodsController {
      * @param event mouse click on the selectSingleGod
      */
     public void handleSingleGodSelectionButton (MouseEvent event){
+        event.consume();
         selectSingleGod.setDisable(true);
         if(firstGod.isSelected()||secondGod.isSelected()|| thirdGod.isSelected()) Client.sendMessageToServer(new ChoseGodResponse(selectedGod));
         else selectSingleGod.setDisable(false);

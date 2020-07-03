@@ -55,7 +55,8 @@ public class QueueOfEvents {
     }
 
     /**
-     * This method deletes the last inserted node of the queue.
+     * This method dequeue the first inserted node in message queue.
+     * @return the first message of the queue.
      */
     public Message dequeueEvent() throws NoSuchElementException {
         if (isEmpty()) return null;

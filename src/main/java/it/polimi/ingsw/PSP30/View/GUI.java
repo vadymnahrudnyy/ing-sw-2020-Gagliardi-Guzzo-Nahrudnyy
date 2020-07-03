@@ -79,7 +79,8 @@ public class GUI implements UI,Runnable{
 
 
     /**
-     * This method runs when the user click on the Info&Rules button. It creates a new stages on which it loads the first scene.
+     * This method runs when the user click on the "Info and Rules" button.
+     * It creates a new stages on which it loads the first scene.
      * @throws IOException when an error occurred in loading fxml file
      */
     public void showRules() throws IOException {
@@ -104,7 +105,7 @@ public class GUI implements UI,Runnable{
     }
 
     /**
-     *This method shows the "Power Rules" of the Info&Rules page and manages mouse click on next button.
+     *This method shows the "Power Rules" of the Info and Rules page and manages mouse click on next button.
      * @param stage stage in which is loaded the scene
      * @throws IOException when an error occurred in loading fxml file
      */
@@ -114,7 +115,9 @@ public class GUI implements UI,Runnable{
 
 
     /**
-     * This method show the glossary of the Info&Rules page and manages mouse click on next and back button.
+     * This method show the glossary of the "Info and Rules" page and manages mouse click on next and back button.
+     * @param stage javaFX stage.
+     * @throws IOException In case FXML loading fails.
      */
     public void rulesScene2(Stage stage) throws IOException {
         StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene2.fxml"));
@@ -141,10 +144,12 @@ public class GUI implements UI,Runnable{
     }
 
     /**
-     * This method shows the "How to Play" of the Info&Rules page and manages mouse click on back button.
+     * This method shows the "How to Play" of the Info and Rules page and manages mouse click on back button.
+     * @param stage javaFX stage
+     * @throws IOException In case FXML loading fails.
      */
     public void rulesScene3(Stage stage) throws IOException {
-        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesScene3.fxml"));
+        StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource("Fxml/RulesScene3.fxml")));
         backButton1=(ImageView) stackPane.getChildren().get(1);
         backButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {

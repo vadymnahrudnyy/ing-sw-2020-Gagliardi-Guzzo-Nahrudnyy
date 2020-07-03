@@ -5,7 +5,7 @@ import it.polimi.ingsw.PSP30.View.GUI;
 import it.polimi.ingsw.PSP30.Messages.*;
 
 
-import javafx.application.Platform;
+
 import javafx.fxml.FXML;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -22,7 +22,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
 import it.polimi.ingsw.PSP30.Client.Client;
-import javafx.stage.WindowEvent;
 
 
 public class BoardController{
@@ -116,6 +115,7 @@ public class BoardController{
     /**
      * Method used to draw the game board on the screen. For every cell the corresponding
      * parameters are checked and used to set the corresponding images.
+     * @param board GameBoard.
      */
     protected void buildBoard(IslandBoard board){
         for(int X = 0; X < IslandBoard.TABLE_DIMENSION;X++)
@@ -187,16 +187,17 @@ public class BoardController{
 
 
     /**
-     * This method is used to set the value of moveRequest variable
+     * This method is used to set the value of moveRequest variable.
+     * @param value New value of moveRequest.
      */
     public void setMoveRequest(boolean value){
         moveRequest = value;
     }
 
     /**
-     * This method shows the pane for the choice of the beginning player
-     * @param players array which contains the names of the players
-     * @throws IOException when an error occurred in loading fxml file
+     * This method shows the pane for the choice of the beginning player.
+     * @param players array which contains the names of the players.
+     * @throws IOException when an error occurred in loading fxml file.
      */
     public void showSelectFirstPlayer(Player[] players) throws IOException {
         selectPlayerMainPane = FXMLLoader.load(Objects.requireNonNull(BoardController.class.getClassLoader().getResource("Fxml/StartPlayerSelection.fxml")));
@@ -423,15 +424,16 @@ public class BoardController{
     }
 
     /**
-     * This method shows the "Using God Power" of the Info&Rules page and manages mouse click on next button
-     * @param mouseEvent mouse click on the Info&Rules button
+     * This method shows the "Using God Power" of the Info and Rules page and manages mouse click on next button
+     * @param mouseEvent mouse click on the Info and Rules button
      * @throws IOException when an error occurred in loading fxml file
      */
     public void showInfoPane(MouseEvent mouseEvent) throws IOException {
+        mouseEvent.consume();
         rulesStage=new Stage();
         rulesStage.initModality(Modality.APPLICATION_MODAL);
         rulesStage.initOwner(GUI.getGameStage());
-        StackPane stackPane = FXMLLoader.load(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard1.fxml"));
+        StackPane stackPane = FXMLLoader.load(Objects.requireNonNull(LoginController.class.getClassLoader().getResource("Fxml/RulesBoard1.fxml")));
         nextButton1=(ImageView) stackPane.getChildren().get(1);
         nextButton1.addEventHandler(MouseEvent.MOUSE_CLICKED, event -> {
             try {
@@ -446,7 +448,7 @@ public class BoardController{
     }
 
     /**
-     * This method shows the "Power Rules" of the Info&Rules page and manages mouse click on next button
+     * This method shows the "Power Rules" of the Info and Rules page and manages mouse click on next button
      * @throws IOException when an error occurred in loading fxml file
      */
     public void rulesScene1() throws IOException {
@@ -464,7 +466,7 @@ public class BoardController{
     }
 
     /**
-     * This method shows the glossary of the Info&Rules page and manages mouse click on next and back button
+     * This method shows the glossary of the Info and Rules page and manages mouse click on next and back button
      * @throws IOException when an error occurred in loading fxml file
      */
     public void rulesScene2() throws IOException {
@@ -491,7 +493,7 @@ public class BoardController{
     }
 
     /**
-     * This method shows the "How to Play" of the Info&Rules page and manages mouse click on back button
+     * This method shows the "How to Play" of the Info and Rules page and manages mouse click on back button
      * @throws IOException when an error occurred in loading fxml file
      */
     public void rulesScene3() throws IOException {

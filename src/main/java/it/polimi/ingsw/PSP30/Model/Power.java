@@ -33,6 +33,8 @@ public class Power {
 
 
     /**
+     * Power object build.
+     * @param powerID ID of the power.
      * @param isActive states if the power have to be activated by the player
      * @param usableOnPlayerTurn indicates if the power can be used during the player's turn
      * @param validOnOpponentTurn flag that states if the power can be activated during the opponent's turn

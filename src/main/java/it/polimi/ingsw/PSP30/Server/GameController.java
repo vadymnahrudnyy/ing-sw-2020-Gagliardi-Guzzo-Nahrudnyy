@@ -64,6 +64,9 @@ class GameController implements Runnable {
         System.out.println(Thread.currentThread()+" game finished! Thread terminated");
     }
 
+    /**
+     * Disconnects all the players of the game.
+     */
     private void allPlayersDisconnect(){
         for (VirtualView client : virtualViewsList) {
             client.sendMessage(new PlayerDisconnectedError());
@@ -78,7 +81,8 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to call Setup method before starting the game itself
+     * Setup of the game before starting it.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void setupPhase() throws PlayerDisconnectedException {
         sendStartGameMessage();
@@ -89,7 +93,8 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used for handling a player's turn and eventually Ares power.
+     * Handles player's turn using corresponding method for different phases.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void TurnHandle() throws PlayerDisconnectedException {
         currentPlayer = currentGame.getCurrentPlayer();
@@ -119,7 +124,7 @@ class GameController implements Runnable {
     }
 
     /**
-     *  Method used to initialize the flags used during the turn to their default values.
+     *  Initializes the flags used during the turn to their default values.
      */
     private void turnInitializer(){
         currentGame.setCurrentPhase(TurnPhase.START);
@@ -136,6 +141,7 @@ class GameController implements Runnable {
     /**
      * Method implementing the Move Phase of the turn.
      * Selects the worker to move and then makes the moves itself.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void Move() throws PlayerDisconnectedException {
         moveMade = false;
@@ -169,6 +175,7 @@ class GameController implements Runnable {
 
     /**
      * Method implementing the Build Phase of the turn.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void Build() throws PlayerDisconnectedException {
         boolean validBuildReceived;
@@ -298,6 +305,7 @@ class GameController implements Runnable {
      * Method used to build in the space indicated by the player.
      * @param client virtual view of the current player.
      * @param toBuild the space to build into.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void buildInSpace(VirtualView client,Space toBuild) throws PlayerDisconnectedException {
         if (toBuild.getHeight() < (Space.DOME_LEVEL - 1) && currentPlayerHasPower(Power.BUILD_DOME_EVERYWHERE_POWER)){
@@ -323,6 +331,7 @@ class GameController implements Runnable {
     /**
      * Method used to choose the gods before start playing.It asks the first player the list of gods to use, then the others chose their god card
      * and the first player automatically receives the remained god card.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void chooseGods() throws PlayerDisconnectedException {
         System.out.println(Thread.currentThread() + " Choosing gods");
@@ -363,6 +372,7 @@ class GameController implements Runnable {
      * @param firstVirtualView virtual view of the first player.
      * @param gameGods empty List where the gods will be inserted.
      * @return a boolean value. True if the player has chosen the gods correctly.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private boolean correctGodChose(VirtualView firstVirtualView,ArrayList<God> gameGods) throws PlayerDisconnectedException {
         gameGods.clear();
@@ -399,6 +409,7 @@ class GameController implements Runnable {
     /**
      * Method used to ask the Challenger the username of the start player.
      * If invalid input is detected it sends an error to the client.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void chooseStartPlayer() throws PlayerDisconnectedException {
         boolean validUsernameReceived = false;
@@ -416,6 +427,7 @@ class GameController implements Runnable {
     }
     /**
      * Used for asking the players the starter position of their workers.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void chooseWorkerPositions() throws PlayerDisconnectedException {
         currentGame.setCurrentPlayer(currentGame.getStarterPlayer());
@@ -691,7 +703,8 @@ class GameController implements Runnable {
     /**
      * Method used to delete a player from the game. In case of two players game, the remained players wins the game,
      * so the victory method is called in order to notify the winner.
-     * @param playerToRemove player to remove from the game
+     * @param playerToRemove Player to remove from the game.
+     * @param clientToRemove Virtual view of the player to remove.
      */
     protected void removePlayerFromGame(Player playerToRemove,VirtualView clientToRemove) {
         if (playerToRemove.getGod().getSinglePower(0) == Power.OPPONENTS_NOT_MOVE_UP_POWER) currentGame.setAthenaMovedUp(false); //disable Athena Power
@@ -742,6 +755,7 @@ class GameController implements Runnable {
      * If the message is a disconnection, 
      * @param senderVirtualView virtual view of the client from who the controller needs a message
      * @param messageIDs list of accepted messages.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void waitValidMessage(VirtualView senderVirtualView,int[] messageIDs) throws PlayerDisconnectedException {
         boolean receivedValidMessage;
@@ -848,6 +862,7 @@ class GameController implements Runnable {
     /**
      * Method used to implement Artemis power.
      * @param previousPosition the start position during first move of the worker selected by the player.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void handleArtemisPower(Space previousPosition) throws PlayerDisconnectedException {
         startSpace = moveWorker.getWorkerPosition();
@@ -876,6 +891,7 @@ class GameController implements Runnable {
     /**
      * Method used to implement Demeter power. It checks if the power can be used and then sends the request to the player.
      * @param builtSpace The space the player has previously built in.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     protected void handleDemeterPower(Space builtSpace) throws PlayerDisconnectedException {
         int workerX = moveWorker.getWorkerPosition().getCoordinateX(), workerY = moveWorker.getWorkerPosition().getCoordinateY();
@@ -890,6 +906,7 @@ class GameController implements Runnable {
      * Method used to implement Hephaestus power. If the power can be used it sends to player a request.
      * If the player wants to use the power, the height of the block previously built increments by one block.
      * @param BuildSpace Space the player previously has built in.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     protected void handleHephaestusPower(Space BuildSpace) throws PlayerDisconnectedException {
         if (BuildSpace.getHeight() >= Space.DOME_LEVEL - 1) return;
@@ -911,6 +928,7 @@ class GameController implements Runnable {
     /**
      * Method used to implement Prometheus power. It checks if the player has the power and if it's possible to use it.
      * In this case, with Prometheus the power is usable only if the power does not lead to loose the game.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     protected void handlePrometheusPower() throws PlayerDisconnectedException {
         //if the player has not got the power, the method ends
@@ -946,6 +964,7 @@ class GameController implements Runnable {
     /**
      * Method used to implement Ares power. It checks if the player has the power, then if it's possible to use it,
      * if yes it asks the player to use the power and finally removes the block from selected space.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     protected void handleAresPower() throws PlayerDisconnectedException {
         //if the player has not Ares Power, the method stops immediately.
@@ -993,6 +1012,7 @@ class GameController implements Runnable {
 
     /**
      * Method used to implement Hestia power. Checks if the power can be used and send a power usage request.
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     protected void handleHestiaPower() throws PlayerDisconnectedException {
         int workerX = moveWorker.getWorkerPosition().getCoordinateX(), workerY = moveWorker.getWorkerPosition().getCoordinateY();
@@ -1008,6 +1028,7 @@ class GameController implements Runnable {
      * and asks the player if he want to use the power. If affirmative answer has been receives, the normal build process is made.
      * @param allowedBuild matrix with allowed build positions.
      * @param client virtual view of the player
+     * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void secondBuildMake(boolean[][] allowedBuild,VirtualView client) throws PlayerDisconnectedException {
         if (workerCanMakeMove(allowedBuild)){

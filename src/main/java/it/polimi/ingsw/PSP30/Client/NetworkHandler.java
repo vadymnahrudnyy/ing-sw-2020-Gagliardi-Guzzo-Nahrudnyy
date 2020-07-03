@@ -5,33 +5,102 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.Socket;
 
-import it.polimi.ingsw.PSP30.Messages.Disconnection;
-import it.polimi.ingsw.PSP30.Messages.Message;
 import it.polimi.ingsw.PSP30.Server.Server;
+import it.polimi.ingsw.PSP30.Messages.Message;
 import it.polimi.ingsw.PSP30.Utils.QueueOfEvents;
 import it.polimi.ingsw.PSP30.Messages.PingMessage;
+import it.polimi.ingsw.PSP30.Messages.Disconnection;
 
 /**
- * This class behaves like the server for client.
+ * This class is used for communication with the Server.
  * @version 1.0
  */
 public class NetworkHandler implements Runnable {
     private static Socket socket;
     private static ObjectInputStream input;
     private static ObjectOutputStream output;
-    private static boolean isConnected=false;
-    private final String serverAddress;
+
     private final int serverPort;
-    protected static final QueueOfEvents incomingMessages= new QueueOfEvents();
+    private final String serverAddress;
     private boolean pingReceived = false;
+    private static boolean isConnected=false;
+
     private Thread pingThread;
     private static Thread clientThread;
 
+    protected static final QueueOfEvents incomingMessages= new QueueOfEvents();
 
     public NetworkHandler(String serverAddress, int serverPort, Thread thread) {
         this.serverAddress = serverAddress;
         this.serverPort = serverPort;
         clientThread=thread;
+    }
+
+    /**
+     * This method is executed on a new thread, it starts the connection with the server and when the connection is established it
+     * distinguishes between ping or normal messages. If if a ping message is received, the received ping's flag is set to "true"
+     * and then the ping thread is interrupted, otherwise the message is queued.
+     */
+    public void run() {
+        try {
+            connect();
+        } catch (Exception e) {
+            setConnected(false);
+            Client.addressError();
+            clientThread.interrupt();
+            try{
+                Thread.sleep(10000);
+            }catch (InterruptedException ignored){}
+        }
+
+        if(isConnected){
+            Runnable Ping = () -> {
+                int missedPings = 0;
+                do{
+                    try {
+                        sendMessage(new PingMessage());
+                        Thread.sleep(Server.CONNECTION_TIMEOUT);
+                        if (!pingReceived) missedPings++;
+                        if(missedPings > 2) disconnect();
+                    } catch (InterruptedException e) {
+                        if (pingReceived){
+                            setPingReceived(false);
+                            missedPings = 0;
+                        }
+                    }
+                }while(isConnected);
+            };
+            pingThread = new Thread(Ping);
+            pingThread.start();
+
+        }
+        while (isConnected){
+            try {
+                Message message= (Message) input.readObject();
+                if(message!=null) receive(message);
+            }
+            catch (IOException | ClassNotFoundException e) {//error in communication
+                disconnect();
+            }
+        }
+    }
+
+
+    /**
+     * Getter of parameter connected.
+     * @return true if the client is connected to the server or false if it is not connected
+     */
+    public static boolean isConnected() {
+        return isConnected;
+    }
+
+    /**
+     * Getter of parameter connected.
+     * @param connected is the boolean that indicates if the client is connected to the server or not
+     */
+    public static void setConnected(boolean connected) {
+        Client.setDisconnected(!connected);
+        isConnected = connected;
     }
 
     /**
@@ -44,6 +113,20 @@ public class NetworkHandler implements Runnable {
         output=new ObjectOutputStream(socket.getOutputStream());
         setConnected(true);
         clientThread.interrupt();
+    }
+
+    /**
+     *This class disconnect the client.
+     */
+    public static void disconnect(){
+
+        incomingMessages.enqueueEvent(new Disconnection());
+        clientThread.interrupt();
+        try {
+            close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**
@@ -87,94 +170,6 @@ public class NetworkHandler implements Runnable {
     }
 
     /**
-     * This method is executed on a new thread, it starts the connection with the server and when the connection is established it
-     * distinguishes between ping or normal messages. If if a ping message is received, the received ping's flag is set to "true"
-     * and then the ping thread is interrupted, otherwise the message is queued.
-     */
-    public void run() {
-        try {
-            connect();
-        } catch (Exception e) {
-            setConnected(false);
-            Client.addressError();
-            clientThread.interrupt();
-            try{
-                Thread.sleep(10000);
-            }catch (InterruptedException interruptedException){
-                interruptedException.printStackTrace();
-            }
-        }
-        if(isConnected){
-            Runnable Ping = () -> {
-                int missedPings = 0;
-                do{
-                    try {
-                        sendMessage(new PingMessage());
-                        Thread.sleep(Server.CONNECTION_TIMEOUT);
-                        if (!pingReceived) missedPings++;
-                        if(missedPings > 2){
-                            disconnect();
-                        }
-                    } catch (InterruptedException e) {
-                        if (pingReceived){
-                            setPingReceived(false);
-                            missedPings = 0;
-                        }
-                    }
-                }while(isConnected);
-            };
-            pingThread = new Thread(Ping);
-            pingThread.start();
-
-        }
-        while (isConnected){
-            try {
-                Message message= (Message) input.readObject();
-                if(message!=null){
-                    receive(message);
-                }
-            }
-            catch (IOException e) {
-                disconnect();
-            } catch (ClassNotFoundException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-    /**
-     * Getter of parameter connected.
-     * @return true if the client is connected to the server or false if it is not connected
-     */
-    public static boolean isConnected() {
-        return isConnected;
-    }
-
-    /**
-     * Getter of parameter connected.
-     * @param connected is the boolean that indicates if the client is connected to the server or not
-     */
-    public static void setConnected(boolean connected) {
-        Client.setDisconnected(!connected);
-        isConnected = connected;
-    }
-
-    /**
-     *This class disconnect the client.
-     */
-    public static void disconnect(){
-
-        incomingMessages.enqueueEvent(new Disconnection());
-        clientThread.interrupt();
-        try {
-            close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    /**
      * Getter of the server address.
      * @return the address of the server
      */
@@ -189,7 +184,6 @@ public class NetworkHandler implements Runnable {
     public int getServerPort() {
         return serverPort;
     }
-
 
     /**
      * Setter parameter ping
