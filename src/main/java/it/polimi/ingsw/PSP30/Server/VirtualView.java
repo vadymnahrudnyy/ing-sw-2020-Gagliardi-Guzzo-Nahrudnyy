@@ -1,18 +1,15 @@
 package it.polimi.ingsw.PSP30.Server;
 
-
 import it.polimi.ingsw.PSP30.Messages.*;
 import it.polimi.ingsw.PSP30.Utils.QueueOfEvents;
 
 import java.io.*;
 import java.net.*;
 
-
 /**
- * This class behave like the View for Controller and Model
- * @version 1.5
+ * Used for communication between server and Client
+ * @version 1.7
  */
-
 public class VirtualView implements Runnable {
     private int numPlayers;
     private String username;
@@ -32,9 +29,9 @@ public class VirtualView implements Runnable {
     private  Message message;
 
     /**
-     * Constructor of VirtualView class instance.
+     * Constructor of VirtualView class instance. Creates the input and output streams.
      * @param clientSocket The socket of the user connected to the server.
-     * @param lobby Server Lobby
+     * @param lobby Server Lobby.
      * @throws IOException When an error occurs in creating the socket or input-output streams.
      */
     public VirtualView(Socket clientSocket,Lobby lobby) throws IOException {
@@ -79,20 +76,32 @@ public class VirtualView implements Runnable {
         System.out.println(Thread.currentThread() + " Closed -- " + "Virtual view of player: " + username);
     }
 
+    /**
+     * Setter for numPlayers parameter.
+     * @param value New numPlayers value.
+     */
     protected void setNumPlayers(int value){
         numPlayers = value;
     }
 
+    /**
+     * Setter for username.
+     * @param name The username chosen by the client.
+     */
     protected void setUsername(String name){
         username = name;
     }
 
+    /**
+     * Setter for associatedGame parameter.
+     * @param game GameController instance, the client is linked to.
+     */
     protected void setAssociatedGame(GameController game){
         associatedGame = game;
     }
 
     /**
-     * Method used to ask the player the number of players the client wants to play with.
+     * Asks the player the number of players the client wants to play with.
      * @throws SocketException in case there is an error with the socket.
      */
     private void askNumPlayers () throws SocketException {
@@ -107,7 +116,7 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * Method used to ask the client his username.
+     * Asks the client his username.
      * @throws SocketException in case there is an error with the socket.
      */
     private void askUsername() throws SocketException {
@@ -123,7 +132,7 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * Method used to read a message(if there is one) from the input stream  and interrupts the controller thread.
+     * Reads a message(if there is one) from the input stream  and interrupts the controller thread.
      * In case a socket error occurs, usually meaning the player disconnected, enqueues in the message queue, the disconnection message
      * which will be handled by the controller during the first request of interaction from the player.
      * @throws SocketException When Socket error occurs.
@@ -154,8 +163,8 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * Method used to send a message to the client. Before each operation it
-     * flushes the stream in order to avoid usually serialized objects to be cached.
+     * Sends a message to the client. Before each operation it flushes
+     * the stream in order to avoid usually serialized objects to be cached.
      * @param message the message to send.
      */
     protected void sendMessage(Message message) {
@@ -171,13 +180,13 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * Method used to get the username chosen by the player associated to the virtual list
+     * Getter for the username of the client.
      * @return the username string.
      */
     protected String getUsername() { return username; }
 
     /**
-     * Method used to obtain the desired number of player for the game of the associated client.
+     * Gets the desired number of player for the game of the associated client.
      * @return desired number of players.
      */
     protected int getNumPlayers(){
@@ -185,15 +194,15 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * Method used to set the associatedGameThread for an instance of class VirtualView.
-     * @param gameThread the Game the player is associated to.
+     * Setter for associatedGameThread parameter.
+     * @param gameThread the GameThread the client is linked to.
      */
     protected void setAssociatedGameThread(Thread gameThread){
         associatedGameThread = gameThread;
     }
 
     /**
-     * Method used to obtain the thread the given virtual view is running on.
+     * Gets thread the given virtual view is running on.
      * @return Thread object.
      */
     protected Thread getVirtualViewThread(){
@@ -201,7 +210,7 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * This method close the connection if one of the players disconnect
+     * Closes the connection with the client.
      */
     protected synchronized void closeConnection() {
         try {
@@ -223,31 +232,42 @@ public class VirtualView implements Runnable {
     }
 
     /**
-     * Method used to read the first message in the queue.
+     * Reads the first message in the queue.
      * @return the first message of the queue.
      */
     public  Message dequeueFirstMessage(){
         return getIncomingMessages().dequeueEvent();
     }
 
+    /**
+     * Setter for inGame parameter.
+     * @param value New value of inGame.
+     */
     protected void setInGame(boolean value){
         isInGame = value;
     }
+
+    /**
+     * Gets inGame parameter value.
+     * @return Boolean value. "true" if the client is in game, "false" otherwise.
+     */
     protected boolean getInGame(){
         return isInGame;
     }
+
+    /**
+     * Setter for inLobby parameter.
+     * @param value New value of inLobby.
+     */
     protected void setInLobby(boolean value){
         isInLobby = value;
     }
-    protected void setConnected(boolean value){
-        connected = value;
-    }
-
 
 
     /**
-     * Inner class Ping implements the separate thread for each virtual view. It sends a ping message to the client and waits at least 10 seconds.
-     * After the timeout the thread checks if ping was received, if not it enqueues a disconnection message which will cause the end of the game.
+     * Implements a runnable that in a new Thread, one for each virtual view, check if the client is connected to the server.
+     * It sends a ping message to the client and waits at least 10 seconds.
+     * After the timeout the thread checks if ping was received and if not it enqueues a disconnection message which will cause the end of the game.
      */
     private static class Ping implements Runnable {
         private final VirtualView client;

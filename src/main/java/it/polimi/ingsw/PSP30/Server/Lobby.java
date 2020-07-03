@@ -4,13 +4,12 @@ import it.polimi.ingsw.PSP30.Messages.LobbyStatusNotification;
 import it.polimi.ingsw.PSP30.Messages.UsernameTakenError;
 
 import java.util.ArrayList;
+
 /**
  * Class Lobby implements a simple lobby for the server.
- *
  * @author Vadym Nahrudnyy
  * @version 2.2
  */
-
 public class Lobby {
     private static boolean twoPlayersLobbyReady = false;
     private static boolean threePlayersLobbyReady = false;

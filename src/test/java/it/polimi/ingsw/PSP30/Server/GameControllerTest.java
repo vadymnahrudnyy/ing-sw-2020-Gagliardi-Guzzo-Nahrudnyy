@@ -210,55 +210,6 @@ public class GameControllerTest {
     }
 
     @Test
-    public void checkHestiaAllowedBuilds() {
-    }
-
-    @Test
-    public void setDisconnectionDetected() {
-    }
-
-    @Test
-    public void useApolloPower() {
-    }
-
-    @Test
-    public void useMinotaurPower() {
-    }
-
-    @Test
-    public void handleDemeterPower() {
-    }
-
-    @Test
-    public void handleHephaestusPower() {
-    }
-
-    @Test
-    public void isPanVictoryMove() {
-    }
-
-    @Test
-    public void handlePrometheusPower() {
-    }
-
-    @Test
-    public void handleAresPower() {
-    }
-
-    @Test
-    public void handleCronusPower() {
-    }
-
-    @Test
-    public void victoryDeniedByHeraPower() {
-
-    }
-
-    @Test
-    public void handleHestiaPower() {
-    }
-
-    @Test
     public void checkPossibleRemovals() {
         IslandBoard testBoard = testGame.getCurrentBoard();
         boolean[][] testRemovals = testGame.initializeMatrix(false);

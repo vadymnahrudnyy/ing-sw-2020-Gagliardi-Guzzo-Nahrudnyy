@@ -35,7 +35,11 @@ class GameController implements Runnable {
 
     private static final int RESPONSE_MESSAGE_WAIT_TIMEOUT = 20000; //Maximum time the thread will wait for a new message.
 
-
+    /**
+     * Constructor of GameController.
+     * @param virtualViews the list of virtual views of the players in the game.
+     * @param numPlayers Number of player in the game.
+     */
     public GameController(ArrayList<VirtualView> virtualViews, int numPlayers) {
         //powerList = Server.getPowerList();
         virtualViewsList = new VirtualView[numPlayers];
@@ -139,8 +143,8 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method implementing the Move Phase of the turn.
-     * Selects the worker to move and then makes the moves itself.
+     * Handles the move phase of the player's turn.
+     * Selects the worker to move and then makes the moves itself, in case using god powers.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void Move() throws PlayerDisconnectedException {
@@ -174,7 +178,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method implementing the Build Phase of the turn.
+     * Handles Build phase of the turn. Checks the possible builds and sends them to the player.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void Build() throws PlayerDisconnectedException {
@@ -196,9 +200,8 @@ class GameController implements Runnable {
         else if (currentPlayerHasPower(Power.NON_PERIMETER_DOUBLE_BUILD)) handleHestiaPower();
     }
 
-
     /**
-     * Method used to count the number of moves (move or build) a worker can make given a boolean matrix with allowed moves.
+     * Counts the number of moves (move or build) a worker can make given a boolean matrix with allowed moves.
      * @param possibleMoves Boolean matrix with allowed values.
      * @return Integer number indicating the number of possible moves.
      */
@@ -212,7 +215,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to get the matrix indexes of the only possible move on the board.
+     * Looks for the matrix indexes of the only possible move on the board.
      * @param possibleMoves Boolean matrix containing only one "true" value.
      * @return Array of two integers standing for the indexes in the matrix where the move is possible.
      */
@@ -229,7 +232,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to select the worker before making the move. In case the worker can moved
+     * Selects the worker before making the move, if the worker can't be moved
      * the other worker of the player is considered. In case both of them can't move, the player is removed from the game.
      */
     private void selectWorkerHandler(){
@@ -250,9 +253,8 @@ class GameController implements Runnable {
         }
     }
 
-
     /**
-     * Method used to check if the current player won during his move phase
+     * Checks if the current player has made a victory move.
      * @return true if the player won, false otherwise.
      */
     protected boolean moveVictoryConditionSatisfied(){
@@ -260,7 +262,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to check after a move if the worker moved up and set the corresponding flag.
+     *  After a move, checks if the worker moved up and set the corresponding flag.
      */
     protected void checkWorkerMovedUp(){
         if (destSpace.getHeight() > startSpace.getHeight()) moveWorker.setMovedUp(true);
@@ -268,7 +270,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to make the move after receiving the message from player and checking the validity of the response.
+     * Makes the move after receiving the destination coordinates from player and checking the validity of the response.
      * @param destX Coordinate X of the destination space.
      * @param destY Coordinate Y of the destination space.
      */
@@ -285,7 +287,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method verifies if the move has been made is a standard win move.
+     * Verifies if the move has been made is a standard win move.
      * @return "true" if a win move has been made, "false" otherwise.
      */
     protected boolean isVictoryMove(){
@@ -293,7 +295,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to check if the current player's god has a specified power.
+     * Checks if the current player's god has a specified power.
      * @param powerID The ID of the power to check.
      * @return "true" if the god has the specified power, "false otherwise"
      */
@@ -302,7 +304,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to build in the space indicated by the player.
+     * Builds in the space indicated by the player.
      * @param client virtual view of the current player.
      * @param toBuild the space to build into.
      * @throws PlayerDisconnectedException When a disconnection is detected.
@@ -322,15 +324,15 @@ class GameController implements Runnable {
 
     //SETUP PHASE
     /**
-     * Method used to notify all player about the game being start
+     * Send the notification of game start to all players.
      */
     private void sendStartGameMessage() {
         for (VirtualView view : virtualViewsList) view.sendMessage(new GameStartNotification(currentGame));
     }
 
     /**
-     * Method used to choose the gods before start playing.It asks the first player the list of gods to use, then the others chose their god card
-     * and the first player automatically receives the remained god card.
+     * Selects the gods before start playing.It asks the first player the list of gods to use, then
+     * the others chose their god card and the first player automatically receives the remained god card.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void chooseGods() throws PlayerDisconnectedException {
@@ -368,7 +370,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method asking the first player the list of gods and checks the validity of the answer.
+     * Asksthe first player the list of gods and checks the validity of the answer.
      * @param firstVirtualView virtual view of the first player.
      * @param gameGods empty List where the gods will be inserted.
      * @return a boolean value. True if the player has chosen the gods correctly.
@@ -388,7 +390,7 @@ class GameController implements Runnable {
         return true;
     }
     /**
-     * Private method of the controller used to identify the god of the first player.
+     * Gets the god will be assigned to the first player.
      * @param gameGods gods chosen to be used in game.
      * @param chosenGods gods chosen by other players.
      * @return the god which will be used by the first player.
@@ -400,14 +402,14 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to get the game object of a game. Used for test purposes
+     * Getter of currentGame. Used for test purposes
      * @return the Game object used to store the game status.
      */
     protected Game getCurrentGame(){
         return currentGame;
     }
     /**
-     * Method used to ask the Challenger the username of the start player.
+     * Asks the Challenger the username of the start player.
      * If invalid input is detected it sends an error to the client.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
@@ -426,7 +428,7 @@ class GameController implements Runnable {
         }while(!validUsernameReceived);
     }
     /**
-     * Used for asking the players the starter position of their workers.
+     * Asks every player players the starter position of their workers.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void chooseWorkerPositions() throws PlayerDisconnectedException {
@@ -458,7 +460,7 @@ class GameController implements Runnable {
     }
     //MOVE
     /**
-     * Check all the possible moves the worker can make.
+     * Checks all the possible moves the worker can make.
      * @param workerCoordinateX coordinate X of the selected worker.
      * @param workerCoordinateY coordinate Y of the selected worker.
      * @return a boolean matrix with "true" value in the position where the worker can move.
@@ -503,7 +505,7 @@ class GameController implements Runnable {
     }
     //BUILD
     /**
-     * Method used to identify the spaces a given worker can build
+     * Identifies the spaces a given worker can build in.
      * @param workerCoordinateX coordinate x of the moved worker.
      * @param workerCoordinateY coordinate y of the moved worker.
      * @return Boolean matrix with true value in the cells the worker can build.
@@ -520,7 +522,7 @@ class GameController implements Runnable {
         return allowedBuilds;
     }
     /**
-     * Method used to add a block in a given space checking also if a dome must be built.
+     * Adds a block in a given space checking also if a dome must be built.
      * @param toBuild the space where to build a block.
      */
     private void blockAddInSpace(Space toBuild){
@@ -540,7 +542,7 @@ class GameController implements Runnable {
         currentGame.setCurrentRound(1);
     }
     /**
-     * Method used to prepare the god list in a three players game.
+     * Builds the god list in a three players game.
      * @return the list of gods can be used during the game.
      */
     private ArrayList<God> threePlayerGodsListInitialization(){
@@ -549,12 +551,10 @@ class GameController implements Runnable {
         return threePlayersGodsList;
     }
     /**
-     * Method used to send a Game Status Notification to all players of the game.
+     * Sends to every player the Game Status Notification.
      */
     private void notifyGameStatusToAll(){
-        for (VirtualView virtualView : virtualViewsList) {
-            virtualView.sendMessage(new GameStatusNotification(currentGame));
-        }
+        for (VirtualView virtualView : virtualViewsList) virtualView.sendMessage(new GameStatusNotification(currentGame));
     }
     /**
      * Creates a new matrix of TABLE_DIMENSION x TABLE_DIMENSION dimension.
@@ -569,8 +569,8 @@ class GameController implements Runnable {
         return matrix;
     }
     /**
-     * checkMessageValidity is a private method used to control if the received message is among
-     * the messages can be used by the game controller at the moment in order to continue the game.
+     * Checks if the received message is among the messages can be used by
+     * the game controller at the moment in order to continue the game.
      * @param messageToCheck is the received message.
      * @param allowedMessages the list of allowed messages
      * @return a boolean value. True if the message is allowed, false otherwise.
@@ -583,8 +583,8 @@ class GameController implements Runnable {
         return false;
     }
     /**
-     * Checks if the the client has chosen a valid position. This is first checked in the client in order to ensure
-     * better performance and reduce socket load and double checked on the server for ensuring security.
+     * Checks if the the client has chosen a valid position. This is first checked on player's side in order to ensure
+     * better performance and reduce socket load and then double checked on the server in order to ensure security.
      * @param allowedPositions matrix of allowed positions.
      * @param receivedX Coordinate X received from the client.
      * @param receivedY Coordinate Y received from the client.
@@ -595,7 +595,7 @@ class GameController implements Runnable {
         else return allowedPositions[receivedX - 1][receivedY - 1];
     }
     /**
-     * Method used during the setup of the game. Create a worker instance in the position indicated by the player
+     * Creates a worker instance in the position indicated by the player.
      * @param numWorker used to distinguish between first and second player's worker.
      * @param owner indicates the player who owns the created worker.
      * @param coordinateX X coordinate of the worker Position.
@@ -610,7 +610,7 @@ class GameController implements Runnable {
         workerPosition.setWorkerInPlace(workers[numWorker-1] = new Worker(owner.getUsername(),gender,workerPosition,owner.getUserID()));
     }
     /**
-     * Method used to check if any of opponents of current Player has a given power
+     * Checks if any of opponents of current player has a given power.
      * @param powerID The power to be checked.
      * @return true if an opponent has the indicated power, false otherwise.
      */
@@ -621,7 +621,7 @@ class GameController implements Runnable {
         return false;
     }
     /**
-     * getVirtualViewByUsername method is used to get the network interface of one player using his username;
+     * Get the network interface of one player using his username;
      * @param username username of the player.
      * @return the corresponding network interface
      */
@@ -632,7 +632,7 @@ class GameController implements Runnable {
         return null;
     }
     /**
-     * Method getGodByName is used to get a god by using the name
+     * Gets a god by using his name
      * @param name Name of the God.
      * @return object of class God taken from the list of gods of the game.
      */
@@ -642,7 +642,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * getWorkerByCoordinate is a private method used to get the worker in the selected Space
+     * Gets the worker in a selected Space
      * @param coordinateX is the X coordinate of the selected Space.
      * @param coordinateY is the Y coordinate of the selected Space.
      * @return the worker in desired place. The value is null in case no worker have been found in the space.
@@ -651,7 +651,7 @@ class GameController implements Runnable {
         return currentGame.getGameBoard().getSpace(coordinateX,coordinateY).getWorkerInPlace();
     }
     /**
-     * Method used to get the other worker of the player
+     * Gets the other worker of the player
      * @param player in the player considered
      * @param oneWorker is the worker we are considering
      * @return the other worker of the player
@@ -662,30 +662,23 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to notify to all players the winner of the game and disconnect them.
+     * Notifies to all players the winner of the game and disconnect them.
      * @param winnerUsername Username of the winner.
      */
     private void victory(String winnerUsername){
         for (VirtualView player:virtualViewsList) player.sendMessage(new WinnerNotification(winnerUsername));
         try {
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            //noinspection ResultOfMethodCallIgnored
-            Thread.interrupted();
-        }
+        } catch (InterruptedException ignored) {}
         for (VirtualView player:virtualViewsList) {
             player.closeConnection();
             try {
                 Thread.sleep(200);
-            } catch (InterruptedException ignored) {
-            }
+            } catch (InterruptedException ignored) {}
         }
         try {
             Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            //noinspection ResultOfMethodCallIgnored
-            Thread.interrupted();
-        }
+        } catch (InterruptedException ignored) {}
         moveAllowed = buildAllowed = running = false;
     }
     /**
@@ -701,8 +694,9 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to delete a player from the game. In case of two players game, the remained players wins the game,
-     * so the victory method is called in order to notify the winner.
+     * Removes a player from the game.
+     * In case of two players game, the remained players wins the game, so the victory method is called in order to notify the winner.
+     * In three players game the player is removed from the list of players but still remains in virtual view list and received updates about the status.
      * @param playerToRemove Player to remove from the game.
      * @param clientToRemove Virtual view of the player to remove.
      */
@@ -743,7 +737,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to remove the worker of a player that has been removed from the game
+     * Removes the workers of a player from the game.
      * @param playerToRemove the player removed from the game.
      */
     protected void removePlayersWorkers(Player playerToRemove){
@@ -751,8 +745,8 @@ class GameController implements Runnable {
         for (Worker workerToRemove : workersToRemove) workerToRemove.getWorkerPosition().setWorkerInPlace(null);
     }
     /**
-     * Method waitValidMessage dequeue the messages waiting for a valid message.
-     * If the message is a disconnection, 
+     * Dequeue the messages waiting for a valid message.
+     * If the message is a disconnection, the game is stopped.
      * @param senderVirtualView virtual view of the client from who the controller needs a message
      * @param messageIDs list of accepted messages.
      * @throws PlayerDisconnectedException When a disconnection is detected.
@@ -778,7 +772,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to get the worker selected by the player. If the selected worker is invalid it send an error message to the client.
+     * Gets the worker selected by the player. If the selected worker is invalid, sends an error message to the client.
      * @param message received select worker response message.
      * @return The selected worker, null if it's invalid
      */
@@ -794,7 +788,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to create the boolean matrix of possible moves for the second move of the player having Artemis god card.
+     * Creates the boolean matrix of possible moves for the second move of the player having Artemis god card.
      * @param previousSpace the position of the worker before the first move
      * @param currentSpace the current position of the worker
      * @return boolean matrix indicating with true the position where the selected worker can move, false otherwise.
@@ -806,7 +800,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to build the matrix of positions where a player having Hestia can build the second time (using the power of the card)
+     * Builds the matrix of positions where a player having Hestia can build the second time (using the power of the card)
      * @param workerX X coordinate of the moved worker.
      * @param workerY Y coordinate of the moved worker.
      * @return boolean matrix with "true" in positions the worker can build.
@@ -836,7 +830,7 @@ class GameController implements Runnable {
     //GOD POWER HANDLERS
 
     /**
-     * Method implemented to use Apollo's power.
+     * Uses Apollo's power.
      * @param destSpaceWorker The worker to change position with.
      */
     protected void useApolloPower(Worker destSpaceWorker){
@@ -847,7 +841,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to use Minotaur power.
+     * Uses Minotaur power.
      * @param destSpaceWorker Worker to push into the next space in move direction.
      * @param destX Coordinate X of the destination space.
      * @param destY Coordinate Y of the destination space.
@@ -860,7 +854,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to implement Artemis power.
+     * Implements Artemis power. It checks if the power can be used and then send a request to the client.
      * @param previousPosition the start position during first move of the worker selected by the player.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
@@ -889,7 +883,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to implement Demeter power. It checks if the power can be used and then sends the request to the player.
+     * Implements Demeter power. It checks if the power can be used and then sends the request to the player.
      * @param builtSpace The space the player has previously built in.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
@@ -903,7 +897,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to implement Hephaestus power. If the power can be used it sends to player a request.
+     * Implements Hephaestus power. If the power can be used it sends to player a request.
      * If the player wants to use the power, the height of the block previously built increments by one block.
      * @param BuildSpace Space the player previously has built in.
      * @throws PlayerDisconnectedException When a disconnection is detected.
@@ -918,7 +912,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to verify if a player has Pan's power then if the move made is winning.
+     * Verifies if a player has Pan's power then if the move made is winning.
      * @return "true" if the move verifies Pan's win condition, "false" otherwise.
      */
     protected boolean isPanVictoryMove(){
@@ -926,7 +920,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to implement Prometheus power. It checks if the player has the power and if it's possible to use it.
+     * Implements Prometheus power. It checks if the player has the power and if it's possible to use it.
      * In this case, with Prometheus the power is usable only if the power does not lead to loose the game.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
@@ -962,7 +956,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to implement Ares power. It checks if the player has the power, then if it's possible to use it,
+     * Implements Ares power. It checks if the player has the power, then if it's possible to use it,
      * if yes it asks the player to use the power and finally removes the block from selected space.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
@@ -994,7 +988,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to check if a player has Cronus god card and the if the victory condition is satisfied.
+     * Checks if a player has Cronus god card and the if the victory condition is satisfied.
      * In case the condition is satisfied it calls victory method.
      */
     protected void handleCronusPower(){
@@ -1003,15 +997,15 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to check if the opponent has Hera's power and then verifies that the power can be used.
-     * @return "true" value if a victory can be denied the Hera power, "false" otherwise
+     * Checks if the opponent has Hera's power and then verifies that the power can be used.
+     * @return "true" value if a victory can be denied the Hera power, "false" otherwise.
      */
     protected boolean victoryDeniedByHeraPower(){
         return (opponentHasPower(Power.PERIMETER_VICTORY_DENY_POWER) && destSpace.isPerimeter());
     }
 
     /**
-     * Method used to implement Hestia power. Checks if the power can be used and send a power usage request.
+     * Implements Hestia power. Checks if the power can be used and send a power usage request.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     protected void handleHestiaPower() throws PlayerDisconnectedException {
@@ -1024,10 +1018,10 @@ class GameController implements Runnable {
     //POWERS AUXILIARY METHODS
 
     /**
-     * Method used to handle the double build powers. Receives a matrix with allowed moves
+     * Handle the double build powers. Receives a matrix with allowed moves
      * and asks the player if he want to use the power. If affirmative answer has been receives, the normal build process is made.
      * @param allowedBuild matrix with allowed build positions.
-     * @param client virtual view of the player
+     * @param client virtual view of the player.
      * @throws PlayerDisconnectedException When a disconnection is detected.
      */
     private void secondBuildMake(boolean[][] allowedBuild,VirtualView client) throws PlayerDisconnectedException {
@@ -1045,10 +1039,10 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to build the matrix of possible blocks removes by Ares Power.
+     * Builds the matrix of possible blocks can be removed by Ares Power.
      * @param workerX Coordinate X of the unmoved worker.
      * @param workerY Coordinate Y of the unmoved worker.
-     * @return boolean matrix indicating with true the spaces where a block can be removed, false otherwise
+     * @return boolean matrix indicating with true the spaces where a block can be removed, false otherwise.
      */
     protected boolean [][] checkPossibleRemovals(int workerX,int workerY){
         boolean[][] removals = initializeMatrix(false);
@@ -1066,7 +1060,7 @@ class GameController implements Runnable {
     }
 
     /**
-     * Method used to check if a player having Prometheus god card can use the power without loosing the game.
+     * Checks if a player having Prometheus god card can use the power without loosing the game.
      * @return False if the use of the power leads to loosing the game, true otherwise.
      */
     protected boolean checkPossiblePreBuild(){

@@ -3,8 +3,9 @@ package it.polimi.ingsw.PSP30.Model;
 import java.io.Serializable;
 
 /**
+ * Implements the Game Board.
  * @author Vadym Nahrudnyy
- * @version 1.0
+ * @version 1.1
  */
 
 public class IslandBoard implements Serializable {
@@ -21,17 +22,23 @@ public class IslandBoard implements Serializable {
         this.numberCompleteTowers = 0;
         this.matrix = new Space[TABLE_DIMENSION][TABLE_DIMENSION];
         int coordinateX,coordinateY;
-        for (coordinateX = 0;coordinateX < TABLE_DIMENSION;++coordinateX){
-            for (coordinateY = 0; coordinateY < TABLE_DIMENSION; ++coordinateY){
+        for (coordinateX = 0;coordinateX < TABLE_DIMENSION;++coordinateX)
+            for (coordinateY = 0; coordinateY < TABLE_DIMENSION; ++coordinateY)
                 matrix [coordinateX][coordinateY] = new Space(coordinateX+1,coordinateY+1);
-            }
-        }
     }
 
-    public void setMatrix(Space[][] newmatrix) {
-        this.matrix = newmatrix;
+    /**
+     * Setter for matrix parameter
+     * @param newMatrix The new matrix.
+     */
+    public void setMatrix(Space[][] newMatrix) {
+        this.matrix = newMatrix;
     }
 
+    /**
+     * Getter of matrix parameter.
+     * @return A matrix con Space objects, representing the board.
+     */
     public Space[][] getMatrix() {
         return matrix;
     }
@@ -41,7 +48,7 @@ public class IslandBoard implements Serializable {
     }
 
     /**
-     * Method getSpace is used to get a single Space from the board.
+     * Gets a single Space from the board.
      * @param coordinateX indicates the X coordinate of the wanted space.
      * @param coordinateY indicates the Y coordinate of the wanted space.
      * @return the desired Space.
@@ -50,16 +57,19 @@ public class IslandBoard implements Serializable {
         return matrix[coordinateX-1][coordinateY-1];
     }
 
+    /**
+     * Setter of numberCompleteTowers parameter.
+     * @param numberCompleteTowers New value of the parameter.
+     */
     public void setNumberCompleteTowers(int numberCompleteTowers) {
         this.numberCompleteTowers = numberCompleteTowers;
     }
 
     /**
-     * The method increments the number of completed towers when a complete tower is built.
+     * Increments the number of completed towers when a complete tower is built.
      */
     public void incrementNumberCompleteTowers() {
         int CompleteTowers = getNumberCompleteTowers();
         setNumberCompleteTowers(++CompleteTowers);
     }
-
 }
