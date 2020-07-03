@@ -21,7 +21,9 @@ import java.util.ArrayList;
 import javafx.scene.layout.*;
 
 
-
+/**
+ * Manages the Gods.fxml scene (choice of the gods by the first player).
+ */
 public class GodsController {
 
     @FXML private BorderPane borderPane;
@@ -45,7 +47,7 @@ public class GodsController {
 
 
     /**
-     * This method shows the list of all the Gods usable during the game and allows the first player to choose the Gods he wants for the current match.
+     * Shows the list of all the Gods usable during the game and allows the first player to choose the Gods he wants for the current match.
      * The number of the cards selected has to be equal to the number of players chosen.
      * @throws IOException when an error loading FXML occurs.
      */
@@ -63,10 +65,10 @@ public class GodsController {
     }
 
     /**
-     * This method shows the list of the Gods chosen by the first player and allows the current player to choose what card he wants to use during the match
-     * @param gameGods ArrayList of Gods chosen by the first player
-     * @param chosenGods ArrayList of Gods already chosen by others players
-     * @throws IOException when an error occurred in loading fxml file
+     * Shows the list of the Gods chosen by the first player and allows the current player to choose what card he wants to use during the match.
+     * @param gameGods ArrayList of Gods chosen by the first player.
+     * @param chosenGods ArrayList of Gods already chosen by others players.
+     * @throws IOException when an error occurred in loading fxml file.
      */
     public void showSingleGodSelector(ArrayList<God> gameGods,ArrayList<God> chosenGods) throws IOException {
         God tempGod;
@@ -102,22 +104,21 @@ public class GodsController {
     }
 
     /**
-     * This method checks if the selected God has already been chosen by other players
-     * @param godName String that indicates the name of the selected God
-     * @param chosen ArrayList of Gods already chosen by others players
-     * @return true if the selected God has already been chosen by other players, false otherwise
+     * Checks if the selected God has already been chosen by other players.
+     * @param godName String that indicates the name of the selected God.
+     * @param chosen ArrayList of Gods already chosen by others players.
+     * @return true if the selected God has already been chosen by other players, false otherwise.
      */
     public boolean godAlreadyChosen(String godName, ArrayList<God> chosen){
         for (God god : chosen) if (godName.equals(god.getName())) return true;
         return false;
     }
 
-
     /**
-     * This method manages the choice of the God card
-     * @param godName String that indicates the name of the selected God
-     * @param button button that contains the God card
-     * @param pane pane in which arrange the buttons
+     * Manages the choice of the God card.
+     * @param godName String that indicates the name of the selected God.
+     * @param button button that contains the God card.
+     * @param pane pane in which arrange the buttons.
      */
     public void singleGodChoiceToggleButtonImage(String godName, ToggleButton button, BorderPane pane){
         selectedGods.add(godName);
@@ -210,9 +211,9 @@ public class GodsController {
     }
 
     /**
-     * This method don't show the image when the mouse is removed from the button (card)
-     * @param event mouse pointer is removed from the card
-     * @param pane pane in which arrange the buttons
+     * Does not show the image when the mouse is removed from the button (card).
+     * @param event mouse pointer is removed from the card.
+     * @param pane pane in which arrange the buttons.
      */
     public void flushPane(MouseEvent event, BorderPane pane) {
         event.consume();
@@ -221,7 +222,7 @@ public class GodsController {
     }
 
     /**
-     * Method used to handle the "On mouse entered" event on a god toggle button during god selection.
+     * Handles the "On mouse entered" event on a god toggle button during god selection.
      * @param godSelectionCenter the image will be shown in central position of the screen.
      * @param godSelectionLeft the image will be shown in left position of the screen.
      */
@@ -235,8 +236,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Apollo card when is selected by the mouse
-     * @param event mouse pointer is positioned over Apollo card
+     * Shows Apollo card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Apollo card.
      */
     public void showApollo(MouseEvent event) {
         event.consume();
@@ -246,8 +247,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Artemis card when is selected by the mouse
-     * @param event mouse pointer is positioned over Artemis card
+     * Shows Artemis card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Artemis card.
      */
     public void showArtemis(MouseEvent event) {
         event.consume();
@@ -257,8 +258,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Athena card when is selected by the mouse
-     * @param event mouse pointer is positioned over Athena card
+     * Shows Athena card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Athena card.
      */
     public void showAthena(MouseEvent event) {
         event.consume();
@@ -268,8 +269,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Atlas card when is selected by the mouse
-     * @param event mouse pointer is positioned over Atlas card
+     * Shows Atlas card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Atlas card.
      */
     public void showAtlas(MouseEvent event) {
         event.consume();
@@ -279,8 +280,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Demeter card when is selected by the mouse
-     * @param event mouse pointer is positioned over Demeter card
+     * Shows Demeter card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Demeter card.
      */
     public void showDemeter(MouseEvent event) {
         event.consume();
@@ -290,8 +291,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Hephaestus card when is selected by the mouse
-     * @param event mouse pointer is positioned over Hephaestus card
+     * Shows Hephaestus card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Hephaestus card.
      */
     public void showHephaestus(MouseEvent event) {
         event.consume();
@@ -301,8 +302,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Prometheus card when is selected by the mouse
-     * @param event mouse pointer is positioned over Prometheus card
+     * Shows Prometheus card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Prometheus card.
      */
     public void showPrometheus(MouseEvent event) {
         event.consume();
@@ -312,8 +313,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Pan card when is selected by the mouse
-     * @param event mouse pointer is positioned over Pan card
+     * Shows Pan card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Pan card.
      */
     public void showPan(MouseEvent event) {
         event.consume();
@@ -323,8 +324,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Ares card when is selected by the mouse
-     * @param event mouse pointer is positioned over Ares card
+     * Shows Ares card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Ares card.
      */
     public void showAres(MouseEvent event) {
         event.consume();
@@ -334,8 +335,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Chronus card when is selected by the mouse
-     * @param event mouse pointer is positioned over Chronus card
+     * Shows Chronus card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Chronus card.
      */
     public void showChronus(MouseEvent event) {
         event.consume();
@@ -345,8 +346,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Hestia card when is selected by the mouse
-     * @param event mouse pointer is positioned over Hestia card
+     * Shows Hestia card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Hestia card.
      */
     public void showHestia(MouseEvent event) {
         event.consume();
@@ -356,8 +357,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Hera card when is selected by the mouse
-     * @param event mouse pointer is positioned over Hera card
+     * Shows Hera card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Hera card.
      */
     public void showHera(MouseEvent event) {
         event.consume();
@@ -367,8 +368,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Minotaur card when is selected by the mouse
-     * @param event mouse pointer is positioned over Minotaur card
+     * Shows Minotaur card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Minotaur card.
      */
     public void showMinotaur(MouseEvent event) {
         event.consume();
@@ -378,8 +379,8 @@ public class GodsController {
     }
 
     /**
-     * This method shows Zeus card when is selected by the mouse
-     * @param event mouse pointer is positioned over Zeus card
+     * Shows Zeus card when is selected by the mouse.
+     * @param event mouse pointer is positioned over Zeus card.
      */
     public void showZeus(MouseEvent event) {
         event.consume();
@@ -388,10 +389,9 @@ public class GodsController {
         showCard(center,left);
     }
 
-
     /**
-     * This method don't show the image when the mouse is removed from the button (card)
-     * @param event mouse pointer is removed from the card
+     * Does not show the image when the mouse is removed from the button (card).
+     * @param event mouse pointer is removed from the card.
      */
     public void none(MouseEvent event) {
         event.consume();
@@ -399,14 +399,18 @@ public class GodsController {
         borderPane.setLeft(null);
     }
 
+    /**
+     * Selects the image when the then button is selected.
+     * @param event mouse is clicked on the button.
+     */
     public void selected(MouseEvent event) {
         event.consume();
     }
 
     /**
-     * This method manages the selection of  Apollo card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Apollo card
+     * Manages the selection of  Apollo card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Apollo card.
      */
     public void selectApollo(MouseEvent event){
         event.consume();
@@ -420,9 +424,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of  Artemis card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Artemis card
+     * Manages the selection of  Artemis card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Artemis card.
      */
     public void selectArtemis(MouseEvent event){
         event.consume();
@@ -436,9 +440,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of  Athena card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Athena card
+     * Manages the selection of  Athena card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Athena card.
      */
     public void selectAthena(MouseEvent event){
         event.consume();
@@ -452,9 +456,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Atlas card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Atlas card
+     * Manages the selection of Atlas card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Atlas card.
      */
     public void selectAtlas(MouseEvent event){
         event.consume();
@@ -468,9 +472,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Demeter card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Demeter card
+     * Manages the selection of Demeter card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Demeter card.
      */
     public void selectDemeter(MouseEvent event){
         event.consume();
@@ -484,9 +488,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Hephaestus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Hephaestus card
+     * Manages the selection of Hephaestus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Hephaestus card.
      */
     public void selectHephaestus(MouseEvent event){
         event.consume();
@@ -500,9 +504,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Minotaur card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Minotaur card
+     * Manages the selection of Minotaur card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Minotaur card.
      */
     public void selectMinotaur(MouseEvent event){
         event.consume();
@@ -516,9 +520,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Pan card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Pan card
+     * Manages the selection of Pan card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Pan card.
      */
     public void selectPan(MouseEvent event){
         event.consume();
@@ -532,9 +536,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Prometheus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Prometheus card
+     * Manages the selection of Prometheus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Prometheus card.
      */
     public void selectPrometheus(MouseEvent event){
         event.consume();
@@ -548,9 +552,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Ares card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Ares card
+     * Manages the selection of Ares card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Ares card.
      */
     public void selectAres(MouseEvent event){
         event.consume();
@@ -564,9 +568,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Chronus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Chronus card
+     * Manages the selection of Chronus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Chronus card.
      */
     public void selectChronus(MouseEvent event){
         event.consume();
@@ -580,9 +584,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Hera card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Hera card
+     * Manages the selection of Hera card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Hera card.
      */
     public void selectHera(MouseEvent event){
         event.consume();
@@ -597,9 +601,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Hestia card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Hestia card
+     * Manages the selection of Hestia card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Hestia card.
      */
     public void selectHestia(MouseEvent event){
         event.consume();
@@ -613,9 +617,9 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of Zeus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
-     * otherwise no more cards can be selected
-     * @param event mouse pointer have clicked on Zeus card
+     * Manages the selection of Zeus card by the mouse, it also verifies the number of cards selected is smaller than the number of players,
+     * otherwise no more cards can be selected.
+     * @param event mouse pointer have clicked on Zeus card.
      */
     public void selectZeus(MouseEvent event){
         event.consume();
@@ -629,7 +633,7 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of the firstGod card by the mouse.
+     * Manages the selection of the firstGod card by the mouse.
      * @param event MouseClick.
      */
     public void firstGodSelected(MouseEvent event){
@@ -638,7 +642,7 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of the secondGod card by the mouse.
+     * Manages the selection of the secondGod card by the mouse.
      * @param event MouseClick.
      */
     public void secondGodSelected(MouseEvent event){
@@ -647,7 +651,7 @@ public class GodsController {
     }
 
     /**
-     * This method manages the selection of the thirdGod card by the mouse
+     * Manages the selection of the thirdGod card by the mouse.
      * @param event MouseClick.
      */
     public void thirdGodSelected(MouseEvent event){
@@ -655,10 +659,9 @@ public class GodsController {
         if (thirdGod.isSelected()) selectedGod=selectedGods.get(2);
     }
 
-
     /**
-     * This method manages the button clicked at the end of the choice of the God by the first player
-     * @param event mouse click on the godSelectionButton
+     * Manages the button clicked at the end of the choice of the God by the first player.
+     * @param event mouse click on the godSelectionButton.
      */
     public void handleGodSelectionButton(MouseEvent event){
         event.consume();
@@ -669,8 +672,8 @@ public class GodsController {
     }
 
     /**
-     * This method manages the button clicked at the end of the choice of the God by the other players
-     * @param event mouse click on the selectSingleGod
+     * Manages the button clicked at the end of the choice of the God by the other players.
+     * @param event mouse click on the selectSingleGod.
      */
     public void handleSingleGodSelectionButton (MouseEvent event){
         event.consume();

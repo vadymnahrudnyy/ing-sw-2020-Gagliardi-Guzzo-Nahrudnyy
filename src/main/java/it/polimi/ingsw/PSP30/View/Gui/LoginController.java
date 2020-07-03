@@ -12,14 +12,18 @@ import javafx.scene.input.MouseEvent;
 
 
 /**
- * This class is the controller for LoginScene.fxml and Home.fxml
+ * Controller for LoginScene.fxml and Home.fxml.
  */
 public class LoginController {
 
     @FXML public ImageView usernameNext;
     @FXML public ImageView nextAddress;
     @FXML private TextField addressField,usernameField;
-    @FXML
+
+    /**
+     * Saves and checks the address in input by the player.
+     * @param event mouse clicked of the Next button.
+     */
     public void handleAddress(MouseEvent event) {
         event.consume();
         String address=addressField.getText();
@@ -33,7 +37,7 @@ public class LoginController {
     }
 
     /**
-     * Alert for empty address
+     * Alert for empty address.
      */
     private void showEmptyAddressAlert() {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
@@ -44,8 +48,8 @@ public class LoginController {
     }
 
     /**
-     * This method manages the choice of three players
-     * @param event mouse click on the image of the three players
+     * Manages the choice of three players.
+     * @param event mouse click on the image of the three players.
      */
     public void handleThreePlayerButton(MouseEvent event) {
         event.consume();
@@ -54,8 +58,8 @@ public class LoginController {
     }
 
     /**
-     * This method manages the choice of two players
-     * @param event mouse click on the image of the two players
+     * Manages the choice of two players.
+     * @param event mouse click on the image of the two players.
      */
     public void handleTwoPlayerButton(MouseEvent event) {
         event.consume();
@@ -64,8 +68,8 @@ public class LoginController {
     }
 
     /**
-     * This method manages the insertion of the username
-     * @param event mouse click on next button
+     * Manages the insertion of the username.
+     * @param event mouse click on next button.
      */
     public void handleUsernameButton(MouseEvent event){
         event.consume();

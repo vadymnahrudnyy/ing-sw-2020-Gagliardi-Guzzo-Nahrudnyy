@@ -19,7 +19,9 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Objects;
 
-
+/**
+ * Controller for Lobby.fxml.
+ */
 public class LobbyController {
 
     @FXML private StackPane lobbyPane, playerStackPane, firstOpponentPane, secondOpponentPane;
@@ -32,9 +34,9 @@ public class LobbyController {
 
 
     /**
-     * This method manages the Lobby scene
-     * @param players names of all the players
-     * @throws IOException when an error occurred in loading fxml file
+     * Manages the Lobby scene.
+     * @param players names of all the players.
+     * @throws IOException when an error occurred in loading fxml file.
      */
     public void showLobby(ArrayList<String> players) throws IOException {
         String firstOpponentUsername = null, secondOpponentUsername;
@@ -62,6 +64,10 @@ public class LobbyController {
        GUI.getGameStage().show();
     }
 
+    /**
+     * Manages the disconnection of the player in waiting room.
+     * @param event mouse is clicked on the exit button.
+     */
     public void lobbyExitButton(MouseEvent event){
         event.consume();
         Client.sendMessageToServer(new Disconnection());

@@ -12,7 +12,7 @@ I seguenti schemi propongono una visione strutturale del proramma. In particolar
 - [UML di dettaglio](https://github.com/vadymnahrudnyy/ing-sw-2020-Gagliardi-Guzzo-Nahrudnyy/tree/master/Deliveries/final/uml)
 
 #### JavaDoc
-La documentazione in dettaglio delle classi e dei metodi utilizzati può essere consulatata al seguente indirizzo: [JavaDoc]().
+La documentazione in dettaglio delle classi e dei metodi utilizzati può essere consulatata al seguente indirizzo: [JavaDoc](https://github.com/vadymnahrudnyy/ing-sw-2020-Gagliardi-Guzzo-Nahrudnyy/tree/master/Deliveries/final/javadoc).
 
 #### Librerie e Plugins
 
@@ -33,7 +33,7 @@ La documentazione in dettaglio delle classi e dei metodi utilizzati può essere 
 - [x] Divinità Avanzate
 - [ ] Undo
 
-##Esecuzione dei jar
+## Esecuzione dei jar
 Attraverso il repository GitHub è possibile scaricare i file jar eseguibili da [questo indirizzo](https://github.com/vadymnahrudnyy/ing-sw-2020-Gagliardi-Guzzo-Nahrudnyy/tree/master/Deliveries/final/jar).
 
 [NOTA: Per poter eseguire i file jar sul proprio calcolatore è necessario scaricare la JDK adatta al proprio sistema operativo da [questo sito](https://www.oracle.com/java/technologies/javase/javase-jdk8-downloads.html)].

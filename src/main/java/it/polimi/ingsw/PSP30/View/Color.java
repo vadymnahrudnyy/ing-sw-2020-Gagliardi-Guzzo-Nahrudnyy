@@ -1,5 +1,8 @@
 package it.polimi.ingsw.PSP30.View;
 
+/**
+ * Defines the color of the workers in CLI interface.
+ */
 public enum Color {
 
     ANSI_RED("\u001b[31m"),
