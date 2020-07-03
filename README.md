@@ -14,8 +14,8 @@ I seguenti schemi propongono una visione strutturale del proramma. In particolar
 #### JavaDoc
 La documentazione in dettaglio delle classi e dei metodi utilizzati può essere consulatata al seguente indirizzo: [JavaDoc](https://github.com/vadymnahrudnyy/ing-sw-2020-Gagliardi-Guzzo-Nahrudnyy/tree/master/Deliveries/final/javadoc).
 
-####Coverage Report
-La documentazione relativa ai test e coverage report può essere consultata al seguente indirizzo: [Coverage Report](https://github.com/vadymnahrudnyy/ing-sw-2020-Gagliardi-Guzzo-Nahrudnyy/tree/master/Deliveries/final/coverage)
+#### Coverage Report
+La documentazione relativa ai test e coverage report può essere consultata al seguente indirizzo: [Coverage Report](https://github.com/vadymnahrudnyy/ing-sw-2020-Gagliardi-Guzzo-Nahrudnyy/tree/master/Deliveries/final/report)
 
 #### Librerie e Plugins
 
